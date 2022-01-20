@@ -1,20 +1,22 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-
-// import Home from './pages/Home';
-
-import A from './pages/A';
-import Search from './pages/A/search';
+import login from './pages/Login';
+import loginEmail from './pages/Login/email';
+import join from './pages/Join';
+import joinSetting from './pages/Join/setting';
+import home from './pages/Home';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Route path="/" exact component={A} />
-        <Route path="/search" exact component={Search} />
-        {/* <Route path="/" exact component={Home} />
-        <Route path="/search" exact component={`${Home}/search`} /> */}
+        <Route path="/home" exact component={home} />
+        <Route path="/login" exact component={login} />
+        <Route path="/login/email" exact component={loginEmail} />
+        <Route path="/join" exact component={join} />
+        <Route path="/join/setting" exact component={joinSetting} />
+        <Route path="/join/setting" exact component={joinSetting} />
       </BrowserRouter>
     </div>
   );

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 const MembershipPage = () => {
   return (
@@ -24,7 +24,7 @@ const MembershipPage = () => {
         />
         <strong>*비밀번호는 6자 이상이어야 합니다.</strong>
       </fieldset>
-      <Link href="/join/setting" passHref>
+      <Link to="/join/setting" passHref>
         <button type="submit">다음</button>
       </Link>
     </Form>

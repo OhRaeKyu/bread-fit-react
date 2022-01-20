@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 const LoginIndexPage = () => {
   return (
@@ -11,30 +10,26 @@ const LoginIndexPage = () => {
       <Section>
         <ul>
           <li>
-            <Link href="/" passHref>
-              <a className="login-list-item">카카오톡 계정으로 로그인</a>
+            <Link to="/" className="login-list-item">
+              카카오톡 계정으로 로그인
             </Link>
           </li>
           <li>
-            <Link href="/">
-              <a href="" className="login-list-item login-google">
-                구글 계정으로 로그인
-              </a>
+            <Link to="/" className="login-list-item login-google">
+              구글 계정으로 로그인
             </Link>
           </li>
           <li>
-            <Link href="/" passhref>
-              <a href="" className="login-list-item login-facebook">
-                페이스북 계정으로 로그인
-              </a>
+            <Link to="/" className="login-list-item login-facebook">
+              페이스북 계정으로 로그인
             </Link>
           </li>
         </ul>
-        <Link href="/login/email" passHref>
-          <a className="link-email"> 이메일로 로그인</a>
+        <Link to="/login/email" className="link-email">
+          이메일로 로그인
         </Link>
-        <Link href="/join" passHref>
-          <a className="link-join">회원가입</a>
+        <Link to="/join" className="link-join">
+          회원가입
         </Link>
       </Section>
     </Container>
@@ -55,6 +50,12 @@ const Container = styled.section`
   padding: 204px 0 0;
   font-size: 400;
   }
+`;
+
+const Logoimg = styled.img`
+  width: 200px;
+  height: 200px;
+  display: block;
 `;
 
 const Section = styled.section`
@@ -126,8 +127,4 @@ const Section = styled.section`
   .login-facebook::before {
     background: url('/assets/facebook.png');
   }
-`;
-
-const Logoimg = styled(Image)`
-  display: block;
 `;
