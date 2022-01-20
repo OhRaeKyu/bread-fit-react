@@ -1,70 +1,96 @@
-# Getting Started with Create React App
+<div align="center">
+  <h1>🍞Bread Fit🥨</h1>
+  <p>빵과 결이 맞는 사람들을 위한 서비스</p>
+  <!-- <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fyoojin-park19%2Fbread-fit&count_bg=%23F3A30A&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+  <img src="https://img.shields.io/github/stars/yoojin-park19/bread-fit" alt="stars"/>
+  <img src="https://img.shields.io/github/issues-pr/yoojin-park19/bread-fit" alt="open pull requests"/> -->
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+0. [팀원 소개](#chapter-0)
+1. [목표와 기능](#chapter-1)
+2. [개발 환경 및 배포 URL](#chapter-2)
+3. [프로젝트 구조와 개발 일정](#chapter-3)
+4. [역할 분담](#chapter-4)
+5. [UI / BM](#chapter-5)
+6. [메인 기능](#chapter-6)
+7. [추가 기능](#chapter-7)
+8. [개발하면서 느낀점](#chapter-8)
 
-## Available Scripts
+## 👋 팀원 소개 <a id="chapter-0"></a>
 
-In the project directory, you can run:
+<table>
+    <tr height="160px">
+        <td align="center" width="150px">
+            <a href="https://github.com/yoojin-park19/bread-fit"><img height="120px" width="120px" src="https://github.com/yoojin-park19.png"/></a>
+            <br />
+            <strong>박유진</strong>
+        </td>
+        <td align="center" width="150px">
+            <a href="https://github.com/Sangdon1029"><img height="120px" width="120px" src="https://github.com/Sangdon1029.png"/></a>
+            <br />
+            <strong>김상돈</strong>
+        </td>
+        <td align="center" width="150px">
+            <a href="https://github.com/OhRaeKyu"><img height="120px" width="120px" src="https://github.com/OhRaeKyu.png"/></a>
+            <br />
+            <strong>오래규</strong>
+        </td>
+        <td align="center" width="150px">
+            <a href="https://github.com/ongddree"><img height="120px" width="120px" src="https://github.com/ongddree.png"/></a>
+            <br />
+            <strong>박서영</strong>
+        </td>
+    </tr>
+</table>
 
-### `yarn start`
+### 프로젝트 기간
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2021-12-22 ~ 202112-30
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 1. 목표와 기능 <a id="chapter-1"></a>
 
-### `yarn test`
+#### 1.1 목표
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 1.2 기능
 
-### `yarn build`
+### 2. 개발 환경 및 배포 URL <a id="chapter-2"></a>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### 2.1 개발 환경
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### 2.2 배포 URL
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 3. 프로젝트 구조와 개발 일정 <a id="chapter-3"></a>
 
-### `yarn eject`
+#### 3.1 프로젝트 구조
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+  ├─ index.html
+  │   ├─ medium.html
+  │   └─ small.html
+  │
+  ├─ css
+  │   ├─ reset.css
+  │   ├─ style.css
+  │   └─ module.css
+  └─ js
+      └─ app.js
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3.2 개발 일정(WBS)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- 2021-12-18 프로그램 기획
+- 2021-12-19 ~ 2021-12-23 마크업, 디자인
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 4. 역할 분담 <a id="chapter-4"></a>
 
-## Learn More
+- 팀장 : 박유진
+- 기획자 : 박유진
+- FE : 박유진, 박서영, 오래규, 김상돈
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 5. UI / BM <a id="chapter-5"></a>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 6. 메인 기능 <a id="chapter-6"></a>
 
-### Code Splitting
+### 7. 추가 기능 <a id="chapter-7"></a>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 8. 개발하며 느낀점 <a id="chapter-8"></a>
