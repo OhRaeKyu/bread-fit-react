@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
 
-export const Layout = ({ children }) => {
+const Layout = ({ children }) => {
   return (
     <Wrap>
       <Container>
@@ -11,6 +11,8 @@ export const Layout = ({ children }) => {
     </Wrap>
   );
 };
+
+export default Layout;
 
 const Wrap = styled.div`
   position: relative;
@@ -35,11 +37,6 @@ const Container = styled.section`
   width: 390px;
   height: 820px;
   background: ${PALLETS.WHITE};
-`;
-
-const Header = styled.section`
-  height: 48px;
-  background: ${PALLETS.BEIGE};
 `;
 
 const Main = styled.section``;
