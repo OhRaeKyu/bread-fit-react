@@ -1,8 +1,7 @@
 import { PALLETS } from '../../constants';
-import Link from 'next/link';
-import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { useState, useRef } from 'react';
 import styled from '@emotion/styled';
-import axios from 'axios';
 
 const LoginEmailPage = () => {
   const inputEmail = useRef();
@@ -24,13 +23,6 @@ const LoginEmailPage = () => {
   const handlePwInput = (event) => {
     setPw(event.target.value);
   };
-
-  // useEffect(() => {
-  //   axios
-  //     .get('/user_inform/login')
-  //     .then((res) => console.log(res))
-  //     .catch();
-  // }, []);
 
   return (
     <Form method="POST">
@@ -64,9 +56,7 @@ const LoginEmailPage = () => {
       >
         로그인
       </button>
-      <Link href="/join" passHref>
-        <a>이메일로 회원가입</a>
-      </Link>
+      <Linkemail to="/join">이메일로 회원가입</Linkemail>
     </Form>
   );
 };
@@ -151,13 +141,12 @@ const Form = styled.form`
       cursor: not-allowed;
     }
   }
-
-  a {
-    display: block;
-    text-align: center;
-    font-size: 12px;
-    line-height: 15px;
-    color: ${PALLETS.GRAY};
-    margin-top: 20px;
-  }
+`;
+const Linkemail = styled(Link)`
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  line-height: 15px;
+  color: ${PALLETS.GRAY};
+  margin-top: 20px;
 `;
