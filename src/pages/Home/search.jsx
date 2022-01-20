@@ -1,15 +1,19 @@
 import styled from '@emotion/styled';
-import Link from 'next/link';
-import { Mainform } from '../../components/layouts/Mainform';
-import { PALLETS } from '../../constants';
-import { Searchuserhead } from '../../components/layouts/Searchuserhead';
+import { Searchuserhead } from '../layouts/Searchuserhead';
+import { Tabmenu } from '../layouts/Tabmenu';
 
 const SearchPage = () => {
   return (
-    <Mainform>
+    <>
       <Searchuserhead />
-    </Mainform>
+      <Searchmain></Searchmain>
+      <Tabmenu />
+    </>
   );
 };
 
 export default SearchPage;
+
+const Searchmain = styled.section`
+  height: 90vh;
+`;

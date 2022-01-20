@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "@emotion/styled";
-import { PALLETS } from "../../constants";
-import { Tabmenu } from ".";
+import React from 'react';
+import styled from '@emotion/styled';
+import { PALLETS } from '../../constants';
+import { Tabmenu } from './Tabmenu';
 
 export const Mainform = ({ children }) => {
   return (

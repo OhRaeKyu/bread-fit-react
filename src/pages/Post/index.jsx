@@ -1,21 +1,22 @@
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
-import { Menuhead } from '../../components/layouts/Menuhead';
-import { Inpreply } from '../../components/layouts/Inpreply';
-import { useState } from 'react/cjs/react.development';
-import CommentList from '../../components/post/CommentList';
+import { Menuhead } from '../layouts/MenuHead';
+import { Inpreply } from '../layouts/Inpreply';
+import CommentList from './Components/CommentList';
+import React, { useState } from 'react';
 
 const PostUploadPage = () => {
   const [isLike, setIsLike] = useState(false);
   const toggleLike = () => {
+    // eslint-disable-next-line no-lone-blocks
     {
       isLike ? setIsLike(false) : setIsLike(true);
     }
   };
 
   return (
-    <>
-      {/* <Menuhead onClick={() => Router.back()} /> */}
+    <Container>
+      <Menuhead />
       <WrapPost>
         <UserInfo>
           <img src="../assets/logo.png" alt="" className="author-img" />
@@ -36,7 +37,7 @@ const PostUploadPage = () => {
           </p>
           <img
             src="../assets/mandarin.jpg"
-            alt="store-picture"
+            alt="storepicture"
             className="img-post"
           />
           <WrapResponse>
@@ -53,15 +54,21 @@ const PostUploadPage = () => {
         <CommentList />
       </WrapPost>
       <Inpreply />
-    </>
+    </Container>
   );
 };
 
 export default PostUploadPage;
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const WrapPost = styled.div`
   margin: 10px 20px;
-  height: 712px;
+  width: 390px;
   overflow: scroll;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -75,13 +82,11 @@ const UserInfo = styled.div`
   display: flex;
   align-items: center;
   height: 42px;
-
   .author-img {
     width: 42px;
     height: 42px;
     border-radius: 50%;
   }
-
   .author-post {
     margin-left: 8px;
 
@@ -96,7 +101,6 @@ const UserInfo = styled.div`
       color: ${PALLETS.GRAY};
     }
   }
-
   .btn-more {
     content: '';
     position: absolute;
@@ -132,7 +136,6 @@ const WrapResponse = styled.div`
   display: flex;
   align-items: center;
   margin: 15px 0;
-
   .like {
     content: '';
     display: inline-block;

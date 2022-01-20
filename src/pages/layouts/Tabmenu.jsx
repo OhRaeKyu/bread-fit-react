@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { PALLETS, ROUTES } from '../../constants';
 import styled from '@emotion/styled';
 
@@ -9,7 +9,7 @@ export const Tabmenu = () => {
         {ROUTES.map((routeObject) => {
           return (
             <li key={`tab-${routeObject.ID}`}>
-              <Link href={routeObject.PATH} passHref>
+              <Link to={routeObject.PATH} passhref="true">
                 <Menubtn>{routeObject.LABEL}</Menubtn>
               </Link>
             </li>

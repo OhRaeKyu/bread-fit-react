@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { PALLETS } from '../../constants';
+import { PALLETS } from '../../../constants';
 
 function CommentList() {
   const now = new Date();
@@ -48,7 +48,6 @@ const Commentlist = styled.ul`
   margin-top: 20px;
   padding: 20px 0;
   border-top: 1px solid ${PALLETS.LIGHTGRAY};
-
   li + li {
     margin-top: 10px;
   }

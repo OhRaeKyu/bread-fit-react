@@ -1,28 +1,23 @@
-import Link from 'next/link';
-import { PALLETS, ROUTES } from '../../constants';
+import { PALLETS } from '../../constants';
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 export const Searchuserhead = () => {
-  const [search, searchInp] = useState();
-
-  const back = () => {
-    history.back();
-  };
-
-  const searchUser = (e) => {
-    console.log(e.target.value);
-  };
+  let history = useHistory();
   return (
     <Searchuserheads>
-      <button onClick={back}>
+      <button
+        onClick={() => {
+          history.goBack();
+        }}
+      >
         <img src="/assets/icon/icon-arrow-left.png" alt="뒤로가기" />
       </button>
       <input
         type="text"
         className="cont-home-search-input"
         placeholder="계정검색"
-        onKeyUp={searchUser}
       />
     </Searchuserheads>
   );
@@ -41,7 +36,7 @@ const Searchuserheads = styled.section`
     height: 22px;
   }
   input {
-    width: 316px;
+    width: 95%;
     height: 32px;
     background: ${PALLETS.CREAM};
     border: none;

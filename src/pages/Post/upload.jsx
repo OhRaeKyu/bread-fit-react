@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
-import Link from 'next/link';
-import { Savehead } from '../../components/layouts/Savehead';
+import { Savehead } from '../layouts/SaveHead';
 
 const PostUploadPage = () => {
   return (
     <Container>
       <Savehead />
-      <main class="cont-upload">
+      <main className="cont-upload">
         <img src="/assets/logo.png" alt="upload" />
         <input
           type="text"
@@ -15,8 +14,8 @@ const PostUploadPage = () => {
           placeholder="게시글을 입력해주세요."
         ></input>
       </main>
-      <input type="file" id="uploadImg" onchange="activeBtn()" multiple></input>
-      <label for="uploadImg"></label>
+      <input type="file" id="uploadImg" multiple></input>
+      <label htmlFor="uploadImg"></label>
     </Container>
   );
 };

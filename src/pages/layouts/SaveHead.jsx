@@ -1,15 +1,10 @@
-import Link from 'next/link';
 import { PALLETS, ROUTES } from '../../constants';
 import styled from '@emotion/styled';
 
 export const Savehead = () => {
-  const back = () => {
-    history.back();
-  };
-
   return (
     <Saveheads>
-      <button id="btnBack" onClick={back}></button>
+      <button id="btnBack" onClick={() => ROUTES.back()}></button>
       <button id="uploadBtn">업로드</button>
     </Saveheads>
   );
@@ -18,7 +13,6 @@ export const Savehead = () => {
 const Saveheads = styled.section`
   display: flex;
   justify-content: space-between;
-  width: 390px;
   height: 48px;
   padding: 13px 16px;
   border-bottom: 1px solid ${PALLETS.GRAY};

@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
-import styles from '../../styles/profile.module.css';
-import Link from 'next/link';
-import { PALLETS, ROUTES } from '../../constants';
+import { PALLETS } from '../../constants';
 import React, { useState } from 'react';
-
+import { useHistory } from 'react-router-dom';
 export const Menuhead = () => {
   const [isActive, setActive] = useState('false');
   const [isDelete, setDelte] = useState('false');
+  let history = useHistory();
 
   const handleToggle = () => {
     setActive(!isActive);
@@ -16,12 +15,13 @@ export const Menuhead = () => {
     setActive(!isActive);
   };
 
-  const back = () => {
-    history.back();
-  };
   return (
     <Menushead>
-      <button onClick={back}>
+      <button
+        onClick={() => {
+          history.goBack();
+        }}
+      >
         <img src="/assets/icon/icon-arrow-left.png" alt="뒤로가기" />
       </button>
       <button id="moreInfo" onClick={handleToggle}>
@@ -36,7 +36,7 @@ export const Menuhead = () => {
             </button>
           </li>
           <li>
-            <a>수정</a>
+            <button>수정</button>
           </li>
         </section>
       </Modifymodal>
@@ -59,7 +59,7 @@ const Menushead = styled.section`
   display: flex;
   position: relative;
   justify-content: space-between;
-  width: 390px;
+  width: 100%;
   height: 48px;
   padding: 13px 16px;
   border-bottom: 1px solid ${PALLETS.GRAY};
