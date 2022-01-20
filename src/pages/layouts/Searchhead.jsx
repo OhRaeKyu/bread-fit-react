@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { PALLETS, ROUTES } from '../../constants';
+import { Link } from 'react-router-dom';
+import { PALLETS } from '../../constants';
 import styled from '@emotion/styled';
 
 export const Searchhead = () => {
@@ -7,7 +7,7 @@ export const Searchhead = () => {
     <Searchheads>
       <label htmlFor="inpUser"></label>
       <input type="text" id="inpUser" placeholder="Bread-fit 피드" />
-      <Link href="/home/search" passHref>
+      <Link to="/home/search" passHref>
         <button id="searchBtn"></button>
       </Link>
     </Searchheads>
