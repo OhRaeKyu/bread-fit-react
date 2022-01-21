@@ -1,15 +1,13 @@
 import styled from '@emotion/styled';
-import { PALLETS } from '../../constants';
+import { PALLETS } from '../../../constants';
 import React, { useState } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
-function MenuModal({ setViewModal }, mode) {
+function MenuModal({ setViewModal }, { postData }) {
   const [clickDel, setClickDel] = useState(false);
   const toggleDel = (e) => {
     e.preventDefault();
-    {
-      clickDel ? setClickDel(false) : setClickDel(true);
-    }
+    clickDel ? setClickDel(false) : setClickDel(true);
   };
 
   const deletePost = () => {
@@ -86,10 +84,9 @@ const MenuList = styled.ul`
   position: fixed;
   bottom: 0;
   left: 0;
-  padding: 15% 5% 10%;
+  padding: 50px 30px 30px;
   width: 100%;
-  height: 20vh;
-  font-size: 0.875rem;
+  font-size: 14px;
   border-radius: 15px 15px 0 0;
   background-color: ${PALLETS.WHITE};
   animation: modal 0.3s linear;
@@ -118,6 +115,10 @@ const MenuList = styled.ul`
 
   li {
     cursor: pointer;
+  }
+
+  li + li {
+    margin-top: 2rem;
   }
 `;
 
