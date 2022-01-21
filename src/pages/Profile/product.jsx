@@ -1,18 +1,15 @@
-import { PALLETS } from "../../constants";
-import { Mainform } from "../../components/layouts/Mainform";
-import React, { useState } from "react";
+import { PALLETS } from '../../constants';
+import React, { useState } from 'react';
+import { ModificationHead } from '../layouts/ModificationHead';
+import styled from '@emotion/styled';
 
-import styled from "@emotion/styled";
 const ProductModificationPage = () => {
-  //프로필 사진 미리보기
-  const [fileImage, setFileImage] = useState("/assets/logo.png");
+  const [fileImage, setFileImage] = useState('/assets/logo.png');
+ 
   const saveFileImage = (e) => {
     setFileImage(URL.createObjectURL(e.target.files[0]));
   };
-  const deleteFileImage = () => {
-    URL.revokeObjectURL(fileImage);
-    setFileImage("");
-  };
+ 
 
   // 글자수 제한
   const useInput = (initialValue, validator) => {
@@ -22,7 +19,7 @@ const ProductModificationPage = () => {
         target: { value },
       } = event;
       let willUpdate = true;
-      if (typeof validator === "function") {
+      if (typeof validator === 'function') {
         willUpdate = validator(value);
       }
       if (willUpdate) {
@@ -32,21 +29,21 @@ const ProductModificationPage = () => {
     return { value, onChange };
   };
   const maxLen = (value) => value.length <= 15;
-  const name = useInput("", maxLen);
+  const name = useInput('', maxLen);
   const maxPrice = (value) => value.length <= 8;
-  const price = useInput("", maxPrice);
+  const price = useInput('', maxPrice);
 
   //url 규칙
-  const [AlphaNum, setAlphaNum] = useState("");
+  const [AlphaNum, setAlphaNum] = useState('');
   const isId = (e) => {
     const curValue = e.currentTarget.value;
     const regExp = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/gi;
-    setAlphaNum(curValue.replace(regExp, ""));
+    setAlphaNum(curValue.replace(regExp, ''));
   };
 
   return (
-    <Mainform>
       <ModifiSec>
+        <ModificationHead />
         <section className="prod-modi-cont">
           <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
           <div className="prod-picb-wrap">
@@ -100,13 +97,11 @@ const ProductModificationPage = () => {
           </article>
         </section>
       </ModifiSec>
-    </Mainform>
   );
 };
 
 export default ProductModificationPage;
 
-const Container = styled.section``;
 
 const ModifiSec = styled.section`
   .sr-only {
@@ -127,7 +122,7 @@ const ModifiSec = styled.section`
     align-items: center;
     .prod-picb-wrap {
       position: relative;
-      margin-top: 20px;
+      margin-top: 50px;
       .product-title {
         font-size: 12px;
         font-weight: 400;
@@ -144,7 +139,7 @@ const ModifiSec = styled.section`
         position: absolute;
         bottom: 10px;
         right: 10px;
-        background-image: url("/assets/upload-file.png");
+        background-image: url('/assets/upload-file.png');
         background-size: cover;
         cursor: pointer;
       }

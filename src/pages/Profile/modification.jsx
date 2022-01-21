@@ -1,18 +1,13 @@
 import { PALLETS } from "../../constants";
-import { Mainform } from "../../components/layouts/Mainform";
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import ReactDOM from "react-dom";
+import { ModificationHead } from '../layouts/ModificationHead';
 
 export const ProfileModificationPage = () => {
   //프로필 사진 미리보기
   const [fileImage, setFileImage] = useState("/assets/logo.png");
   const saveFileImage = (e) => {
     setFileImage(URL.createObjectURL(e.target.files[0]));
-  };
-  const deleteFileImage = () => {
-    URL.revokeObjectURL(fileImage);
-    setFileImage("");
   };
 
   // 글자수 제한
@@ -47,8 +42,8 @@ export const ProfileModificationPage = () => {
     setAlphaNum(curValue.replace(regExp, ""));
   };
   return (
-    <Mainform>
-      <ModifiSec>
+    <ModifiSec>
+        <ModificationHead />
         <section className="prof-modi-cont">
           <h1 className="sr-only">프로필 수정 페이지 입니다.</h1>
           <div className="prof-pic-wrap">
@@ -109,16 +104,14 @@ export const ProfileModificationPage = () => {
           </article>
         </section>
       </ModifiSec>
-    </Mainform>
+
   );
 };
 export default ProfileModificationPage;
 
-const Container = styled.section``;
-
 const ModifiSec = styled.section`
   .prof-modi-cont {
-    margin-top: 20px;
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
     justify-self: center;
