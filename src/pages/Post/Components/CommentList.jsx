@@ -1,43 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { PALLETS } from '../../constants';
+import { PALLETS } from '../../../constants';
+import axios from 'axios';
 
-function CommentList() {
+import MenuModal from '../../layouts/MenuModal';
+
+function CommentList({ postData }) {
+  postData = '61e7ca8b458f1ddd2e27055c';
+
   const now = new Date();
-  const [comment, setComment] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [error, setError] = useState(null);
+
+  const [viewModal, setViewModal] = useState(false);
+  const toggleModal = (e) => {
+    e.preventDefault();
+    viewModal ? setViewModal(false) : setViewModal(true);
+  };
+
+  const getComments = async () => {
+    try {
+      const res = await axios.get(
+        `http://146.56.183.55:5050/post/${postData}/comments`,
+        {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzgyNjYyMCwiaWF0IjoxNjQyNjQyNjIwfQ.1aA9IYP98ludT0Te-f-awqzew_Blbr2enfdFI8Tk2Fw`,
+            'Content-type': 'application/json',
+          },
+        }
+      );
+      setComments(res.data.comments);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    // 게시글 id 인자로 받기
-    fetch('http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/comments', {
-      method: 'GET',
-      headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzgyNjYyMCwiaWF0IjoxNjQyNjQyNjIwfQ.1aA9IYP98ludT0Te-f-awqzew_Blbr2enfdFI8Tk2Fw`,
-        'Content-type': 'application/json',
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setComment(data.comments);
-      });
+    getComments();
   }, []);
 
   return (
     <Commentlist>
-      {comment.map((data) => (
+      {comments.map((data) => (
         <li key={data.id}>
           <img src={data.author.image} alt="" />
           <div className="wrap-reply">
             <div className="info-reply">
-              <span>{data.author.username}</span>
+              <p className="user-name">{data.author.username}</p>
               {/* 며칠전으로 바꿔야함 */}
               <small>{new Date(data.createdAt).toLocaleDateString()}</small>
-              <button></button>
+              <button onClick={toggleModal}>
+                <span className="sr-only">댓글 메뉴 보기 버튼</span>
+              </button>
             </div>
             <p className="cont-reply">{data.content}</p>
           </div>
+          {viewModal ? (
+            <MenuModal
+              setViewModal={setViewModal}
+              mode="comment"
+              commentId={data.id}
+            />
+          ) : null}
         </li>
       ))}
     </Commentlist>
@@ -50,7 +75,7 @@ const Commentlist = styled.ul`
   border-top: 1px solid ${PALLETS.LIGHTGRAY};
 
   li + li {
-    margin-top: 10px;
+    margin-top: 20px;
   }
 
   li {
@@ -73,7 +98,8 @@ const Commentlist = styled.ul`
         height: 36px;
         line-height: 36px;
 
-        span {
+        .user-name {
+          display: inline-block;
           font-size: 14px;
           font-weight: 500;
           margin-right: 6px;

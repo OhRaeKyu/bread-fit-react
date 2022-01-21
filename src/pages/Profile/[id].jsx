@@ -23,6 +23,7 @@ const Profile = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 60px 0;
 `;
 
 export default UserprofilePage;

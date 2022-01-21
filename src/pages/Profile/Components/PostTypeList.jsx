@@ -2,11 +2,39 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-import MenuModal from './MenuModal';
+import MenuModal from '../../layouts/MenuModal';
 import { PALLETS } from '../../../constants';
+import axios from 'axios';
 
 function PostTypeList({ userData }) {
-  // api 연결 시 수정해야함
+  const postLike = () => {
+    fetch('http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/heart', {
+      method: 'POST',
+      headers: {
+        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        'Content-type': 'application/json',
+      },
+    });
+  };
+
+  const deleteLike = async () => {
+    try {
+      await axios.delete(
+        `http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/unheart`,
+        {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            'Content-type': 'application/json',
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const [isLike, setIsLike] = useState(false);
   const [countLike, setCountLike] = useState(0);
 
@@ -15,9 +43,11 @@ function PostTypeList({ userData }) {
     if (isLike) {
       setCountLike(countLike - 1);
       setIsLike(false);
+      deleteLike();
     } else {
       setCountLike(countLike + 1);
       setIsLike(true);
+      postLike();
     }
   };
 
@@ -27,7 +57,7 @@ function PostTypeList({ userData }) {
     viewModal ? setViewModal(false) : setViewModal(true);
   };
 
-  const postData = {};
+  const postId = '';
 
   return (
     <>
@@ -74,7 +104,7 @@ function PostTypeList({ userData }) {
         </PostItem>
       </ul>
       {viewModal ? (
-        <MenuModal setViewModal={setViewModal} postData={postData} />
+        <MenuModal setViewModal={setViewModal} mode="post" postId={postId} />
       ) : null}
     </>
   );
@@ -183,13 +213,6 @@ const WrapResponse = styled.div`
     background-size: cover;
     margin-right: 5px;
   }
-`;
-
-const CommentBtn = styled.a`
-  width: 20px;
-  height: 20px;
-  background-image: url('/assets/icon/icon-message-circle.png');
-  background-size: cover;
 `;
 
 export default PostTypeList;
