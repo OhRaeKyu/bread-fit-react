@@ -12,7 +12,7 @@ export const Tabmenu = (route) => {
               <li key={`tab-${routeObject.ID}`}>
                 <Tablink to={routeObject.PATH}>
                   <Icon src={routeObject.ACTIVE}></Icon>
-                  <Menubtn>{routeObject.LABEL}</Menubtn>
+                  <Menubtn status="active">{routeObject.LABEL}</Menubtn>
                 </Tablink>
               </li>
             );
@@ -55,8 +55,9 @@ const Tablink = styled(Link)`
 const Menubtn = styled.strong`
   position: relative;
   font-size: 10px;
-  color: ${PALLETS.GRAY};
+  color: ${(props) => (props.status ? '#F26E22' : `${PALLETS.GRAY}`)};
   line-height: 14px;
+
   padding: 0px 6px;
   width: 84px;
 `;
