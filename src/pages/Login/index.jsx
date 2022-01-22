@@ -8,29 +8,29 @@ const LoginIndexPage = () => {
       <Logoimg src="/assets/logo-white.svg" width={200} height={200} />
       <h2 className="sr-only">로그인</h2>
       <Section>
-        <ul>
+        <Loginitems>
           <li>
-            <Link to="/" className="login-list-item">
+            <Loginitem to="/" social="kakao">
               카카오톡 계정으로 로그인
-            </Link>
+            </Loginitem>
           </li>
           <li>
-            <Link to="/" className="login-list-item login-google">
+            <Loginitem to="/" social="google">
               구글 계정으로 로그인
-            </Link>
+            </Loginitem>
           </li>
           <li>
-            <Link to="/" className="login-list-item login-facebook">
+            <Loginitem to="/" social="facebook">
               페이스북 계정으로 로그인
-            </Link>
+            </Loginitem>
           </li>
-        </ul>
-        <Link to="/login/email" className="link-email">
+        </Loginitems>
+        <Option to="/login/email" option="email" className="link-email">
           이메일로 로그인
-        </Link>
-        <Link to="/join" className="link-join">
+        </Option>
+        <Option to="/join" className="link-join">
           회원가입
-        </Link>
+        </Option>
       </Section>
     </Container>
   );
@@ -39,15 +39,17 @@ const LoginIndexPage = () => {
 export default LoginIndexPage;
 
 const Container = styled.section`
-  background-color: var(--bg-color-1);
-  padding: 270px 95px 374px;
+
+  position:relative;
+  // * 100vh 이슈
+  height:100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   font-weight: 700;
   background-color: ${PALLETS.BROWN};
-  padding: 204px 0 0;
+  padding-top: 204px;
   font-size: 400;
   }
 `;
@@ -59,26 +61,18 @@ const Logoimg = styled.img`
 `;
 
 const Section = styled.section`
+  position: absolute;
+  bottom: 0;
   font-size: 14px;
   font-weight: 400;
   line-height: 18px;
-  padding: 50px 34px 0 34px;
+  padding: 50px 34px 82px 34px;
   background: ${PALLETS.WHITE};
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   width: 100%;
-  height: 100%;
   margin-top: 117px;
   color: ${PALLETS.GRAY};
-
-  .login-list-item {
-    display: block;
-    position: relative;
-    border: 1px solid #f2c94c;
-    padding: 13px 0;
-    border-radius: 44px;
-    white-space: nowrap;
-  }
 
   .link-email,
   .link-join {
@@ -92,39 +86,62 @@ const Section = styled.section`
     content: '\u007C';
     margin: 0 8px;
   }
+`;
 
-  li:first-child ~ li {
+const Option = styled(Link)`
+  display: inline-block;
+  font-size: 12px;
+  line-height: 15px;
+    &:after {
+        display: ${(props) => (props.option ? 'block' : 'none')};
+        content: '\u007C';
+        margin: 0 8px;
+      }
+    }
+  }
+`;
+
+const Loginitems = styled.ul`
+  li:first-of-type ~ li {
     margin-top: 10px;
   }
 
-  li:last-child {
+  li:last-of-type {
     margin-bottom: 20px;
   }
+`;
 
-  .login-list-item::before {
+const Loginitem = styled(Link)`
+  display: block;
+  position: relative;
+  border: 1px solid;
+  border-color: ${(props) =>
+    props.social === 'kakao'
+      ? '#f2c94c'
+      : props.social === 'google'
+      ? '#767676'
+      : props.social === 'facebook'
+      ? '#2d9cdb'
+      : `${PALLETS.BLACK}`};
+  padding: 13px 0;
+  border-radius: 44px;
+  white-space: nowrap;
+
+  &:before {
     display: block;
     content: '';
     position: absolute;
     width: 24px;
     height: 24px;
-    background: url('/assets/message-circle.png');
     top: 10px;
     left: 14px;
-  }
-
-  .login-google {
-    border: 1px solid ${PALLETS.LIGHTGRAY};
-  }
-
-  .login-google::before {
-    background: url('/assets/google.png');
-  }
-
-  .login-facebook {
-    border: 1px solid #2d9cdb;
-  }
-
-  .login-facebook::before {
-    background: url('/assets/facebook.png');
+    background: url(${(props) =>
+      props.social === 'kakao'
+        ? '/assets/message-circle.png'
+        : props.social === 'google'
+        ? '/assets/google.png'
+        : props.social === 'facebook'
+        ? '/assets/facebook.png'
+        : 'null'});
   }
 `;
