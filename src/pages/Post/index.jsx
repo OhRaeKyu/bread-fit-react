@@ -1,42 +1,94 @@
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
-import { Menuhead } from '../../components/layouts/Menuhead';
-import { Inpreply } from '../../components/layouts/Inpreply';
-import { useState } from 'react/cjs/react.development';
-import CommentList from '../../components/post/CommentList';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+import Inpreply from './Components/Inpreply';
+import CommentList from './Components/CommentList';
+import MenuModal from '../layouts/MenuModal';
 
 const PostUploadPage = () => {
-  const [isLike, setIsLike] = useState(false);
-  const toggleLike = () => {
-    {
-      isLike ? setIsLike(false) : setIsLike(true);
+  const postLike = () => {
+    fetch('http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/heart', {
+      method: 'POST',
+      headers: {
+        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        'Content-type': 'application/json',
+      },
+    });
+  };
+
+  const deleteLike = async () => {
+    try {
+      await axios.delete(
+        `http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/unheart`,
+        {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            'Content-type': 'application/json',
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
     }
+  };
+  const postId = '';
+
+  // api 연결 시 수정해야함
+  const [isLike, setIsLike] = useState(false);
+  const [countLike, setCountLike] = useState(0);
+
+  const toggleLike = (e) => {
+    e.preventDefault();
+    if (isLike) {
+      setCountLike(countLike - 1);
+      setIsLike(false);
+      deleteLike();
+    } else {
+      setCountLike(countLike + 1);
+      setIsLike(true);
+      postLike();
+    }
+  };
+
+  const [viewModal, setViewModal] = useState(false);
+  const toggleModal = (e) => {
+    e.preventDefault();
+    viewModal ? setViewModal(false) : setViewModal(true);
   };
 
   return (
     <>
       {/* <Menuhead onClick={() => Router.back()} /> */}
       <WrapPost>
-        <UserInfo>
-          <img src="../assets/logo.png" alt="" className="author-img" />
-          <div className="author-post">
-            <p>서초구 소울브레드</p>
-            <small>@soul_bread</small>
+        <ItemHeader>
+          <div className="wrap-img">
+            <img
+              src="/assets/logo.png"
+              alt="게시물에 보여지는 사용자의 프로필 이미지입니다."
+            />
           </div>
-          <span className="btn-more"></span>
-        </UserInfo>
-        <PostContent>
-          <p className="txt-post">
-            인생 빵맛집.. 진짜 모든빵이 다 너무맛있고..든든하고 그래요. 앙버터도
-            저렇게버터듬뿍든건 첨봐요! 거기다가 달지않지만 옹골찬 팥과 쫀득하고
-            짭쪼름한 프렛첼의조화가 환상입니다. 그리고 와사비 크림치즈가 들어간
-            샌드위치도 매콤하니 맛있어요!!거기다가 많은분이 추천하시는
-            쌩얼크치도 맛났지만 저는 베베레가 더 맛있었어요. 레몬맛과 블루베리
-            맛나는 크림치즈에 키위들어간거요~
+          <div className="user-post">
+            <p>서초구 소울브레드</p>
+            <small>@ soul_bread</small>
+          </div>
+          <div className="btn-more" onClick={toggleModal}>
+            <span className="sr-only">게시물 메뉴</span>
+          </div>
+        </ItemHeader>
+        <ItemMain>
+          <p className="cont-post">
+            옷을 인생을 그러므로 없으면 것은 이상은 것은 우리의 위하여, 뿐이다.
+            이상의 청춘의 뼈 따뜻한 그들의 그와 약동하다. 대고, 못할 넣는
+            풍부하게 뛰노는 인생의 힘있다.
           </p>
           <img
-            src="../assets/mandarin.jpg"
-            alt="store-picture"
+            src="/assets/product-img.jpg"
+            alt="게시물에 업로드된 이미지입니다."
             className="img-post"
           />
           <WrapResponse>
@@ -44,15 +96,18 @@ const PostUploadPage = () => {
               className={isLike ? 'like on' : 'like'}
               onClick={toggleLike}
             ></button>
-            <p>0</p>
-            <button className="comment"></button>
+            <p>{countLike}</p>
+            <Link to="/post/:id" className="comment"></Link>
             <p>0</p>
           </WrapResponse>
-          <p className="date-post">2021년 12월 21일</p>
-        </PostContent>
-        <CommentList />
+          <p className="date-post">2021년 12월 31일</p>
+        </ItemMain>
+        <CommentList postId={postId} />
       </WrapPost>
-      <Inpreply />
+      <Inpreply postId={postId} />
+      {viewModal ? (
+        <MenuModal setViewModal={setViewModal} mode="post" postId={postId} />
+      ) : null}
     </>
   );
 };
@@ -60,29 +115,28 @@ const PostUploadPage = () => {
 export default PostUploadPage;
 
 const WrapPost = styled.div`
-  margin: 10px 20px;
-  height: 712px;
-  overflow: scroll;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome , Safari , Opera*/
-  }
+  width: 390px;
+  margin: 60px auto;
 `;
 
-const UserInfo = styled.div`
+const ItemHeader = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   height: 42px;
 
-  .author-img {
+  .wrap-img {
     width: 42px;
     height: 42px;
+    border: 1px solid ${PALLETS.LIGHTGRAY};
     border-radius: 50%;
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
-  .author-post {
+  .user-post {
     margin-left: 8px;
 
     p {
@@ -98,8 +152,10 @@ const UserInfo = styled.div`
   }
 
   .btn-more {
+    cursor: pointer;
     content: '';
     position: absolute;
+    top: 0;
     right: 0;
     width: 18px;
     height: 18px;
@@ -108,10 +164,10 @@ const UserInfo = styled.div`
   }
 `;
 
-const PostContent = styled.main`
+const ItemMain = styled.div`
   margin-left: 50px;
 
-  .txt-post {
+  .cont-post {
     margin: 15px 0;
     line-height: 1.3;
   }

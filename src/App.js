@@ -8,8 +8,10 @@ import joinSetting from './pages/Join/setting';
 import home from './pages/Home';
 import profile from './pages/Profile';
 import otherProfile from './pages/Profile/[id]';
+import post from './pages/Post';
 import PrivateRoute from './pages/Login/components/PrivateRoutes';
 import PublicRoute from './pages/Login/components/PublicRoute';
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
           <PrivateRoute path="/home" exact component={home} />
           <PrivateRoute path="/profile" exact component={profile} />
           <PrivateRoute path="/profile/:id" exact component={otherProfile} />
+          <PrivateRoute path="/post/:id" exact component={post} />
         </Switch>
       </BrowserRouter>
     </div>
@@ -30,3 +33,4 @@ function App() {
 }
 
 export default App;
+
