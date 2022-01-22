@@ -12,10 +12,9 @@ export const UserInformation = ()=>{
     setActive(!isActive);
     setIsfollow(!isfollow);
   };
-  //조건문
-  const [profile, setProfile] = useState([]);
+  const [profile, setProfile] = useState({});
   useEffect(() => {
-    fetch('http://146.56.183.55:5050/profile/lion123/following', {
+    fetch('http://146.56.183.55:5050/profile/lion123', {
       method: 'GET',
       headers: {
         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
@@ -28,46 +27,23 @@ export const UserInformation = ()=>{
       })
       .then((data) => {
         setProfile(data);
-        setIsfollow(data.isfollow);
+        console.log(profile)
+        console.log(profile.profile.username)
+
       });
   }, []);
   return (
     <>
-    {profile.map((data) => (
-      <ul key={data.id}>
-        <li>
-         <div className="user-search-container">
-            <Link className="item-link-cont" to="profile/id">
-            <img
-              className="search-user-img"
-              src= {data.image}
-              alt="사용자 이미지"
-            />
-            <div className="user-information">
-              <h3 className="user-profile-name">{data.username}</h3>
-              <small className="user-profile-email">{data.intro}</small>
-            </div>
-            </Link>
-            <button
-              type="button"
-              onClick={handleToggle}
-              className={`s-button follow btn-one-fol ${isfollow ? "click" : null}`}
-            >
-              팔로우
-            </button>
-            <button
-              type="button"
-              onClick={handleToggle}
-              className={`s-button cancle btn-one-canc ${
-                isActive ? "click" : null
-              }`}
-            >
-              취소
-            </button>
-          </div>
-          </li>
+    
+    <li>{profile[0]}</li>
+      <ul key={profile.id}>
+        <li>{profile.profile.username}</li>
+        <li>{profile.profile.accountname}</li>
+        <li>{profile.profile.intro}</li>
+        <li>{profile.profile.image}</li>
+        <li>{profile.profile.followerCount}</li>
+        <li>{profile.profile.followingCount}</li>
        </ul>
-    ))}
     </>
   );
 };
