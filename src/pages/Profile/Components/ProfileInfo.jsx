@@ -2,13 +2,63 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
+import axios from 'axios';
 
 function ProfileInfo({ userData, who }) {
-  // API 연결 후 수정해야함
+  const postFollow = () => {
+    // 게시글 id 인자로 받기
+    fetch('http://146.56.183.55:5050/profile/real_binky/follow', {
+      method: 'POST',
+      headers: {
+        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        'Content-type': 'application/json',
+      },
+    });
+  };
+
+  // axios로 하는 방법 찾기
+  // const postFollow = async () => {
+  //   try {
+  //     await axios.post(`http://146.56.183.55:5050/profile/real_binky/follow`, {
+  //       headers: {
+  //         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+  //         'Content-type': 'application/json',
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  const deleteFollow = async () => {
+    try {
+      await axios.delete(
+        `http://146.56.183.55:5050/profile/real_binky/unfollow`,
+        {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            'Content-type': 'application/json',
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const [isFollow, setIsFollow] = useState(false);
   const toggleFollow = (e) => {
     e.preventDefault();
-    isFollow ? setIsFollow(false) : setIsFollow(true);
+    if (isFollow) {
+      setIsFollow(false);
+      deleteFollow();
+    } else {
+      setIsFollow(true);
+      postFollow();
+    }
   };
 
   const MyProfile = () => {

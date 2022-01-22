@@ -9,6 +9,7 @@ import joinSetting from './pages/Join/setting';
 import home from './pages/Home';
 import profile from './pages/Profile';
 import otherProfile from './pages/Profile/[id]';
+import post from './pages/Post';
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
         {/* profile */}
         <Route path="/profile" exact component={profile} />
         <Route path="/profile/:id" exact component={otherProfile} />
+
+        {/* post */}
+        <Route path="/post/:id" exact component={post} />
       </BrowserRouter>
     </div>
   );
