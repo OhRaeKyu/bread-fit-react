@@ -85,9 +85,8 @@ const Form = styled.form`
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  width: 390px;
-  height: 844px;
-  padding: 50px 34px 0;
+  width: 322px;
+  padding: 50px 0 0;
 `;
 
 const Fieldset = styled.fieldset`
@@ -139,10 +138,6 @@ const Error = styled.strong`
   color: #eb5757;
   font-size: 12px;
   line-height: 14px;
-
-  .on {
-    display: block;
-  }
 `;
 
 const Btnsubmit = styled.button`
