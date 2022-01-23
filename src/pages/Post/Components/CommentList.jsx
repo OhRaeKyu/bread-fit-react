@@ -6,6 +6,8 @@ import axios from 'axios';
 
 import MenuModal from '../../layouts/MenuModal';
 
+import { API_ENDPOINT } from '../../../constants';
+
 function CommentList({ postData }) {
   postData = '61e7ca8b458f1ddd2e27055c';
 
@@ -21,17 +23,15 @@ function CommentList({ postData }) {
   };
 
   const getComments = async () => {
+    const userToken = localStorage.getItem('Token');
     try {
-      const res = await axios.get(
-        `http://146.56.183.55:5050/post/${postData}/comments`,
-        {
-          headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzgyNjYyMCwiaWF0IjoxNjQyNjQyNjIwfQ.1aA9IYP98ludT0Te-f-awqzew_Blbr2enfdFI8Tk2Fw`,
-            'Content-type': 'application/json',
-          },
-        }
-      );
+      const res = await axios.get(`${API_ENDPOINT}post/${postData}/comments`, {
+        headers: {
+          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
       setComments(res.data.comments);
     } catch (err) {
       console.log(err);
@@ -64,10 +64,11 @@ function CommentList({ postData }) {
           </div>
         </li>
       ))}
+      {/* 자신의 댓글 일 때와 아닐 때 처리해야함 */}
       {viewModal ? (
         <MenuModal
           setViewModal={setViewModal}
-          mode="comment"
+          mode="댓글"
           commentId={comments[delIndex].id}
         />
       ) : null}

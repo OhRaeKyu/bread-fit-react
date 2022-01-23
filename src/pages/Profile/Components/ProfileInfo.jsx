@@ -4,14 +4,17 @@ import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
 
+import { API_ENDPOINT } from '../../../constants';
+
 function ProfileInfo({ userData, who }) {
+  const userToken = localStorage.getItem('Token');
   const postFollow = () => {
     // 게시글 id 인자로 받기
-    fetch('http://146.56.183.55:5050/profile/real_binky/follow', {
+    fetch(`${API_ENDPOINT}profile/real_binky/follow`, {
       method: 'POST',
       headers: {
         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        Authorization: `Bearer ${userToken}`,
         'Content-type': 'application/json',
       },
     });
@@ -34,16 +37,13 @@ function ProfileInfo({ userData, who }) {
 
   const deleteFollow = async () => {
     try {
-      await axios.delete(
-        `http://146.56.183.55:5050/profile/real_binky/unfollow`,
-        {
-          headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-            'Content-type': 'application/json',
-          },
-        }
-      );
+      await axios.delete(`${API_ENDPOINT}profile/real_binky/unfollow`, {
+        headers: {
+          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
     } catch (err) {
       console.log(err);
     }
@@ -65,8 +65,8 @@ function ProfileInfo({ userData, who }) {
     return (
       <MyProfileBtn>
         <article className="info-foot">
-          <Link to="/profile/modification">프로필 수정</Link>
-          <Link to="/profile/product">상품 등록</Link>
+          <Link to="/modification">프로필 수정</Link>
+          <Link to="/product">상품 등록</Link>
         </article>
       </MyProfileBtn>
     );

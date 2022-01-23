@@ -4,7 +4,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+import { API_ENDPOINT } from '../../constants';
+
 function MenuModal({ setViewModal, mode, postId, commentId }) {
+  const userToken = localStorage.getItem('Token');
+
   postId = '61e8c70a458f1ddd2e28f8a0';
   const [clickDel, setClickDel] = useState(false);
   const toggleDel = (e) => {
@@ -15,10 +19,10 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
   const deletePost = async () => {
     try {
       await axios
-        .delete(`http://146.56.183.55:5050/post/${postId}`, {
+        .delete(`${API_ENDPOINT}post/${postId}`, {
           headers: {
             // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            Authorization: `Bearer ${userToken}`,
             'Content-type': 'application/json',
           },
         })
@@ -35,11 +39,11 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
     try {
       await axios
         .delete(
-          `http://146.56.183.55:5050/post/61eb03becd27b6cf65fa2212/comments/${commentId}`,
+          `${API_ENDPOINT}post/61eb03becd27b6cf65fa2212/comments/${commentId}`,
           {
             headers: {
               // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+              Authorization: `Bearer ${userToken}`,
               'Content-type': 'application/json',
             },
           }
@@ -53,47 +57,79 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
   };
 
   const CheckModal = () => {
-    return (
-      <CheckDelete>
-        <strong>{mode === 'post' ? '게시글' : '댓글'}을 삭제할까요?</strong>
-        <button
-          type="button"
-          onClick={() => {
-            setViewModal(false);
-          }}
-        >
-          취소
-        </button>
-        <button
-          type="button"
-          className="btn-delete"
-          onClick={() => {
-            setViewModal(false);
-            mode === 'post' ? deletePost() : deleteComment();
-          }}
-        >
-          삭제
-        </button>
-      </CheckDelete>
-    );
+    if (mode === '프로필') {
+      return (
+        <CheckDelete>
+          <strong>로그아웃 하시겠어요?</strong>
+          <button
+            type="button"
+            onClick={() => {
+              setViewModal(false);
+            }}
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            className="btn-delete"
+            onClick={() => {
+              localStorage.removeItem('Token');
+            }}
+          >
+            <Link to="/"></Link>
+            로그아웃
+          </button>
+        </CheckDelete>
+      );
+    } else {
+      return (
+        <CheckDelete>
+          <strong>{mode}을 삭제할까요?</strong>
+          <button
+            type="button"
+            onClick={() => {
+              setViewModal(false);
+            }}
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            className="btn-delete"
+            onClick={() => {
+              setViewModal(false);
+              mode === 'post' ? deletePost() : deleteComment();
+            }}
+          >
+            삭제
+          </button>
+        </CheckDelete>
+      );
+    }
   };
 
   const Menu = () => {
     switch (mode) {
-      case 'post':
+      case '게시글':
         return (
           <>
             <li onClick={toggleDel}>삭제</li>
             <li>
               {/* 해당 게시글(id) 수정 페이지로 이동 */}
-              <Link to="#">수정</Link>
+              <Link to="/modification">수정</Link>
             </li>
           </>
         );
-      case 'comment':
+      case '댓글':
         return (
           <>
             <li onClick={toggleDel}>삭제</li>
+          </>
+        );
+      case '프로필':
+        return (
+          <>
+            <li onClick={toggleDel}>로그아웃</li>
           </>
         );
       default:

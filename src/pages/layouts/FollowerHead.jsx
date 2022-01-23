@@ -1,19 +1,16 @@
 import { PALLETS, ROUTES } from '../../constants';
 import styled from '@emotion/styled';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 export const FollowerHead = () => {
   const history = useHistory();
   const back = () => {
-    history.back();
+    history.goBack();
   };
   return (
-    
     <FollowerHeads>
-      <button id="btnBack" 
-         onClick={back}
-      ></button>
+      <button id="btnBack" onClick={back}></button>
     </FollowerHeads>
   );
 };
