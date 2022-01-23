@@ -50,7 +50,6 @@ function PostInfo({ userData }) {
 
 const PostSection = styled.section`
   width: 100%;
-  margin: 10px 0;
   padding-bottom: 20px;
   background-color: ${PALLETS.WHITE};
   border-top: 1px solid ${PALLETS.LIGHTGRAY};

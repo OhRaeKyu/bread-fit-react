@@ -1,35 +1,37 @@
 import React, { useEffect, useState } from 'react';
+import { ReactDOM } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
 
 import MenuModal from '../../layouts/MenuModal';
 
+import { API_ENDPOINT } from '../../../constants';
+
 function CommentList({ postData }) {
   postData = '61e7ca8b458f1ddd2e27055c';
 
   const now = new Date();
+  const [delIndex, setDelIndex] = useState('');
   const [comments, setComments] = useState([]);
-  const [error, setError] = useState(null);
 
   const [viewModal, setViewModal] = useState(false);
-  const toggleModal = (e) => {
+  const toggleModal = (e, index) => {
     e.preventDefault();
+    setDelIndex(index);
     viewModal ? setViewModal(false) : setViewModal(true);
   };
 
   const getComments = async () => {
+    const userToken = localStorage.getItem('Token');
     try {
-      const res = await axios.get(
-        `http://146.56.183.55:5050/post/${postData}/comments`,
-        {
-          headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzgyNjYyMCwiaWF0IjoxNjQyNjQyNjIwfQ.1aA9IYP98ludT0Te-f-awqzew_Blbr2enfdFI8Tk2Fw`,
-            'Content-type': 'application/json',
-          },
-        }
-      );
+      const res = await axios.get(`${API_ENDPOINT}post/${postData}/comments`, {
+        headers: {
+          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
       setComments(res.data.comments);
     } catch (err) {
       console.log(err);
@@ -42,7 +44,7 @@ function CommentList({ postData }) {
 
   return (
     <Commentlist>
-      {comments.map((data) => (
+      {comments.map((data, index) => (
         <li key={data.id}>
           <img src={data.author.image} alt="" />
           <div className="wrap-reply">
@@ -50,21 +52,26 @@ function CommentList({ postData }) {
               <p className="user-name">{data.author.username}</p>
               {/* 며칠전으로 바꿔야함 */}
               <small>{new Date(data.createdAt).toLocaleDateString()}</small>
-              <button onClick={toggleModal}>
+              <button
+                onClick={(e) => {
+                  toggleModal(e, index);
+                }}
+              >
                 <span className="sr-only">댓글 메뉴 보기 버튼</span>
               </button>
             </div>
             <p className="cont-reply">{data.content}</p>
           </div>
-          {viewModal ? (
-            <MenuModal
-              setViewModal={setViewModal}
-              mode="comment"
-              commentId={data.id}
-            />
-          ) : null}
         </li>
       ))}
+      {/* 자신의 댓글 일 때와 아닐 때 처리해야함 */}
+      {viewModal ? (
+        <MenuModal
+          setViewModal={setViewModal}
+          mode="댓글"
+          commentId={comments[delIndex].id}
+        />
+      ) : null}
     </Commentlist>
   );
 }

@@ -3,26 +3,28 @@ import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
 
+import { API_ENDPOINT } from '../../../constants';
+
 const Inpreply = ({ postData }) => {
   const contComment = useRef(null);
 
   const postReply = (e) => {
+    const userToken = localStorage.getItem('Token');
     e.preventDefault();
     // 게시글 id 인자로 받기
-    fetch('http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/comments', {
+    fetch(`${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/comments`, {
       method: 'POST',
       headers: {
         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        Authorization: `Bearer ${userToken}`,
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
         comment: { content: `${contComment.current.value}` },
       }),
-    }) // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
-      .then(() => {
-        window.location.reload();
-      });
+    }).then(() => {
+      window.location.reload();
+    });
   };
 
   // axios로 해보기

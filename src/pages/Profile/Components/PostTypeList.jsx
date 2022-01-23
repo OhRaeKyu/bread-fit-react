@@ -6,13 +6,16 @@ import MenuModal from '../../layouts/MenuModal';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
 
+import { API_ENDPOINT } from '../../../constants';
+
 function PostTypeList({ userData }) {
+  const userToken = localStorage.getItem('Token');
+
   const postLike = () => {
-    fetch('http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/heart', {
+    fetch(`${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/heart`, {
       method: 'POST',
       headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        Authorization: `Bearer ${userToken}`,
         'Content-type': 'application/json',
       },
     });
@@ -21,11 +24,10 @@ function PostTypeList({ userData }) {
   const deleteLike = async () => {
     try {
       await axios.delete(
-        `http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/unheart`,
+        `${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/unheart`,
         {
           headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            Authorization: `Bearer ${userToken}`,
             'Content-type': 'application/json',
           },
         }
@@ -103,8 +105,9 @@ function PostTypeList({ userData }) {
           </ItemMain>
         </PostItem>
       </ul>
+      {/* 자신의 게시글 일 때와 아닐 때 처리해야함 */}
       {viewModal ? (
-        <MenuModal setViewModal={setViewModal} mode="post" postId={postId} />
+        <MenuModal setViewModal={setViewModal} mode="게시글" postId={postId} />
       ) : null}
     </>
   );

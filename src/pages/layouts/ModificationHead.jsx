@@ -1,4 +1,4 @@
-import { PALLETS} from '../../constants';
+import { PALLETS } from '../../constants';
 import styled from '@emotion/styled';
 import { useHistory } from 'react-router-dom';
 
@@ -6,9 +6,12 @@ export const ModificationHead = () => {
   let history = useHistory();
   return (
     <ModificationHeads>
-      <button id="btnBack" onClick={() => {
-          history.back();
-        }}></button>
+      <button
+        id="btnBack"
+        onClick={() => {
+          history.goBack();
+        }}
+      ></button>
       <button id="uploadBtn">저장</button>
     </ModificationHeads>
   );

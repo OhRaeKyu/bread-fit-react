@@ -14,6 +14,13 @@ import upload from './pages/Post/upload';
 import PrivateRoute from './pages/Login/components/PrivateRoutes';
 import PublicRoute from './pages/Login/components/PublicRoute';
 
+import product from './pages/Profile/product';
+import productId from './pages/Profile/product[id]Detail';
+import modification from './pages/Profile/modification';
+import follower from './pages/Profile/follower';
+import following from './pages/Profile/following';
+import test from './pages/Profile/producttest';
+
 function App() {
   return (
     <div className="App">
@@ -23,12 +30,18 @@ function App() {
           <PublicRoute path="/login/email" exact component={loginEmail} />
           <PublicRoute path="/join" exact component={join} />
           <PublicRoute path="/join/setting" exact component={joinSetting} />
-          <PrivateRoute path="/home/search" exact component={search} />
           <PrivateRoute path="/home" exact component={home} />
+          <PrivateRoute path="/home/search" exact component={search} />
           <PrivateRoute path="/profile" exact component={profile} />
           <PrivateRoute path="/profile/:id" exact component={otherProfile} />
           <PrivateRoute path="/post/:id" exact component={post} />
           <PrivateRoute path="/upload" exact component={upload} />
+          <PrivateRoute path="/product" exact component={product} />
+          <PrivateRoute path="/product/:id" exact component={productId} />
+          <PrivateRoute path="/modification" exact component={modification} />
+          <PrivateRoute path="/follower" exact component={follower} />
+          <PrivateRoute path="/following" exact component={following} />
+          <PrivateRoute path="/test" exact component={test} />
         </Switch>
       </BrowserRouter>
     </div>
