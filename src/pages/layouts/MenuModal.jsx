@@ -49,7 +49,6 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
         });
     } catch (err) {
       console.log(err);
-      console.log(commentId);
     }
   };
 

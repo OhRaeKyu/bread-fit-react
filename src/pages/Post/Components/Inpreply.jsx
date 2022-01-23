@@ -19,10 +19,7 @@ const Inpreply = ({ postData }) => {
       body: JSON.stringify({
         comment: { content: `${contComment.current.value}` },
       }),
-    }) // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
-      .then(() => {
-        window.location.reload();
-      });
+    });
   };
 
   // axios로 해보기
