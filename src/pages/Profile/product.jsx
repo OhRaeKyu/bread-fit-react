@@ -4,15 +4,31 @@ import styled from '@emotion/styled';
 import { useHistory, Link } from 'react-router-dom';
 
 const ProductModificationPage = () => {
+  let history = useHistory();
+  const back = () => {
+    history.goBack();
+  };
+
+  const [itemName, setItemName] = useState('');
+  const [price, setPrice] = useState('');
+  const [Url, setUrl] = useState('');
   const [image, setImgfile] = useState(null);
-  const [imageSrc, setImageSrc] = useState('/assets/logo.png');
+  const [imageSrc, setImageSrc] = useState('');
 
-
-  //이미지 초기화
+  const onItem = (e) => {
+    setItemName(e.target.value);
+  };
+  const onPrice = (e) => {
+    setPrice(e.target.value);
+  };
+  const onUrl = (e) => {
+    setUrl(e.target.value);
+  };
   const handleChangeFile = (e) => {
     setImgfile(e.target.files);
     encodeFileToBase64(e.target.files[0]);
   };
+
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
@@ -24,121 +40,53 @@ const ProductModificationPage = () => {
     });
   };
 
-  const itemName = useRef(null);
-  const price = useRef(null);
-  const link = useRef(null);
-  const itemImage = useRef(null);
-
- const productPost = (e) => {
-    e.preventDefault();
-    // 게시글 id 인자로 받기
-    fetch('http://146.56.183.55:5050/product', {
+  async function imageUpload(files, index) {
+    const formData = new FormData();
+    formData.append('image', files[index]);
+    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
       method: 'POST',
-      headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        "product":{
-          "itemName": `${itemName.current.value}`,
-          "price": parseInt(price.current.value),
-          "link": `${link.current.value}`,
-          "itemImage": `${itemImage.current.value}`
-        }
-      }),
+      body: formData,
     });
-  };
-
-  // async function imageUpload(files, index) {
-  //   const formData = new FormData();
-  //   formData.append('image', files[index]);
-  //   const res = await fetch('http://146.56.183.55:5050/image/uploadfile', {
-  //     method: 'POST',
-  //     body: formData,
-  //   });
-  //   const data = await res.json();
-  //   const productImgName = data['filename'];
-  //   console.log(productImgName);
-  //   return productImgName;
-  // }
-  
-  // async function createPost(e) {
-    // const imageUrls = [];
-    // const files = image;
-
-
-    // const url = 'http://146.56.183.55:5050';
-    // if (files.length < 2) {
-    //   for (let index = 0; index < files.length; index++) {
-    //     const imgurl = await imageUpload(files, index);
-    //     imageUrls.push(url + '/' + imgurl);
-    //   }
-  //     const res = await fetch('http://146.56.183.55:5050/product', {
-  //       method: 'POST',
-  //       headers: {
-  //         "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWE5Y2ZhY2QyN2I2Y2Y2NWY5NTJlZCIsImV4cCI6MTY0Nzk0OTU3OCwiaWF0IjoxNjQyNzY1NTc4fQ.yvPTEypDONy8Pbf0Rp30u66ceoqi-esfavk1CtWK4nA`,
-  //         'Content-type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         "product": {
-  //           "itemName": String,
-  //           "price": Number,
-  //           "link": String,
-  //           "itemImage": String
-  //           }
-  //       }),
-  //     });
-  //     console.log(image);
-  //     const json = await res.json();
-  //   } else {
-  //     alert('파일이 너무 큽니다.');
-  //   }
-  // }
-
-  const saveFileImage = (e) => {
-    setImageSrc(URL.createObjectURL(e.target.files[0]));
-  };
- 
-
-  // 글자수 제한
-  const useInput = (initialValue, validator) => {
-    const [value, setValue] = useState(initialValue);
-    const onChange = (event) => {
-      const {
-        target: { value },
-      } = event;
-      let willUpdate = true;
-      if (typeof validator === 'function') {
-        willUpdate = validator(value);
+    const data = await res.json();
+    const productImgName = data['filename'];
+    return productImgName;
+  }
+  async function productPost(e) {
+    const imageUrls = [];
+    const files = image;
+    const url = 'http://146.56.183.55:5050';
+    if (files.length < 2) {
+      for (let index = 0; index < files.length; index++) {
+        const imgurl = await imageUpload(files, index);
+        imageUrls.push(url + '/' + imgurl);
       }
-      if (willUpdate) {
-        setValue(value);
-      }
-    };
-    return { value, onChange };
-  };
-  const maxLen = (value) => value.length <= 15;
-  const name = useInput('', maxLen);
-  const maxPrice = (value) => value.length <= 8;
-  const productPrice = useInput('', maxPrice);
-
-  //url 규칙
-  const [AlphaNum, setAlphaNum] = useState('');
-  const isId = (e) => {
-    const curValue = e.currentTarget.value;
-    const regExp = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,10}/gi;
-    setAlphaNum(curValue.replace(regExp, ''));
-  };
-  let history = useHistory();
+      const res = await fetch(url + '/product', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWE5Y2ZhY2QyN2I2Y2Y2NWY5NTJlZCIsImV4cCI6MTY0Nzk0OTU3OCwiaWF0IjoxNjQyNzY1NTc4fQ.yvPTEypDONy8Pbf0Rp30u66ceoqi-esfavk1CtWK4nA`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          post: {
+            itemName : itemName,
+            price : price,
+            link : Url, 
+            image: imageUrls + '',
+          },
+        }),
+      });
+      console.log(res);
+      const json = await res.json();
+    }
+  }
   return (
       <ModifiSec>
-        <form>
+        {/* <form> */}
         <ModificationHeads>
           <button id="btnBack" onClick={() => {history.back();}}></button>
-          <Link to="/product/id">
+          {/* <Link to="/product/id"> */}
           <button id="uploadBtn" onClick={productPost}>저장</button>
-          </Link>
+          {/* </Link> */}
         </ModificationHeads>
         <section className="prod-modi-cont">
           <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
@@ -146,15 +94,12 @@ const ProductModificationPage = () => {
             <h2 className="product-title">이미지 등록</h2>
             <img src={imageSrc} alt="상품 사진" id="product-cha-img" />
             <input
-              id="product-cha-btn"
-              className="product-change-inp"
-              name="imgUpload"
               type="file"
               accept="image/*"
-              ref={itemImage}
+              id="product-cha-btn"
               onChange={handleChangeFile}
-              required
-            />
+              multiple
+            ></input>
             <label htmlFor="product-cha-btn" className="product-change-btn"></label>
           </div>
           <article className="prod-info-inpt">
@@ -164,9 +109,8 @@ const ProductModificationPage = () => {
                 type="text"
                 placeholder="1~15자 이내여야 합니다."
                 className="inp-product-name"
-                value={name.value}
-                onChange={name.onChange}
-                ref={itemName}
+                value={itemName}
+                onChange={onItem}
                 required
                 />
             </label>
@@ -177,9 +121,8 @@ const ProductModificationPage = () => {
                 placeholder="숫자만 입력 가능합니다."
                 className="inp-product-price"
                 required
-                value={productPrice.value}
-                onChange={productPrice.onChange}
-                ref={price}
+                value={price}
+                onChange={onPrice}
               />
             </label>
             <label>
@@ -189,14 +132,13 @@ const ProductModificationPage = () => {
                 placeholder="URL을 입력해 주세요."
                 className="inp-product-link"
                 required
-                value={AlphaNum}
-                onChange={isId}
-                ref={link}
+                value={Url}
+                onChange={onUrl}
               />
             </label>
           </article>
         </section>
-        </form>
+        {/* </form> */}
       </ModifiSec>
   );
   }

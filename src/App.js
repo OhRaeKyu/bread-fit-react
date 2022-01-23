@@ -17,7 +17,7 @@ import productId from './pages/Profile/product[id]Detail';
 import modification from './pages/Profile/modification';
 import follower from './pages/Profile/follower';
 import following from './pages/Profile/following';
-import test from './pages/Profile/producttest';
+import productEdit from './pages/Profile/productEdit';
 
 function App() {
   return (
@@ -33,11 +33,11 @@ function App() {
           <PrivateRoute path="/profile/:id" exact component={otherProfile} />
           <PrivateRoute path="/post/:id" exact component={post} />
           <PrivateRoute path="/product" exact component={product} />
+          <PrivateRoute path="/productEdit" exact component={productEdit} />
           <PrivateRoute path="/product/:id" exact component={productId} />
           <PrivateRoute path="/modification" exact component={modification} />
           <PrivateRoute path="/follower" exact component={follower} />
           <PrivateRoute path="/following" exact component={following} />
-          <PrivateRoute path="/test" exact component={test} />
         </Switch>
       </BrowserRouter>
     </div>

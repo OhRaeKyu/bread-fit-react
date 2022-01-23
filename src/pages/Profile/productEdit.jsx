@@ -3,55 +3,111 @@ import React, { useState, useRef } from 'react';
 import styled from '@emotion/styled';
 import { useHistory, Link } from 'react-router-dom';
 
-const Test = ({ postData }) => {
-    let history = useHistory();
-    const itemName = useRef(null);
-    const price = useRef(null);
-    const link = useRef(null);
-    const itemImage = useRef(null);
-    const productPost = (e) => {
-        
-          e.preventDefault();
-          // 게시글 id 인자로 받기
-          fetch('http://146.56.183.55:5050/product', {
-            method: 'POST',
-            headers: {
-              // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-              'Content-type': 'application/json',
-            },
-            body: JSON.stringify({
-              "product":{
-                "itemName": `${itemName.current.value}`,
-                "price": parseInt(price.current.value),
-                "link": `${link.current.value}`,
-                "itemImage": `${itemImage.current.value}`
-              }
-            })
-          })}
+const ProductModificationPage = () => {
+  let history = useHistory();
+  const back = () => {
+    history.goBack();
+  };
+
+  const [itemName, setItemName] = useState('');
+  const [price, setPrice] = useState('');
+  const [Url, setUrl] = useState('');
+  const [image, setImgfile] = useState(null);
+  const [imageSrc, setImageSrc] = useState('');
+
+  const onItem = (e) => {
+    setItemName(e.target.value);
+  };
+  const onPrice = (e) => {
+    setPrice(e.target.value);
+  };
+  const onUrl = (e) => {
+    setUrl(e.target.value);
+  };
+  const handleChangeFile = (e) => {
+    setImgfile(e.target.files);
+    encodeFileToBase64(e.target.files[0]);
+  };
+
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        resolve();
+      };
+    });
+  };
+
+  async function imageUpload(files, index) {
+    const formData = new FormData();
+    formData.append('image', files[index]);
+    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await res.json();
+    const productImgName = data['filename'];
+    return productImgName;
+  }
+  async function productPost(e) {
+    const imageUrls = [];
+    const files = image;
+    const url = 'http://146.56.183.55:5050';
+    if (files.length < 2) {
+      for (let index = 0; index < files.length; index++) {
+        const imgurl = await imageUpload(files, index);
+        imageUrls.push(url + '/' + imgurl);
+      }
+      const res = await fetch(url + '/product/61ed5ab4cd27b6cf6506b37d/edit', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWQ1YTgzY2QyN2I2Y2Y2NTA2YjM0NyIsImV4cCI6MTY0ODEyOTE3MCwiaWF0IjoxNjQyOTQ1MTcwfQ.-GNGEzFnnnqfeVFlRZ7XzumvfXZL0NNwmHWMeojoTOA`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          post: {
+            itemName : itemName,
+            price : price*1,
+            link : Url, 
+            image: imageUrls + '',
+          },
+        }),
+      });
+      console.log(itemName);
+      console.log(price);
+      console.log(typeof(price*1));
+      console.log(typeof(Url));
+      console.log(typeof(imageUrls));
+      console.log(typeof(price));
+      console.log(typeof(itemName));
+      console.log(Url);
+      console.log(imageUrls);
+      const json = await res.json();
+    }
+  }
   return (
       <ModifiSec>
-        <form>
+        {/* <form> */}
         <ModificationHeads>
           <button id="btnBack" onClick={() => {history.back();}}></button>
-          <Link to="/product/id">
+          {/* <Link to="/product/id"> */}
           <button id="uploadBtn" onClick={productPost}>저장</button>
-          </Link>
+          {/* </Link> */}
         </ModificationHeads>
         <section className="prod-modi-cont">
           <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
           <div className="prod-picb-wrap">
             <h2 className="product-title">이미지 등록</h2>
-            <img src=""alt="상품 사진" id="product-cha-img" />
+            <img src={imageSrc} alt="상품 사진" id="product-cha-img" />
             <input
-              id="product-cha-btn"
-              className="product-change-inp"
-              name="imgUpload"
               type="file"
               accept="image/*"
-              ref={itemImage}
-              required
-            />
+              id="product-cha-btn"
+              onChange={handleChangeFile}
+              multiple
+            ></input>
             <label htmlFor="product-cha-btn" className="product-change-btn"></label>
           </div>
           <article className="prod-info-inpt">
@@ -61,7 +117,8 @@ const Test = ({ postData }) => {
                 type="text"
                 placeholder="1~15자 이내여야 합니다."
                 className="inp-product-name"
-                ref={itemName}
+                value={itemName}
+                onChange={onItem}
                 required
                 />
             </label>
@@ -72,7 +129,8 @@ const Test = ({ postData }) => {
                 placeholder="숫자만 입력 가능합니다."
                 className="inp-product-price"
                 required
-                ref={price}
+                value={price}
+                onChange={onPrice}
               />
             </label>
             <label>
@@ -82,16 +140,17 @@ const Test = ({ postData }) => {
                 placeholder="URL을 입력해 주세요."
                 className="inp-product-link"
                 required
-                ref={link}
+                value={Url}
+                onChange={onUrl}
               />
             </label>
           </article>
         </section>
-        </form>
+        {/* </form> */}
       </ModifiSec>
-      );
-};
-export default Test;
+  );
+  }
+export default ProductModificationPage;
 
 
 const ModifiSec = styled.section`

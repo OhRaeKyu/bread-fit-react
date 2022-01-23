@@ -1,10 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
 
 function ProfileInfo({ userData, who }) {
+  const [profileInfo, setProfileInfo] = useState([]);
+  useEffect(() => {
+    fetch('http://146.56.183.55:5050/profile/lion123', {
+      method: 'GET',
+      headers: {
+        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWE5Y2ZhY2QyN2I2Y2Y2NWY5NTJlZCIsImV4cCI6MTY0Nzk0OTU3OCwiaWF0IjoxNjQyNzY1NTc4fQ.yvPTEypDONy8Pbf0Rp30u66ceoqi-esfavk1CtWK4nA`,
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setProfileInfo(data.profile);
+      });
+  }, []);
+
+
   const postFollow = () => {
     // 게시글 id 인자로 받기
     fetch('http://146.56.183.55:5050/profile/real_binky/follow', {
@@ -60,7 +79,6 @@ function ProfileInfo({ userData, who }) {
       postFollow();
     }
   };
-
   const MyProfile = () => {
     return (
       <MyProfileBtn>
@@ -98,7 +116,7 @@ function ProfileInfo({ userData, who }) {
     <ProfileSection>
       <article className="info-head">
         <FollowInfo>
-          <Link to="/follower">0000</Link>
+          <Link to="/follower">{profileInfo.followerCount}</Link>
           <p>followers</p>
         </FollowInfo>
         <UserImage
@@ -106,14 +124,14 @@ function ProfileInfo({ userData, who }) {
           alt="사용자의 프로필 이미지입니다."
         ></UserImage>
         <FollowInfo>
-          <Link to="/follower">0000</Link>
+          <Link to="/following">{profileInfo.followingCount}</Link>
           <p>followings</p>
         </FollowInfo>
       </article>
       <article className="info-main">
-        <p className="user-name">서초구 소울브레드</p>
-        <p className="user-id">@ soul_bread</p>
-        <p className="user-intro">안녕하세요! 서초구 소울브레드입니다! :)</p>
+        <p className="user-name">{profileInfo.username}</p>
+        <p className="user-id">@ {profileInfo.accountname}</p>
+        <p className="user-intro">{profileInfo.intro}</p>
       </article>
       {who === 'my' ? <MyProfile /> : <OtherProfile />}
     </ProfileSection>

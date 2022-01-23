@@ -7,10 +7,8 @@ import { Route, Link } from 'react-router-dom';
 
 export const UserInformation = ()=>{
   const [isActive, setActive] = useState(false);
-  const [isfollow, setIsfollow] = useState(false);
   const handleToggle = () => {
     setActive(!isActive);
-    setIsfollow(!isfollow);
   };
   //조건문
   const [profile, setProfile] = useState([]);
@@ -28,14 +26,19 @@ export const UserInformation = ()=>{
       })
       .then((data) => {
         setProfile(data);
-        setIsfollow(data.isfollow);
       });
   }, []);
   return (
     <>
+
     {profile.map((data) => (
       <ul key={data.id}>
         <li>
+        {/* <li>isfollow : {data.isfollow}</li>
+        <li>following : {data.following}</li>
+            <li>follower : {data.follower}</li>
+            <li> followerCount : {data.followerCount}</li>
+            <li>followingCount : {data.followingCount}</li> */}
          <div className="user-search-container">
             <Link className="item-link-cont" to="profile/id">
             <img
@@ -51,8 +54,9 @@ export const UserInformation = ()=>{
             <button
               type="button"
               onClick={handleToggle}
-              className={`s-button follow btn-one-fol ${isfollow ? "click" : null}`}
+              className={`s-button follow btn-one-fol ${isActive ? "click" : null}`}
             >
+          
               팔로우
             </button>
             <button
@@ -80,7 +84,7 @@ export const FollowerPage = ()=>{
       <ModifiSec>
         <UserInformation />
       </ModifiSec>
-      <Tabmenu />
+      <Tabmenu route={'프로필'}></Tabmenu>
     </>
   );
 };
