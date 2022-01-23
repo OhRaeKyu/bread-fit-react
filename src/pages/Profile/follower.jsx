@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import styled from "@emotion/styled";
-import { PALLETS } from "../../constants";
+import React, { useState, useEffect } from 'react';
+import styled from '@emotion/styled';
+import { PALLETS } from '../../constants';
 import { Tabmenu } from '../layouts/Tabmenu';
 import { FollowerHead } from '../layouts/FollowerHead';
 import { Route, Link } from 'react-router-dom';
 
-export const UserInformation = ()=>{
+export const UserInformation = () => {
   const [isActive, setActive] = useState(false);
   const [isfollow, setIsfollow] = useState(false);
   const handleToggle = () => {
@@ -33,50 +33,51 @@ export const UserInformation = ()=>{
   }, []);
   return (
     <>
-    {profile.map((data) => (
-      <ul key={data.id}>
-        <li>
-         <div className="user-search-container">
-            <Link className="item-link-cont" to="profile/id">
-            <img
-              className="search-user-img"
-              src= {data.image}
-              alt="사용자 이미지"
-            />
-            <div className="user-information">
-              <h3 className="user-profile-name">{data.username}</h3>
-              <small className="user-profile-email">{data.intro}</small>
+      {profile.map((data) => (
+        <ul key={data.id}>
+          <li>
+            <div className="user-search-container">
+              <Link className="item-link-cont" to="profile/id">
+                <img
+                  className="search-user-img"
+                  src={data.image}
+                  alt="사용자 이미지"
+                />
+                <div className="user-information">
+                  <h3 className="user-profile-name">{data.username}</h3>
+                  <small className="user-profile-email">{data.intro}</small>
+                </div>
+              </Link>
+              <button
+                type="button"
+                onClick={handleToggle}
+                className={`s-button follow btn-one-fol ${
+                  isfollow ? 'click' : null
+                }`}
+              >
+                팔로우
+              </button>
+              <button
+                type="button"
+                onClick={handleToggle}
+                className={`s-button cancle btn-one-canc ${
+                  isActive ? 'click' : null
+                }`}
+              >
+                취소
+              </button>
             </div>
-            </Link>
-            <button
-              type="button"
-              onClick={handleToggle}
-              className={`s-button follow btn-one-fol ${isfollow ? "click" : null}`}
-            >
-              팔로우
-            </button>
-            <button
-              type="button"
-              onClick={handleToggle}
-              className={`s-button cancle btn-one-canc ${
-                isActive ? "click" : null
-              }`}
-            >
-              취소
-            </button>
-          </div>
           </li>
-       </ul>
-    ))}
+        </ul>
+      ))}
     </>
   );
 };
 
-      
-export const FollowerPage = ()=>{
+export const FollowerPage = () => {
   return (
     <>
-    <FollowerHead />
+      <FollowerHead />
       <ModifiSec>
         <UserInformation />
       </ModifiSec>
@@ -88,10 +89,10 @@ export const FollowerPage = ()=>{
 export default FollowerPage;
 
 const ModifiSec = styled.section`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   .user-search-container {
     width: 322px;
@@ -101,13 +102,13 @@ align-items: center;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    .item-link-cont{
+    .item-link-cont {
       display: flex;
-    justify-content: flex-start;
-    align-items: center;
+      justify-content: flex-start;
+      align-items: center;
     }
-    .search-user-img{
-      background-color:  ${PALLETS.ORANGE};
+    .search-user-img {
+      background-color: ${PALLETS.ORANGE};
       width: 60px;
       height: 60px;
       border-radius: 60px;
@@ -128,7 +129,7 @@ align-items: center;
       height: 28px;
       background-color: ${PALLETS.ORANGE};
       border: 1px solid ${PALLETS.ORANGE};
-      color:  white;
+      color: white;
     }
     .cancle {
       display: none;

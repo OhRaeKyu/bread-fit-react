@@ -7,7 +7,6 @@ const ProductModificationPage = () => {
   const [image, setImgfile] = useState(null);
   const [imageSrc, setImageSrc] = useState('/assets/logo.png');
 
-
   //이미지 초기화
   const handleChangeFile = (e) => {
     setImgfile(e.target.files);
@@ -29,7 +28,7 @@ const ProductModificationPage = () => {
   const link = useRef(null);
   const itemImage = useRef(null);
 
- const productPost = (e) => {
+  const productPost = (e) => {
     e.preventDefault();
     // 게시글 id 인자로 받기
     fetch('http://146.56.183.55:5050/product', {
@@ -40,12 +39,12 @@ const ProductModificationPage = () => {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        "product":{
-          "itemName": `${itemName.current.value}`,
-          "price": parseInt(price.current.value),
-          "link": `${link.current.value}`,
-          "itemImage": `${itemImage.current.value}`
-        }
+        product: {
+          itemName: `${itemName.current.value}`,
+          price: parseInt(price.current.value),
+          link: `${link.current.value}`,
+          itemImage: `${itemImage.current.value}`,
+        },
       }),
     });
   };
@@ -62,18 +61,17 @@ const ProductModificationPage = () => {
   //   console.log(productImgName);
   //   return productImgName;
   // }
-  
+
   // async function createPost(e) {
-    // const imageUrls = [];
-    // const files = image;
+  // const imageUrls = [];
+  // const files = image;
 
-
-    // const url = 'http://146.56.183.55:5050';
-    // if (files.length < 2) {
-    //   for (let index = 0; index < files.length; index++) {
-    //     const imgurl = await imageUpload(files, index);
-    //     imageUrls.push(url + '/' + imgurl);
-    //   }
+  // const url = 'http://146.56.183.55:5050';
+  // if (files.length < 2) {
+  //   for (let index = 0; index < files.length; index++) {
+  //     const imgurl = await imageUpload(files, index);
+  //     imageUrls.push(url + '/' + imgurl);
+  //   }
   //     const res = await fetch('http://146.56.183.55:5050/product', {
   //       method: 'POST',
   //       headers: {
@@ -99,7 +97,6 @@ const ProductModificationPage = () => {
   const saveFileImage = (e) => {
     setImageSrc(URL.createObjectURL(e.target.files[0]));
   };
- 
 
   // 글자수 제한
   const useInput = (initialValue, validator) => {
@@ -132,12 +129,19 @@ const ProductModificationPage = () => {
   };
   let history = useHistory();
   return (
-      <ModifiSec>
-        <form>
+    <ModifiSec>
+      <form>
         <ModificationHeads>
-          <button id="btnBack" onClick={() => {history.back();}}></button>
+          <button
+            id="btnBack"
+            onClick={() => {
+              history.goBack();
+            }}
+          ></button>
           <Link to="/product/id">
-          <button id="uploadBtn" onClick={productPost}>저장</button>
+            <button id="uploadBtn" onClick={productPost}>
+              저장
+            </button>
           </Link>
         </ModificationHeads>
         <section className="prod-modi-cont">
@@ -155,7 +159,10 @@ const ProductModificationPage = () => {
               onChange={handleChangeFile}
               required
             />
-            <label htmlFor="product-cha-btn" className="product-change-btn"></label>
+            <label
+              htmlFor="product-cha-btn"
+              className="product-change-btn"
+            ></label>
           </div>
           <article className="prod-info-inpt">
             <label>
@@ -168,7 +175,7 @@ const ProductModificationPage = () => {
                 onChange={name.onChange}
                 ref={itemName}
                 required
-                />
+              />
             </label>
             <label>
               <h3>가격</h3>
@@ -196,12 +203,11 @@ const ProductModificationPage = () => {
             </label>
           </article>
         </section>
-        </form>
-      </ModifiSec>
+      </form>
+    </ModifiSec>
   );
-  }
+};
 export default ProductModificationPage;
-
 
 const ModifiSec = styled.section`
   .sr-only {
