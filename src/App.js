@@ -6,9 +6,11 @@ import loginEmail from './pages/Login/email';
 import join from './pages/Join';
 import joinSetting from './pages/Join/setting';
 import home from './pages/Home';
+import search from './pages/Home/search';
 import profile from './pages/Profile';
 import otherProfile from './pages/Profile/[id]';
 import post from './pages/Post';
+import upload from './pages/Post/upload';
 import PrivateRoute from './pages/Login/components/PrivateRoutes';
 import PublicRoute from './pages/Login/components/PublicRoute';
 
@@ -29,9 +31,11 @@ function App() {
           <PublicRoute path="/join" exact component={join} />
           <PublicRoute path="/join/setting" exact component={joinSetting} />
           <PrivateRoute path="/home" exact component={home} />
+          <PrivateRoute path="/home/search" exact component={search} />
           <PrivateRoute path="/profile" exact component={profile} />
           <PrivateRoute path="/profile/:id" exact component={otherProfile} />
           <PrivateRoute path="/post/:id" exact component={post} />
+          <PrivateRoute path="/upload" exact component={upload} />
           <PrivateRoute path="/product" exact component={product} />
           <PrivateRoute path="/product/:id" exact component={productId} />
           <PrivateRoute path="/modification" exact component={modification} />
@@ -45,4 +49,3 @@ function App() {
 }
 
 export default App;
-
