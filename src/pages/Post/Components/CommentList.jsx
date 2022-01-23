@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ReactDOM } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
@@ -9,12 +10,13 @@ function CommentList({ postData }) {
   postData = '61e7ca8b458f1ddd2e27055c';
 
   const now = new Date();
+  const [delIndex, setDelIndex] = useState('');
   const [comments, setComments] = useState([]);
-  const [error, setError] = useState(null);
 
   const [viewModal, setViewModal] = useState(false);
-  const toggleModal = (e) => {
+  const toggleModal = (e, index) => {
     e.preventDefault();
+    setDelIndex(index);
     viewModal ? setViewModal(false) : setViewModal(true);
   };
 
@@ -42,7 +44,7 @@ function CommentList({ postData }) {
 
   return (
     <Commentlist>
-      {comments.map((data) => (
+      {comments.map((data, index) => (
         <li key={data.id}>
           <img src={data.author.image} alt="" />
           <div className="wrap-reply">
@@ -50,21 +52,25 @@ function CommentList({ postData }) {
               <p className="user-name">{data.author.username}</p>
               {/* 며칠전으로 바꿔야함 */}
               <small>{new Date(data.createdAt).toLocaleDateString()}</small>
-              <button onClick={toggleModal}>
+              <button
+                onClick={(e) => {
+                  toggleModal(e, index);
+                }}
+              >
                 <span className="sr-only">댓글 메뉴 보기 버튼</span>
               </button>
             </div>
             <p className="cont-reply">{data.content}</p>
           </div>
-          {viewModal ? (
-            <MenuModal
-              setViewModal={setViewModal}
-              mode="comment"
-              commentId={data.id}
-            />
-          ) : null}
         </li>
       ))}
+      {viewModal ? (
+        <MenuModal
+          setViewModal={setViewModal}
+          mode="comment"
+          commentId={comments[delIndex].id}
+        />
+      ) : null}
     </Commentlist>
   );
 }
