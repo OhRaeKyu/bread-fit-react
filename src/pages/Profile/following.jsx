@@ -12,10 +12,9 @@ export const UserInformation = ()=>{
     setActive(!isActive);
     setIsfollow(!isfollow);
   };
-  //조건문
   const [profile, setProfile] = useState([]);
   useEffect(() => {
-    fetch('http://146.56.183.55:5050/profile/lion123/following', {
+    fetch('http://146.56.183.55:5050/profile/lion123/follower', {
       method: 'GET',
       headers: {
         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
@@ -51,7 +50,7 @@ export const UserInformation = ()=>{
             <button
               type="button"
               onClick={handleToggle}
-              className={`s-button follow btn-one-fol ${isfollow ? "click" : null}`}
+              className={`s-button follow btn-one-fol ${isActive ? "click" : null}`}
             >
               팔로우
             </button>
@@ -80,7 +79,7 @@ export const FollowerPage = ()=>{
       <ModifiSec>
         <UserInformation />
       </ModifiSec>
-      <Tabmenu />
+      <Tabmenu route={'프로필'}></Tabmenu>
     </>
   );
 };
