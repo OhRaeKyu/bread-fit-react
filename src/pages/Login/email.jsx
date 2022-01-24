@@ -40,6 +40,7 @@ const LoginEmailPage = () => {
       console.log(json);
       if (json.user.token) {
         localStorage.setItem('Token', json.user.token);
+        localStorage.setItem('accountname', json.user.accountname);
         history.push('/home');
       }
     } catch (err) {
