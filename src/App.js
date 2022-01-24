@@ -4,14 +4,13 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import login from './pages/Login';
 import loginEmail from './pages/Login/email';
 import join from './pages/Join';
-import joinSetting from './pages/Join/setting';
 import home from './pages/Home';
 import profile from './pages/Profile';
 import otherProfile from './pages/Profile/[id]';
 import post from './pages/Post';
 import PrivateRoute from './pages/Login/components/PrivateRoutes';
 import PublicRoute from './pages/Login/components/PublicRoute';
-
+import product from './pages/Profile/product';
 
 function App() {
   return (
@@ -21,7 +20,7 @@ function App() {
           <PublicRoute path="/login" exact component={login} />
           <PublicRoute path="/login/email" exact component={loginEmail} />
           <PublicRoute path="/join" exact component={join} />
-          <PublicRoute path="/join/setting" exact component={joinSetting} />
+          <PrivateRoute path="/product" exact component={product} />
           <PrivateRoute path="/home" exact component={home} />
           <PrivateRoute path="/profile" exact component={profile} />
           <PrivateRoute path="/profile/:id" exact component={otherProfile} />
@@ -33,4 +32,3 @@ function App() {
 }
 
 export default App;
-
