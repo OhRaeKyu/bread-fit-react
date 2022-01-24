@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
 import { Tabmenu } from '../layouts/Tabmenu';
-import { FollowerHead } from '../layouts/FollowerHead';
+import { Searchuserhead } from '../layouts/Searchuserhead';
 import { Route, Link } from 'react-router-dom';
 
-export const UserInformation = () => {
+export const UserList = ({ keyword }) => {
   const [isActive, setActive] = useState(false);
   const [isfollow, setIsfollow] = useState(false);
+
   const handleToggle = () => {
     setActive(!isActive);
     setIsfollow(!isfollow);
   };
+
   //조건문
   const [profile, setProfile] = useState([]);
   useEffect(() => {
@@ -28,58 +30,78 @@ export const UserInformation = () => {
       })
       .then((data) => {
         setProfile(data);
+        console.log(data);
         setIsfollow(data.isfollow);
       });
   }, []);
   return (
     <>
-      {profile.map((data) => (
-        <ul key={data.id}>
-          <li>
-            <div className="user-search-container">
-              <Link className="item-link-cont" to="profile/id">
-                <img
-                  className="search-user-img"
-                  src={data.image}
-                  alt="사용자 이미지"
-                />
-                <div className="user-information">
-                  <h3 className="user-profile-name">{data.username}</h3>
-                  <small className="user-profile-email">{data.intro}</small>
-                </div>
-              </Link>
-              <button
-                type="button"
-                onClick={handleToggle}
-                className={`s-button follow btn-one-fol ${
-                  isfollow ? 'click' : null
-                }`}
-              >
-                팔로우
-              </button>
-              <button
-                type="button"
-                onClick={handleToggle}
-                className={`s-button cancle btn-one-canc ${
-                  isActive ? 'click' : null
-                }`}
-              >
-                취소
-              </button>
-            </div>
-          </li>
-        </ul>
-      ))}
+      {profile
+        .filter((profile) => {
+          if (keyword == '') {
+            return profile;
+          } else if (
+            profile.username.toLowerCase().includes(keyword.toLowerCase())
+          ) {
+            return profile;
+          }
+        })
+        .map((data) => (
+          <ul key={data.id}>
+            <li>
+              <div className="user-search-container">
+                <Link className="item-link-cont" to="profile/id">
+                  <img
+                    className="search-user-img"
+                    src={data.image}
+                    alt="사용자 이미지"
+                  />
+                  <div className="user-information">
+                    <h3 className="user-profile-name">{data.username}</h3>
+                    <small className="user-profile-email">{data.intro}</small>
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleToggle}
+                  className={`s-button follow btn-one-fol ${
+                    isfollow ? 'click' : null
+                  }`}
+                >
+                  팔로우
+                </button>
+                <button
+                  type="button"
+                  onClick={handleToggle}
+                  className={`s-button cancle btn-one-canc ${
+                    isActive ? 'click' : null
+                  }`}
+                >
+                  취소
+                </button>
+              </div>
+            </li>
+          </ul>
+        ))}
     </>
   );
 };
 
 export const FollowerPage = () => {
+  //검색
+  const [keyword, setKeyword] = useState('');
+
+  const handleSearch = (event) => {
+    const keyword = event.target.value;
+    console.log(keyword);
+    setKeyword(keyword);
+  };
+
   return (
     <>
-      <FollowerHead />
+      <Searchuserhead handleSearch={handleSearch} />
       <ModifiSec>
-        <UserInformation />
+        <UserList keyword={keyword} />
       </ModifiSec>
       <Tabmenu />
     </>

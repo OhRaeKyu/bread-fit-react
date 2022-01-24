@@ -2,17 +2,18 @@ import { PALLETS } from '../../constants';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-export const Searchuserhead = () => {
+
+export const Searchuserhead = ({ handleSearch }) => {
   let history = useHistory();
-  const [search, searchInp] = useState();
+  // const [search, searchInp] = useState();
 
   const back = () => {
     history.goBack();
   };
 
-  const searchUser = (e) => {
-    console.log(e.target.value);
-  };
+  // const searchUser = (e) => {
+  //   console.log(e.target.value);
+  // };
   return (
     <Searchuserheads>
       <button onClick={back}>
@@ -22,7 +23,8 @@ export const Searchuserhead = () => {
         type="text"
         className="cont-home-search-input"
         placeholder="계정검색"
-        onKeyUp={searchUser}
+        // onKeyUp={searchUser}
+        onChange={handleSearch}
       />
     </Searchuserheads>
   );
