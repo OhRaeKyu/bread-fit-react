@@ -30,7 +30,7 @@ const MembershipPage = ({ setMode, handleUserdata }) => {
 
   const submitJoin = async () => {
     try {
-      const res = await fetch(`${API_ENDPOINT}` + 'user/emailvalid', {
+      const res = await fetch('http://146.56.183.55:5050/user/emailvalid', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

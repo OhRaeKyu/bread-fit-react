@@ -24,7 +24,7 @@ const LoginEmailPage = () => {
 
   const submitLogin = async () => {
     try {
-      const res = await fetch(`${API_ENDPOINT}` + 'user/login', {
+      const res = await fetch('http://146.56.183.55:5050/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

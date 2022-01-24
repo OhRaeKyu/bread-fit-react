@@ -1,15 +1,139 @@
 import { PALLETS } from '../../constants';
-import React, { useState } from 'react';
-import { ModificationHead } from '../layouts/ModificationHead';
+import React, { useState, useRef } from 'react';
 import styled from '@emotion/styled';
+import { useHistory, Link } from 'react-router-dom';
+import axios from 'axios';
 
 const ProductModificationPage = () => {
-  const [fileImage, setFileImage] = useState('/assets/logo.png');
- 
-  const saveFileImage = (e) => {
-    setFileImage(URL.createObjectURL(e.target.files[0]));
+  const [image, setImgfile] = useState(null);
+  const [imageSrc, setImageSrc] = useState('/assets/logo.png');
+
+  //이미지 초기화
+  const handleChangeFile = (e) => {
+    setImgfile(e.target.files);
+    encodeFileToBase64(e.target.files[0]);
   };
- 
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        resolve();
+      };
+    });
+  };
+
+  const itemName = useRef(null);
+  const price = useRef(null);
+  const link = useRef(null);
+  const itemImage = useRef(null);
+
+  const productPost = async (e) => {
+    e.preventDefault();
+    try {
+      // 게시글 id 인자로 받기
+      const res = await fetch('http://146.56.183.55:5050/product', {
+        method: 'POST',
+        headers: {
+          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          product: {
+            itemName: `${itemName.current.value}`,
+            price: parseInt(price.current.value),
+            link: `${link.current.value}`,
+            itemImage: `${itemImage.current.value}`,
+          },
+        }),
+      });
+      const json = await res.json();
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // const productPost = async (e) => {
+  //   e.preventDefault();
+  //   // 게시글 id 인자로 받기
+  //   try {
+  //     const res = await axios.post(
+  //       'http://146.56.183.55:5050/product',
+  //       {
+  //         headers: {
+  //           // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+  //           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+  //           'Content-type': 'application/json',
+  //         },
+  //       },
+  //       {
+  //         body: {
+  //           product: {
+  //             itemName: `${itemName.current.value}`,
+  //             price: parseInt(price.current.value),
+  //             link: `${link.current.value}`,
+  //             itemImage: `${itemImage.current.value}`,
+  //           },
+  //         },
+  //       }
+  //     );
+  //     console.log(res);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  async function imageUpload(files, index) {
+    const formData = new FormData();
+    formData.append('image', files[index]);
+    const res = await fetch('http://146.56.183.55:5050/image/uploadfile', {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await res.json();
+    const productImgName = data['filename'];
+    console.log(productImgName);
+    return productImgName;
+  }
+
+  async function createPost(e) {
+    const imageUrls = [];
+    const files = image;
+
+    const url = 'http://146.56.183.55:5050';
+    if (files.length < 2) {
+      for (let index = 0; index < files.length; index++) {
+        const imgurl = await imageUpload(files, index);
+        imageUrls.push(url + '/' + imgurl);
+      }
+      const res = await fetch('http://146.56.183.55:5050/product', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWE5Y2ZhY2QyN2I2Y2Y2NWY5NTJlZCIsImV4cCI6MTY0Nzk0OTU3OCwiaWF0IjoxNjQyNzY1NTc4fQ.yvPTEypDONy8Pbf0Rp30u66ceoqi-esfavk1CtWK4nA`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          product: {
+            itemName: String,
+            price: Number,
+            link: String,
+            itemImage: String,
+          },
+        }),
+      });
+      console.log(image);
+      const json = await res.json();
+    } else {
+      alert('파일이 너무 큽니다.');
+    }
+  }
+
+  const saveFileImage = (e) => {
+    setImageSrc(URL.createObjectURL(e.target.files[0]));
+  };
 
   // 글자수 제한
   const useInput = (initialValue, validator) => {
@@ -31,34 +155,51 @@ const ProductModificationPage = () => {
   const maxLen = (value) => value.length <= 15;
   const name = useInput('', maxLen);
   const maxPrice = (value) => value.length <= 8;
-  const price = useInput('', maxPrice);
+  const productPrice = useInput('', maxPrice);
 
   //url 규칙
   const [AlphaNum, setAlphaNum] = useState('');
   const isId = (e) => {
     const curValue = e.currentTarget.value;
-    const regExp = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/gi;
+    const regExp = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,10}/gi;
     setAlphaNum(curValue.replace(regExp, ''));
   };
-
+  let history = useHistory();
   return (
-      <ModifiSec>
-        <ModificationHead />
+    <ModifiSec>
+      <form>
+        <ModificationHeads>
+          <button
+            id="btnBack"
+            onClick={() => {
+              history.back();
+            }}
+          ></button>
+          <Link to="/product/id">
+            <button id="uploadBtn" onClick={productPost}>
+              저장
+            </button>
+          </Link>
+        </ModificationHeads>
         <section className="prod-modi-cont">
           <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
           <div className="prod-picb-wrap">
             <h2 className="product-title">이미지 등록</h2>
-            <img src={fileImage} alt="상품 사진" id="product-cha-img" />
+            <img src={imageSrc} alt="상품 사진" id="product-cha-img" />
             <input
               id="product-cha-btn"
               className="product-change-inp"
               name="imgUpload"
               type="file"
               accept="image/*"
-              onChange={saveFileImage}
+              ref={itemImage}
+              onChange={handleChangeFile}
               required
             />
-            <label for="product-cha-btn" className="product-change-btn"></label>
+            <label
+              htmlFor="product-cha-btn"
+              className="product-change-btn"
+            ></label>
           </div>
           <article className="prod-info-inpt">
             <label>
@@ -69,6 +210,7 @@ const ProductModificationPage = () => {
                 className="inp-product-name"
                 value={name.value}
                 onChange={name.onChange}
+                ref={itemName}
                 required
               />
             </label>
@@ -79,8 +221,9 @@ const ProductModificationPage = () => {
                 placeholder="숫자만 입력 가능합니다."
                 className="inp-product-price"
                 required
-                value={price.value}
-                onChange={price.onChange}
+                value={productPrice.value}
+                onChange={productPrice.onChange}
+                ref={price}
               />
             </label>
             <label>
@@ -92,16 +235,16 @@ const ProductModificationPage = () => {
                 required
                 value={AlphaNum}
                 onChange={isId}
+                ref={link}
               />
             </label>
           </article>
         </section>
-      </ModifiSec>
+      </form>
+    </ModifiSec>
   );
 };
-
 export default ProductModificationPage;
-
 
 const ModifiSec = styled.section`
   .sr-only {
@@ -181,5 +324,33 @@ const ModifiSec = styled.section`
   }
   .ms-button.disabled.add {
     display: block;
+  }
+`;
+
+const ModificationHeads = styled.section`
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
+  height: 48px;
+  padding: 13px 16px;
+  border-bottom: 1px solid ${PALLETS.GRAY};
+  #btnBack {
+    background: url(/assets/icon/icon-arrow-left.png);
+    width: 22px;
+    height: 22px;
+  }
+  #uploadBtn {
+    background-color: ${PALLETS.ORANGE};
+    width: 100px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: 26px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+    .disabled {
+      background-color: ${PALLETS.BEIGE};
+    }
   }
 `;
