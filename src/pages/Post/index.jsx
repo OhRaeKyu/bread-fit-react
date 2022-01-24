@@ -4,17 +4,21 @@ import { PALLETS } from '../../constants';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import Inpreply from './Components/Inpreply';
+import PostHeader from './Components/PostHeader';
 import CommentList from './Components/CommentList';
+import Inpreply from './Components/Inpreply';
 import MenuModal from '../layouts/MenuModal';
 
+import { API_ENDPOINT } from '../../constants';
+
 const PostUploadPage = () => {
+  const userToken = localStorage.getItem('Token');
+
   const postLike = () => {
-    fetch('http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/heart', {
+    fetch(`${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/heart`, {
       method: 'POST',
       headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        Authorization: `Bearer ${userToken}`,
         'Content-type': 'application/json',
       },
     });
@@ -23,11 +27,10 @@ const PostUploadPage = () => {
   const deleteLike = async () => {
     try {
       await axios.delete(
-        `http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/unheart`,
+        `${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/unheart`,
         {
           headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            Authorization: `Bearer ${userToken}`,
             'Content-type': 'application/json',
           },
         }
@@ -38,7 +41,6 @@ const PostUploadPage = () => {
   };
   const postId = '';
 
-  // api 연결 시 수정해야함
   const [isLike, setIsLike] = useState(false);
   const [countLike, setCountLike] = useState(0);
 
@@ -63,8 +65,8 @@ const PostUploadPage = () => {
 
   return (
     <>
-      {/* <Menuhead onClick={() => Router.back()} /> */}
       <WrapPost>
+        <PostHeader />
         <ItemHeader>
           <div className="wrap-img">
             <img

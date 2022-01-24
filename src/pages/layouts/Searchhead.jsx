@@ -7,7 +7,7 @@ export const Searchhead = () => {
     <Searchheads>
       <label htmlFor="inpUser"></label>
       <input type="text" id="inpUser" placeholder="Bread-fit 피드" />
-      <Link to="/home/search" passHref>
+      <Link to="/home/search">
         <button id="searchBtn"></button>
       </Link>
     </Searchheads>
@@ -22,7 +22,7 @@ const Searchheads = styled.section`
   padding: 0 16px;
   border-bottom: 1px solid ${PALLETS.GRAY};
   input {
-    width: 320px;
+    width: 90%;
     line-height: 2;
     border: none;
   }

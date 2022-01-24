@@ -2,7 +2,6 @@ import { PALLETS } from '../../constants';
 import React, { useState, useRef } from 'react';
 import styled from '@emotion/styled';
 import { useHistory, Link } from 'react-router-dom';
-import axios from 'axios';
 
 const ProductModificationPage = () => {
   const [image, setImgfile] = useState(null);
@@ -29,107 +28,71 @@ const ProductModificationPage = () => {
   const link = useRef(null);
   const itemImage = useRef(null);
 
-  const productPost = async (e) => {
+  const productPost = (e) => {
     e.preventDefault();
-    try {
-      // 게시글 id 인자로 받기
-      const res = await fetch('http://146.56.183.55:5050/product', {
-        method: 'POST',
-        headers: {
-          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-          'Content-type': 'application/json',
+    // 게시글 id 인자로 받기
+    fetch('http://146.56.183.55:5050/product', {
+      method: 'POST',
+      headers: {
+        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        product: {
+          itemName: `${itemName.current.value}`,
+          price: parseInt(price.current.value),
+          link: `${link.current.value}`,
+          itemImage: `${itemImage.current.value}`,
         },
-        body: JSON.stringify({
-          product: {
-            itemName: `${itemName.current.value}`,
-            price: parseInt(price.current.value),
-            link: `${link.current.value}`,
-            itemImage: `${itemImage.current.value}`,
-          },
-        }),
-      });
-      const json = await res.json();
-      console.log(json);
-    } catch (err) {
-      console.log(err);
-    }
+      }),
+    });
   };
 
-  // const productPost = async (e) => {
-  //   e.preventDefault();
-  //   // 게시글 id 인자로 받기
-  //   try {
-  //     const res = await axios.post(
-  //       'http://146.56.183.55:5050/product',
-  //       {
-  //         headers: {
-  //           // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-  //           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-  //           'Content-type': 'application/json',
-  //         },
-  //       },
-  //       {
-  //         body: {
-  //           product: {
-  //             itemName: `${itemName.current.value}`,
-  //             price: parseInt(price.current.value),
-  //             link: `${link.current.value}`,
-  //             itemImage: `${itemImage.current.value}`,
-  //           },
-  //         },
-  //       }
-  //     );
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.log(error);
+  // async function imageUpload(files, index) {
+  //   const formData = new FormData();
+  //   formData.append('image', files[index]);
+  //   const res = await fetch('http://146.56.183.55:5050/image/uploadfile', {
+  //     method: 'POST',
+  //     body: formData,
+  //   });
+  //   const data = await res.json();
+  //   const productImgName = data['filename'];
+  //   console.log(productImgName);
+  //   return productImgName;
+  // }
+
+  // async function createPost(e) {
+  // const imageUrls = [];
+  // const files = image;
+
+  // const url = 'http://146.56.183.55:5050';
+  // if (files.length < 2) {
+  //   for (let index = 0; index < files.length; index++) {
+  //     const imgurl = await imageUpload(files, index);
+  //     imageUrls.push(url + '/' + imgurl);
   //   }
-  // };
-
-  async function imageUpload(files, index) {
-    const formData = new FormData();
-    formData.append('image', files[index]);
-    const res = await fetch('http://146.56.183.55:5050/image/uploadfile', {
-      method: 'POST',
-      body: formData,
-    });
-    const data = await res.json();
-    const productImgName = data['filename'];
-    console.log(productImgName);
-    return productImgName;
-  }
-
-  async function createPost(e) {
-    const imageUrls = [];
-    const files = image;
-
-    const url = 'http://146.56.183.55:5050';
-    if (files.length < 2) {
-      for (let index = 0; index < files.length; index++) {
-        const imgurl = await imageUpload(files, index);
-        imageUrls.push(url + '/' + imgurl);
-      }
-      const res = await fetch('http://146.56.183.55:5050/product', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWE5Y2ZhY2QyN2I2Y2Y2NWY5NTJlZCIsImV4cCI6MTY0Nzk0OTU3OCwiaWF0IjoxNjQyNzY1NTc4fQ.yvPTEypDONy8Pbf0Rp30u66ceoqi-esfavk1CtWK4nA`,
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          product: {
-            itemName: String,
-            price: Number,
-            link: String,
-            itemImage: String,
-          },
-        }),
-      });
-      console.log(image);
-      const json = await res.json();
-    } else {
-      alert('파일이 너무 큽니다.');
-    }
-  }
+  //     const res = await fetch('http://146.56.183.55:5050/product', {
+  //       method: 'POST',
+  //       headers: {
+  //         "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWE5Y2ZhY2QyN2I2Y2Y2NWY5NTJlZCIsImV4cCI6MTY0Nzk0OTU3OCwiaWF0IjoxNjQyNzY1NTc4fQ.yvPTEypDONy8Pbf0Rp30u66ceoqi-esfavk1CtWK4nA`,
+  //         'Content-type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         "product": {
+  //           "itemName": String,
+  //           "price": Number,
+  //           "link": String,
+  //           "itemImage": String
+  //           }
+  //       }),
+  //     });
+  //     console.log(image);
+  //     const json = await res.json();
+  //   } else {
+  //     alert('파일이 너무 큽니다.');
+  //   }
+  // }
 
   const saveFileImage = (e) => {
     setImageSrc(URL.createObjectURL(e.target.files[0]));
@@ -172,7 +135,7 @@ const ProductModificationPage = () => {
           <button
             id="btnBack"
             onClick={() => {
-              history.back();
+              history.goBack();
             }}
           ></button>
           <Link to="/product/id">
@@ -257,7 +220,6 @@ const ModifiSec = styled.section`
     border: 0;
     clip: rect(0, 0, 0, 0);
   }
-
   .prod-modi-cont {
     display: flex;
     flex-direction: column;
@@ -318,7 +280,6 @@ const ModifiSec = styled.section`
     color: ${PALLETS.LIGHTGRAY};
     font-size: 14px;
   }
-
   .prod-info-inpt .ms-button.disabled {
     display: none;
   }

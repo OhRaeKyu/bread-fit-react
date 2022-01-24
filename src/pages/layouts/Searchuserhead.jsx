@@ -1,13 +1,13 @@
-import Link from 'next/link';
-import { PALLETS, ROUTES } from '../../constants';
+import { PALLETS } from '../../constants';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-
+import { useHistory } from 'react-router-dom';
 export const Searchuserhead = () => {
+  let history = useHistory();
   const [search, searchInp] = useState();
 
   const back = () => {
-    history.back();
+    history.goBack();
   };
 
   const searchUser = (e) => {
@@ -41,7 +41,7 @@ const Searchuserheads = styled.section`
     height: 22px;
   }
   input {
-    width: 316px;
+    width: 95%;
     height: 32px;
     background: ${PALLETS.CREAM};
     border: none;
