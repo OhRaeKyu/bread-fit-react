@@ -12,7 +12,7 @@ const JoinPage = () => {
       accountname: '',
       intro: '',
       name: '',
-      image: '',
+      image: 'http://146.56.183.55:5050/Ellipse.png',
     },
   ]);
 

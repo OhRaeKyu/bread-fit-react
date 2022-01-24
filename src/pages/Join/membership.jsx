@@ -42,15 +42,12 @@ const MembershipPage = ({ setMode, handleUserdata }) => {
         }),
       });
       const json = await res.json();
-      console.log(json);
       if (json.message === '이미 가입된 이메일 주소 입니다.') {
         setError('email');
-        console.log(json.message);
       } else {
         handleUserdata('email', email);
         handleUserdata('password', pw);
         setMode(false);
-        console.log(json.message);
       }
     } catch (err) {
       setError('email');

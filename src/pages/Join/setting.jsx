@@ -50,7 +50,6 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
     });
     const data = await res.json();
     const ImgName = `http://146.56.183.55:5050/${data['filename']}`;
-    console.log(ImgName);
     return ImgName;
   }
 
