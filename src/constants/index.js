@@ -10,8 +10,8 @@ export const ROUTES = [
   },
   {
     ID: 1,
-    PATH: '/chat',
-    LABEL: '채팅',
+    PATH: '/recommend',
+    LABEL: '오늘의빵',
     INACTIVE: '/assets/icon/icon-message-circle.svg',
     ACTIVE: '/assets/icon/icon-message-circle-fill.svg',
   },

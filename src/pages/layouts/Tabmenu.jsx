@@ -34,6 +34,8 @@ export const Tabmenu = (route) => {
 const Tabmenus = styled.ul`
   position: fixed;
   bottom: 0;
+  left: 0;
+  background: ${PALLETS.WHITE};
   width: 100%;
   display: flex;
   justify-content: space-between;
