@@ -220,7 +220,6 @@ const ModifiSec = styled.section`
     border: 0;
     clip: rect(0, 0, 0, 0);
   }
-
   .prod-modi-cont {
     display: flex;
     flex-direction: column;
@@ -281,7 +280,6 @@ const ModifiSec = styled.section`
     color: ${PALLETS.LIGHTGRAY};
     font-size: 14px;
   }
-
   .prod-info-inpt .ms-button.disabled {
     display: none;
   }
