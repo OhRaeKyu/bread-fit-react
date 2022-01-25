@@ -19,7 +19,7 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
   const deletePost = async () => {
     try {
       await axios
-        .delete(`${API_ENDPOINT}post/${postId}`, {
+        .delete(`${API_ENDPOINT}/post/${postId}`, {
           headers: {
             // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
             Authorization: `Bearer ${userToken}`,
@@ -39,7 +39,7 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
     try {
       await axios
         .delete(
-          `${API_ENDPOINT}post/61eb03becd27b6cf65fa2212/comments/${commentId}`,
+          `${API_ENDPOINT}/post/61eb03becd27b6cf65fa2212/comments/${commentId}`,
           {
             headers: {
               // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기

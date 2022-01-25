@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import { useState, useEffect } from 'react';
+import { API_ENDPOINT } from '../../../constants';
+
+import axios from 'axios';
+
 export const Userfeed = () => {
   const now = new Date();
   const [isLike, setIsLike] = useState(false);
@@ -8,21 +12,25 @@ export const Userfeed = () => {
     isLike ? setIsLike(false) : setIsLike(true);
   };
   const [post, setPost] = useState([]);
-  useEffect(() => {
-    fetch('http://146.56.183.55:5050/post/feed', {
-      method: 'GET',
-      headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWEwOTQ3NDU4ZjFkZGQyZTJiYTE5MiIsImV4cCI6MTY0NzkyNzEwOSwiaWF0IjoxNjQyNzQzMTA5fQ.kxZJWVlF8-1DFZKxflFBAmEr6jRyq2ynCRIiTTGP6Ks`,
-        'Content-type': 'application/json',
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setPost(data.posts);
+
+  const getFeed = async () => {
+    const userToken = localStorage.getItem('Token');
+    try {
+      const res = await axios.get(`${API_ENDPOINT}/post/feed`, {
+        headers: {
+          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
       });
+      setPost(res.data.posts);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getFeed();
   }, []);
 
   return (

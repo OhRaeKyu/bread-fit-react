@@ -15,7 +15,7 @@ const PostUploadPage = () => {
   const userToken = localStorage.getItem('Token');
 
   const postLike = () => {
-    fetch(`${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/heart`, {
+    fetch(`${API_ENDPOINT}/post/61e7ca8b458f1ddd2e27055c/heart`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${userToken}`,
@@ -27,7 +27,7 @@ const PostUploadPage = () => {
   const deleteLike = async () => {
     try {
       await axios.delete(
-        `${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/unheart`,
+        `${API_ENDPOINT}/post/61e7ca8b458f1ddd2e27055c/unheart`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -108,7 +108,7 @@ const PostUploadPage = () => {
       </WrapPost>
       <Inpreply postId={postId} />
       {viewModal ? (
-        <MenuModal setViewModal={setViewModal} mode="post" postId={postId} />
+        <MenuModal setViewModal={setViewModal} mode="게시글" postId={postId} />
       ) : null}
     </>
   );

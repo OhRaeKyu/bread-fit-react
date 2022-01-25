@@ -4,70 +4,71 @@ import { PALLETS } from '../../constants';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 function ProductDetail() {
-    const [product, setProduct] = useState([]);
-    const getProfile = async () => {
-      try {
-        const res = await axios.get(
-          `http://146.56.183.55:5050/product/detail/61eac1a3cd27b6cf65f99881`,
-          {
-            headers: {
-              // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzgyNjYyMCwiaWF0IjoxNjQyNjQyNjIwfQ.1aA9IYP98ludT0Te-f-awqzew_Blbr2enfdFI8Tk2Fw`,
-              'Content-type': 'application/json',
-            },
-          }
-        );
-        setProduct(res.data.product);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    useEffect(() => {
-      getProfile();
-    }, []);
-
-    let history = useHistory();
-    return (
-        <ModifiSec key={product.id}>
-          <ModificationHeads>
-            <button id="btnBack" onClick={() => {history.back();}}></button>
-            <Link to="/product">
-            <button id="uploadBtn">수정하기</button>
-            </Link>
-          </ModificationHeads>
-          <section className="prod-modi-cont">
-            <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
-            <div className="prod-picb-wrap">
-              <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
-            </div>
-            <article className="prod-info-inpt">
-              <label>
-                <h3>상품명</h3>
-                <li
-                  className="inp-product-name"
-                  required
-                  >{product.itemName}</li>
-              </label>
-              <label>
-                <h3>가격</h3>
-                <li className="inp-product-price">
-                  {product.price}
-                </li>
-              </label>product
-              <label>
-                <h3>판매 링크</h3>
-                <li className="inp-product-link">
-                  {product.link}
-                </li>
-              </label>
-            </article>
-          </section>
-        </ModifiSec>
+  const userToken = localStorage.getItem('Token');
+  const [product, setProduct] = useState([]);
+  const getProfile = async () => {
+    try {
+      const res = await axios.get(
+        `http://146.56.183.55:5050/product/detail/61ee1124497c907df9e70f15`,
+        {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer ${userToken}`,
+            'Content-type': 'application/json',
+          },
+        }
       );
+      setProduct(res.data.product);
+    } catch (err) {
+      console.log(err);
     }
-    
-export default ProductDetail;
+  };
+  useEffect(() => {
+    getProfile();
+  }, []);
 
+  let history = useHistory();
+  return (
+    <ModifiSec key={product.id}>
+      <ModificationHeads>
+        <button
+          id="btnBack"
+          onClick={() => {
+            history.back();
+          }}
+        ></button>
+        <Link to="/product">
+          <button id="uploadBtn">수정하기</button>
+        </Link>
+      </ModificationHeads>
+      <section className="prod-modi-cont">
+        <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
+        <div className="prod-picb-wrap">
+          <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
+        </div>
+        <article className="prod-info-inpt">
+          <label>
+            <h3>상품명</h3>
+            <li className="inp-product-name" required>
+              {product.itemName}
+            </li>
+          </label>
+          <label>
+            <h3>가격</h3>
+            <li className="inp-product-price">{product.price}</li>
+          </label>
+          product
+          <label>
+            <h3>판매 링크</h3>
+            <li className="inp-product-link">{product.link}</li>
+          </label>
+        </article>
+      </section>
+    </ModifiSec>
+  );
+}
+
+export default ProductDetail;
 
 const ModifiSec = styled.section`
   .sr-only {

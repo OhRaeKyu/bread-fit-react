@@ -98,7 +98,7 @@ function PostTypeList({ userData }) {
                 onClick={toggleLike}
               ></button>
               <p>{countLike}</p>
-              <Link to="/post/:id" className="comment"></Link>
+              <Link to={`/post/:id`} className="comment"></Link>
               <p>0</p>
             </WrapResponse>
             <p className="date-post">2021년 12월 31일</p>
