@@ -1,20 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
 
-import { API_ENDPOINT } from '../../../constants';
-
 function ProfileInfo({ userData, who }) {
+  const [profileInfo, setProfileInfo] = useState([]);
   const userToken = localStorage.getItem('Token');
-  const postFollow = () => {
-    // 게시글 id 인자로 받기
-    fetch(`${API_ENDPOINT}profile/real_binky/follow`, {
-      method: 'POST',
+  const userAccountname = localStorage.getItem('accountname');
+  useEffect(() => {
+    fetch(`http://146.56.183.55:5050/profile/efnoo`, {
+      method: 'GET',
       headers: {
         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
         Authorization: `Bearer ${userToken}`,
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setProfileInfo(data.profile);
+      });
+  }, []);
+
+
+  const postFollow = () => {
+    // 게시글 id 인자로 받기
+    fetch('http://146.56.183.55:5050/profile/real_binky/follow', {
+      method: 'POST',
+      headers: {
+        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
         'Content-type': 'application/json',
       },
     });
@@ -37,13 +55,16 @@ function ProfileInfo({ userData, who }) {
 
   const deleteFollow = async () => {
     try {
-      await axios.delete(`${API_ENDPOINT}profile/real_binky/unfollow`, {
-        headers: {
-          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-          Authorization: `Bearer ${userToken}`,
-          'Content-type': 'application/json',
-        },
-      });
+      await axios.delete(
+        `http://146.56.183.55:5050/profile/real_binky/unfollow`,
+        {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            'Content-type': 'application/json',
+          },
+        }
+      );
     } catch (err) {
       console.log(err);
     }
@@ -60,13 +81,12 @@ function ProfileInfo({ userData, who }) {
       postFollow();
     }
   };
-
   const MyProfile = () => {
     return (
       <MyProfileBtn>
         <article className="info-foot">
-          <Link to="/modification">프로필 수정</Link>
-          <Link to="/product">상품 등록</Link>
+          <Link to="/profile/modification">프로필 수정</Link>
+          <Link to="/profile/product">상품 등록</Link>
         </article>
       </MyProfileBtn>
     );
@@ -98,22 +118,22 @@ function ProfileInfo({ userData, who }) {
     <ProfileSection>
       <article className="info-head">
         <FollowInfo>
-          <Link to="/follower">0000</Link>
+          <Link to="/follower">{profileInfo.followerCount}</Link>
           <p>followers</p>
         </FollowInfo>
         <UserImage
-          src="/assets/logo.png"
+          src={profileInfo.image}
           alt="사용자의 프로필 이미지입니다."
         ></UserImage>
         <FollowInfo>
-          <Link to="/follower">0000</Link>
+          <Link to="/following">{profileInfo.followingCount}</Link>
           <p>followings</p>
         </FollowInfo>
       </article>
       <article className="info-main">
-        <p className="user-name">서초구 소울브레드</p>
-        <p className="user-id">@ soul_bread</p>
-        <p className="user-intro">안녕하세요! 서초구 소울브레드입니다! :)</p>
+        <p className="user-name">{profileInfo.username}</p>
+        <p className="user-id">@ {profileInfo.accountname}</p>
+        <p className="user-intro">{profileInfo.intro}</p>
       </article>
       {who === 'my' ? <MyProfile /> : <OtherProfile />}
     </ProfileSection>

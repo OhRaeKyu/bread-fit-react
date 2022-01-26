@@ -1,27 +1,61 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled/';
 import { PALLETS } from '../../../constants';
+import axios from 'axios';
+import { useHistory, Link, useParams, Route } from 'react-router-dom';
 
-function ProductInfo({ userData }) {
+function ProductInfo({ userData, id }) {
+  const [productInfo, setProductInfo] = useState([]);
+  const [modal, setModal] = useState(false);
+  const productId = '';
+  const userToken = localStorage.getItem('Token');
+  const userAccountname = localStorage.getItem('accountname');
+
+  useEffect(() => {
+    fetch(`http://146.56.183.55:5050/product/efnoo`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setProductInfo(data.product);
+      });
+  }, []);
+
+  
   return (
-    <ProductSection>
+    <>
+      <ProductSection >
       <WrapProduct>
         <h2>판매 중인 상품</h2>
-        <ProductList>
-          {/* 데이터 list 반복문으로 랜더링하면 됩니다. */}
-          <li>
-            <img
-              src="/assets/product-img.jpg"
-              alt="판매 중인 상품에 대한 이미지입니다."
-            />
-            <p className="product-name">에그타르트</p>
-            <p className="product-price">000,000원</p>
-          </li>
-        </ProductList>
+        <div className='productListWrap'>
+          {productInfo.map((data)=>(
+          <Link to={`/product/${data.id}`}>
+            <ProductList key={data.id}>
+              {/* 데이터 list 반복문으로 랜더링하면 됩니다. */}
+              <li>
+                <img
+                  src={data.itemImage}
+                  alt="판매 중인 상품에 대한 이미지입니다."
+                />
+                <p className="product-name">{data.itemName}</p>
+                <p className="product-price">{data.price}</p>
+              </li>
+            </ProductList>
+          </Link>
+          ))}
+        </div>
       </WrapProduct>
     </ProductSection>
+    </>
   );
 }
+
 
 const ProductSection = styled.section`
   width: 100%;
@@ -30,12 +64,20 @@ const ProductSection = styled.section`
   background-color: ${PALLETS.WHITE};
   border-top: 1px solid ${PALLETS.LIGHTGRAY};
   border-bottom: 1px solid ${PALLETS.LIGHTGRAY};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .delete_modal{
+    overflow: hidden;
+  }
 `;
 
 const WrapProduct = styled.div`
   width: 390px;
   margin: 0 auto;
-
+  .productListWrap {
+    display: flex;
+  }
   h2 {
     font-weight: 700;
     margin-bottom: 16px;
@@ -59,6 +101,7 @@ const ProductList = styled.ul`
 
     img {
       width: 140px;
+      height: 100px;
       border-radius: 5px;
     }
 
@@ -77,5 +120,7 @@ const ProductList = styled.ul`
     }
   }
 `;
+
+
 
 export default ProductInfo;

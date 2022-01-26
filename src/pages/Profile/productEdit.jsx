@@ -48,17 +48,19 @@ const ProductModificationPage = () => {
     const imageUrls = [];
     const files = image;
     const url = 'http://146.56.183.55:5050';
+    console.log(files.length);
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
         imageUrls.push(url + '/' + imgurl);
       }
       // 게시글 id 인자로 받기
-      const res = await fetch(url + '/product', {
-        method: 'POST',
+      const productId = '61ee5c65fc5ff92d6d4f7922';
+      const res = await fetch(url + '/product/'+ productId, {
+        method: 'PUT',
         headers: {
           // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWYzMGIyMzY4NTcwZTE1MTQ3MDhlMCIsImV4cCI6MTY0ODI0OTUzNywiaWF0IjoxNjQzMDY1NTM3fQ.yT63IjWS6aC4UfYii0AgzALFztLCCj0H33EbLEtdBqA`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWU1YmRiZmM1ZmY5MmQ2ZDRmNzdmNiIsImV4cCI6MTY0ODE5NTEzNCwiaWF0IjoxNjQzMDExMTM0fQ.ed4tN8uHCNcmA3s9Eqm3OxXnxTjRAwx6NgZEQZjsNfg`,
           'Content-type': 'application/json',
         },
         body: JSON.stringify({
@@ -108,7 +110,7 @@ const ProductModificationPage = () => {
   let history = useHistory();
   return (
     <ModifiSec>
-      <form>
+      {/* <form> */}
         <ModificationHeads>
           <button
             id="btnBack"
@@ -181,7 +183,7 @@ const ProductModificationPage = () => {
             </label>
           </article>
         </section>
-      </form>
+      {/* </form> */}
     </ModifiSec>
   );
 };
