@@ -67,7 +67,7 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
   const submitAccount = async () => {
     try {
       const imgurl = await imageUpload(imagefile);
-      const res = await fetch(`${API_ENDPOINT}` + 'user/accountnamevalid', {
+      const res = await fetch(`${API_ENDPOINT}/user/accountnamevalid`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
