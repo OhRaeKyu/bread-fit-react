@@ -1,4 +1,4 @@
-import { PALLETS } from '../../constants';
+import { PALLETS, API_ENDPOINT } from '../../constants';
 import React, { useState, useRef } from 'react';
 import styled from '@emotion/styled';
 import { useHistory, Link } from 'react-router-dom';
@@ -7,6 +7,8 @@ import axios from 'axios';
 const ProductModificationPage = () => {
   const [image, setImgfile] = useState(null);
   const [imageSrc, setImageSrc] = useState('/assets/logo.png');
+  const userToken = localStorage.getItem('Token');
+  const userAccountname = localStorage.getItem('accountname');
 
   //이미지 초기화
   const handleChangeFile = (e) => {
@@ -32,7 +34,7 @@ const ProductModificationPage = () => {
   async function imageUpload(files, index) {
     const formData = new FormData();
     formData.append('image', files[index]);
-    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
+    const res = await fetch(`${API_ENDPOINT}/image/uploadfile`, {
       method: 'POST',
       body: formData,
     });
@@ -47,7 +49,7 @@ const ProductModificationPage = () => {
     e.preventDefault();
     const imageUrls = [];
     const files = image;
-    const url = 'http://146.56.183.55:5050';
+    const url = `${API_ENDPOINT}`;
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
@@ -58,7 +60,7 @@ const ProductModificationPage = () => {
         method: 'POST',
         headers: {
           // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWYzMGIyMzY4NTcwZTE1MTQ3MDhlMCIsImV4cCI6MTY0ODI0OTUzNywiaWF0IjoxNjQzMDY1NTM3fQ.yT63IjWS6aC4UfYii0AgzALFztLCCj0H33EbLEtdBqA`,
+          Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
         body: JSON.stringify({

@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled/';
-import { PALLETS } from '../../../constants';
+import { PALLETS, API_ENDPOINT } from '../../../constants';
 import axios from 'axios';
 import { useHistory, Link, useParams, Route } from 'react-router-dom';
 
 function ProductInfo({ userData, id }) {
   const [productInfo, setProductInfo] = useState([]);
-  const [modal, setModal] = useState(false);
   const productId = '';
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
 
   useEffect(() => {
-    fetch(`http://146.56.183.55:5050/product/efnoo`, {
+    fetch(`${API_ENDPOINT}/product/${userAccountname}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${userToken}`,

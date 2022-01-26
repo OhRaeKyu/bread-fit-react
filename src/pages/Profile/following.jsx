@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { PALLETS } from "../../constants";
+import { PALLETS, API_ENDPOINT } from '../../constants';
 import { Tabmenu } from '../layouts/Tabmenu';
 import { FollowerHead } from '../layouts/FollowerHead';
 import { Route, Link } from 'react-router-dom';
@@ -11,8 +11,6 @@ export const UserInformation = ()=>{
   const [isActive, setActive] = useState(false);
   const [isfollow, setIsfollow] = useState(false);
   const handleToggle = (event) => {
-    // setActive(!isActive);
-    // setIsfollow(!isfollow);
     event.currentTarget.innerText =
       event.currentTarget.innerText === '팔로우' ? '취소' : '팔로우';
 
@@ -20,10 +18,9 @@ export const UserInformation = ()=>{
   };
   const [profile, setProfile] = useState([]);
   useEffect(() => {
-    fetch(`http://146.56.183.55:5050/profile/${userAccountname}/following`, {
+    fetch(`${API_ENDPOINT}/profile/${userAccountname}/following`, {
       method: 'GET',
       headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
         Authorization: `Bearer ${userToken}`,
         'Content-type': 'application/json',
       },
@@ -39,15 +36,6 @@ export const UserInformation = ()=>{
   return (
     <>
     {profile
-            // .filter((profile) => {
-            //   if (keyword == '') {
-            //     return profile;
-            //   } else if (
-            //     profile.username.toLowerCase().includes(keyword.toLowerCase())
-            //   ) {
-            //     return profile;
-            //   }
-            // })
             .map((data, index) => (
               <li key={`follow-${index}`}>
                 <div className="user-search-container">
@@ -69,13 +57,6 @@ export const UserInformation = ()=>{
                   >
                     팔로우
                   </button>
-                  {/* <button
-                    type="button"
-                    onClick={handleToggle}
-                    className={`s-button cancle btn-one-canc `}
-                  >
-                    취소
-                  </button> */}
                 </div>
               </li>
             ))}

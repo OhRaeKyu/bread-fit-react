@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { PALLETS } from '../../../constants';
+import { PALLETS, API_ENDPOINT } from '../../../constants';
 import axios from 'axios';
 
 function ProfileInfo({ userData, who }) {
@@ -9,7 +9,7 @@ function ProfileInfo({ userData, who }) {
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
   useEffect(() => {
-    fetch(`http://146.56.183.55:5050/profile/efnoo`, {
+    fetch(`${API_ENDPOINT}/profile/${userAccountname}`, {
       method: 'GET',
       headers: {
         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
@@ -56,7 +56,7 @@ function ProfileInfo({ userData, who }) {
   const deleteFollow = async () => {
     try {
       await axios.delete(
-        `http://146.56.183.55:5050/profile/real_binky/unfollow`,
+        `${API_ENDPOINT}/profile/real_binky/unfollow`,
         {
           headers: {
             // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
@@ -85,8 +85,8 @@ function ProfileInfo({ userData, who }) {
     return (
       <MyProfileBtn>
         <article className="info-foot">
-          <Link to="/profile/modification">프로필 수정</Link>
-          <Link to="/profile/product">상품 등록</Link>
+          <Link to="/modification">프로필 수정</Link>
+          <Link to="/product">상품 등록</Link>
         </article>
       </MyProfileBtn>
     );

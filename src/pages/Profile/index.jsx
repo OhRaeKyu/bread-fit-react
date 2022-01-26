@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-
 import ProfileHeader from './Components/ProfileHeader';
 import ProfileInfo from './Components/ProfileInfo';
 import ProductInfo from './Components/ProductInfo';
@@ -7,7 +6,6 @@ import PostInfo from './Components/PostInfo';
 import { Tabmenu } from '../layouts/Tabmenu';
 
 const ProfileIndexPage = () => {
-  // API 받아서 여기로 넣기
   const userData = {};
 
   return (

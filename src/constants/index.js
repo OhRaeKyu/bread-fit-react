@@ -17,7 +17,7 @@ export const ROUTES = [
   },
   {
     ID: 2,
-    PATH: '/post',
+    PATH: '/upload',
     LABEL: '게시물 작성',
     INACTIVE: '/assets/icon/icon-edit.svg',
     ACTIVE: '/assets/icon/icon-edit-fill.svg',
