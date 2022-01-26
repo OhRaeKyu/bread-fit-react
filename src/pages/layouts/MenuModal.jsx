@@ -9,7 +9,6 @@ import { API_ENDPOINT } from '../../constants';
 function MenuModal({ setViewModal, mode, postId, commentId }) {
   const userToken = localStorage.getItem('Token');
 
-  postId = '61e8c70a458f1ddd2e28f8a0';
   const [clickDel, setClickDel] = useState(false);
   const toggleDel = (e) => {
     e.preventDefault();
@@ -38,16 +37,13 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
   const deleteComment = async () => {
     try {
       await axios
-        .delete(
-          `${API_ENDPOINT}/post/61eb03becd27b6cf65fa2212/comments/${commentId}`,
-          {
-            headers: {
-              // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-              Authorization: `Bearer ${userToken}`,
-              'Content-type': 'application/json',
-            },
-          }
-        ) // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
+        .delete(`${API_ENDPOINT}/post/${postId}/comments/${commentId}`, {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer ${userToken}`,
+            'Content-type': 'application/json',
+          },
+        }) // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
         .then(() => {
           window.location.reload();
         });

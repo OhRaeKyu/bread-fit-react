@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import PostHeader from './Components/PostHeader';
@@ -11,11 +11,29 @@ import MenuModal from '../layouts/MenuModal';
 
 import { API_ENDPOINT } from '../../constants';
 
-const PostUploadPage = () => {
+const PostDetailPage = ({ postId }) => {
+  const params = useParams();
+  const [post, setPost] = useState();
   const userToken = localStorage.getItem('Token');
 
+  const getPost = async () => {
+    try {
+      const res = await axios.get(`${API_ENDPOINT}/post/${params.id}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
+      setPost(res.data.post);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  getPost();
+
   const postLike = () => {
-    fetch(`${API_ENDPOINT}/post/61e7ca8b458f1ddd2e27055c/heart`, {
+    fetch(`${API_ENDPOINT}/post/${params.id}/heart`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${userToken}`,
@@ -26,20 +44,16 @@ const PostUploadPage = () => {
 
   const deleteLike = async () => {
     try {
-      await axios.delete(
-        `${API_ENDPOINT}/post/61e7ca8b458f1ddd2e27055c/unheart`,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-            'Content-type': 'application/json',
-          },
-        }
-      );
+      await axios.delete(`${API_ENDPOINT}/post/${params.id}/unheart`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
     } catch (err) {
       console.log(err);
     }
   };
-  const postId = '';
 
   const [isLike, setIsLike] = useState(false);
   const [countLike, setCountLike] = useState(0);
@@ -65,56 +79,60 @@ const PostUploadPage = () => {
 
   return (
     <>
-      <WrapPost>
-        <PostHeader />
-        <ItemHeader>
-          <div className="wrap-img">
+      {post ? (
+        <WrapPost>
+          <PostHeader />
+          <ItemHeader>
+            <div className="wrap-img">
+              <img
+                src={post.author.image}
+                alt="게시물에 보여지는 사용자의 프로필 이미지입니다."
+              />
+            </div>
+            <div className="user-post">
+              <p>{post.author.username}</p>
+              <small>{post.author.accountname}</small>
+            </div>
+            <div className="btn-more" onClick={toggleModal}>
+              <span className="sr-only">게시물 메뉴</span>
+            </div>
+          </ItemHeader>
+          <ItemMain>
+            <p className="cont-post">{post.content}</p>
             <img
-              src="/assets/logo.png"
-              alt="게시물에 보여지는 사용자의 프로필 이미지입니다."
+              src={post.image}
+              alt="게시물에 업로드된 이미지입니다."
+              className="img-post"
             />
-          </div>
-          <div className="user-post">
-            <p>서초구 소울브레드</p>
-            <small>@ soul_bread</small>
-          </div>
-          <div className="btn-more" onClick={toggleModal}>
-            <span className="sr-only">게시물 메뉴</span>
-          </div>
-        </ItemHeader>
-        <ItemMain>
-          <p className="cont-post">
-            옷을 인생을 그러므로 없으면 것은 이상은 것은 우리의 위하여, 뿐이다.
-            이상의 청춘의 뼈 따뜻한 그들의 그와 약동하다. 대고, 못할 넣는
-            풍부하게 뛰노는 인생의 힘있다.
-          </p>
-          <img
-            src="/assets/product-img.jpg"
-            alt="게시물에 업로드된 이미지입니다."
-            className="img-post"
-          />
-          <WrapResponse>
-            <button
-              className={isLike ? 'like on' : 'like'}
-              onClick={toggleLike}
-            ></button>
-            <p>{countLike}</p>
-            <Link to="/post/:id" className="comment"></Link>
-            <p>0</p>
-          </WrapResponse>
-          <p className="date-post">2021년 12월 31일</p>
-        </ItemMain>
-        <CommentList postId={postId} />
-      </WrapPost>
-      <Inpreply postId={postId} />
+            <WrapResponse>
+              <button
+                className={isLike ? 'like on' : 'like'}
+                onClick={toggleLike}
+              ></button>
+              <p>{post.heartCount}</p>
+              <Link to="/post/:id" className="comment"></Link>
+              <p>{post.commentCount}</p>
+            </WrapResponse>
+            <p className="date-post">
+              {new Date(post.createdAt).toLocaleDateString()}
+            </p>
+          </ItemMain>
+          <CommentList postId={params.id} />
+        </WrapPost>
+      ) : null}
+      <Inpreply postId={params.id} />
       {viewModal ? (
-        <MenuModal setViewModal={setViewModal} mode="게시글" postId={postId} />
+        <MenuModal
+          setViewModal={setViewModal}
+          mode="게시글"
+          postId={params.id}
+        />
       ) : null}
     </>
   );
 };
 
-export default PostUploadPage;
+export default PostDetailPage;
 
 const WrapPost = styled.div`
   width: 390px;
@@ -132,7 +150,9 @@ const ItemHeader = styled.div`
     height: 42px;
     border: 1px solid ${PALLETS.LIGHTGRAY};
     border-radius: 50%;
+    overflow: hidden;
     img {
+      width: 100%;
       height: 100%;
       object-fit: cover;
     }
