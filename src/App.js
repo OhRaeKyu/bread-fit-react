@@ -20,12 +20,12 @@ import following from './pages/Profile/following';
 import productEdit from './pages/Profile/productEdit';
 import Recommend from './pages/Recommend';
 
-
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Switch>
+          <PublicRoute path="/" exact component={login} />
           <PublicRoute path="/login" exact component={login} />
           <PublicRoute path="/login/email" exact component={loginEmail} />
           <PublicRoute path="/join" exact component={join} />
