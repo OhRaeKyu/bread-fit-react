@@ -44,12 +44,12 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
   async function imageUpload(files) {
     const formData = new FormData();
     formData.append('image', files[0]);
-    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
+    const res = await fetch(`${API_ENDPOINT}/image/uploadfile`, {
       method: 'POST',
       body: formData,
     });
     const data = await res.json();
-    const ImgName = `http://146.56.183.55:5050/${data['filename']}`;
+    const ImgName = `${API_ENDPOINT}/${data['filename']}`;
     return ImgName;
   }
 
