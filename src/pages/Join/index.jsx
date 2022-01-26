@@ -12,7 +12,7 @@ const JoinPage = () => {
       accountname: '',
       intro: '',
       name: '',
-      image: 'http://146.56.183.55:5050/Ellipse.png',
+      image: `${API_ENDPOINT}/Ellipse.png`,
     },
   ]);
 
@@ -28,7 +28,7 @@ const JoinPage = () => {
 
   const submitUserdata = async () => {
     try {
-      const res = await fetch(`http://146.56.183.55:5050/user`, {
+      const res = await fetch(`${API_ENDPOINT}/user`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
