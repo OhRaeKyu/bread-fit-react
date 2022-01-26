@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import { useState, useEffect } from 'react';
 import { API_ENDPOINT } from '../../../constants';
+import { Link } from 'react-router-dom';
 
 import axios from 'axios';
 
@@ -36,10 +37,10 @@ export const Userfeed = () => {
   return (
     <>
       {post.map((data, index) => (
-        <Userfeeds key={index}>
+        <Userfeeds key={data.id}>
           <WrapPost>
             <UserInfo>
-              <img src="../assets/logo.png" alt="" className="author-img" />
+              <img src={data.author.image} alt="" className="author-img" />
               <div className="author-post">
                 <p>{data.author.username}</p>
                 <small>{data.author.accountname}</small>
@@ -49,7 +50,11 @@ export const Userfeed = () => {
             <PostContent>
               <p className="txt-post">{data.content}</p>
               {data.image.length ? (
-                <img src={data.image} alt="storepicture" className="img-post" />
+                <img
+                  src={data.image}
+                  alt="이미지를 불러올 수 없습니다."
+                  className="img-post"
+                />
               ) : null}
               <WrapResponse>
                 <button
@@ -57,7 +62,7 @@ export const Userfeed = () => {
                   onClick={toggleLike}
                 ></button>
                 <p>{data.heartCount}</p>
-                <button className="comment"></button>
+                <Link to={`/post/${data.id}`} className="comment"></Link>
                 <p>{data.commentCount}</p>
               </WrapResponse>
               <p className="date-post">

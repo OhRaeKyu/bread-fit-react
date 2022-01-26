@@ -38,8 +38,6 @@ const HomeIndexPage = () => {
     getFeed();
   }, []);
 
-  console.log(post);
-
   return (
     <>
       <Searchhead />
