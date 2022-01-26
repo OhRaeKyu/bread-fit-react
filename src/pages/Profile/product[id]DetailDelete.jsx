@@ -1,32 +1,24 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-function ProductDetail() {
-    const itemImage = useRef(null);
-    const itemName = useRef(null);
-    const price = useRef(null);
-    const link = useRef(null);
+function ProductDetail({productId}) {
     const [product, setProduct] = useState([]);
+    const userToken = localStorage.getItem('Token');
+    const userAccountname = localStorage.getItem('accountname');
+    const productParams =useParams();
+    console.log(product.id)
     const getProfile = async () => {
       try {
-        const res = await axios.put(
-          `http://146.56.183.55:5050/product/61eac1a3cd27b6cf65f99881`,
+        const res = await axios.get(
+          `http://146.56.183.55:5050/product/detail/${userAccountname}`,
           {
             headers: {
               // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzgyNjYyMCwiaWF0IjoxNjQyNjQyNjIwfQ.1aA9IYP98ludT0Te-f-awqzew_Blbr2enfdFI8Tk2Fw`,
+              Authorization: `Bearer ${userToken}`,
               'Content-type': 'application/json',
             },
-            body:{
-                "product": {
-                    "itemName": `${itemName.current.value}`,
-                    "price": Number,
-                    "link": String,
-                    "itemImage": String
-                }
-            }
           }
         );
         setProduct(res.data.product);
@@ -39,13 +31,38 @@ function ProductDetail() {
     }, []);
 
     let history = useHistory();
+
+    const deleteProduct = async () => {
+      try {
+        await axios
+          .delete(
+            `http://146.56.183.55:5050/product/61f0f6559d09d36b212366c1`,
+            {
+              headers: {
+                // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+                Authorization: `Bearer ${userToken}`,
+                'Content-type': 'application/json',
+              },
+            }
+          ) // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
+          .then(() => {
+            window.location.reload();
+          });
+      } catch (err) {
+        console.log(err);
+        console.log(productId);
+      }
+    };
     return (
         <ModifiSec key={product.id}>
           <ModificationHeads>
-            <button id="btnBack" onClick={() => {history.back();}}></button>
+            <button id="btnBack" onClick={() => {history.back()}}></button>
+            <div>
+            <button className="uploadBtn" onClick={deleteProduct}>삭제하기</button>
             <Link to="/product">
-            <button id="uploadBtn">수정하기</button>
+            <button className="uploadBtn">수정하기</button>
             </Link>
+            </div>
           </ModificationHeads>
           <section className="prod-modi-cont">
             <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
@@ -171,7 +188,7 @@ const ModificationHeads = styled.section`
     width: 22px;
     height: 22px;
   }
-  #uploadBtn {
+  .uploadBtn {
     background-color: ${PALLETS.ORANGE};
     width: 100px;
     height: 28px;
@@ -181,6 +198,7 @@ const ModificationHeads = styled.section`
     font-size: 12px;
     line-height: 18px;
     text-align: center;
+    margin-right: 10px;
     .disabled {
       background-color: ${PALLETS.BEIGE};
     }

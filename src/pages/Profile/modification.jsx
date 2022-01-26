@@ -1,13 +1,95 @@
 import { PALLETS } from "../../constants";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "@emotion/styled";
-import { ModificationHead } from '../layouts/ModificationHead';
+import { useHistory, Link } from 'react-router-dom';
+
 
 export const ProfileModificationPage = () => {
+  let history = useHistory();
+
   //프로필 사진 미리보기
+  const [image, setImgfile] = useState(null);
+  const [imageSrc, setImageSrc] = useState('/assets/logo.png');
   const [fileImage, setFileImage] = useState("/assets/logo.png");
   const saveFileImage = (e) => {
     setFileImage(URL.createObjectURL(e.target.files[0]));
+  };
+
+//이미지 초기화
+const handleChangeFile = (e) => {
+  setImgfile(e.target.files);
+  encodeFileToBase64(e.target.files[0]);
+};
+const encodeFileToBase64 = (fileBlob) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(fileBlob);
+  return new Promise((resolve) => {
+    reader.onload = () => {
+      setImageSrc(reader.result);
+      resolve();
+    };
+  });
+};
+
+const userName = useRef(null);
+const accountname = useRef(null);
+const intro = useRef(null);
+const itemImage = useRef(null);
+const userAccountName = '';
+
+localStorage.setItem(userAccountName,accountname)
+
+  async function imageUpload(files, index) {
+    const formData = new FormData();
+    formData.append('image', files[index]);
+    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await res.json();
+    const productImgName = data['filename'];
+    console.log(productImgName)
+    return productImgName;
+    
+  }
+  
+  const profileEdit = async (e) => {
+    e.preventDefault();
+    const userToken = localStorage.getItem('token');
+    const imageUrls = [];
+    const files = image;
+    const url = 'http://146.56.183.55:5050';
+    if (files.length < 2) {
+      for (let index = 0; index < files.length; index++) {
+        const imgurl = await imageUpload(files, index);
+        imageUrls.push(url + '/' + imgurl);
+      }
+      // 게시글 id 인자로 받기
+      const res = await fetch(url + '/user', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWYzMGIyMzY4NTcwZTE1MTQ3MDhlMCIsImV4cCI6MTY0ODI0OTUzNywiaWF0IjoxNjQzMDY1NTM3fQ.yT63IjWS6aC4UfYii0AgzALFztLCCj0H33EbLEtdBqA`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: {
+            username: `${userName.current.value}`,
+            accountname: `${accountname.current.value}`,
+            intro: `${intro.current.value}`,
+            image: imageUrls[0] + '',
+          },
+        }),
+      });
+      const json = await res.json();
+      console.log(res);
+      console.log(json);
+      console.log(typeof(userName.current.value));
+      console.log(typeof(accountname.current.value));
+      console.log(typeof(intro.current.value));
+      console.log(typeof(imageUrls));
+      console.log(imageUrls);
+      console.log(imageUrls[0]);
+    } 
   };
 
   // 글자수 제한
@@ -43,11 +125,23 @@ export const ProfileModificationPage = () => {
   };
   return (
     <ModifiSec>
-        <ModificationHead />
+        <ModificationHeads>
+          <button
+            id="btnBack"
+            onClick={() => {
+              history.back();
+            }}
+          ></button>
+          <Link to="/product/id">
+            <button id="uploadBtn" onClick={profileEdit}>
+              저장
+            </button>
+          </Link>
+        </ModificationHeads>
         <section className="prof-modi-cont">
           <h1 className="sr-only">프로필 수정 페이지 입니다.</h1>
           <div className="prof-pic-wrap">
-            <img id="profile-cha-img" src={fileImage} alt="사용자 지정 사진" />
+            <img id="profile-cha-img" src={imageSrc} alt="사용자 지정 사진" />
 
             <input
               id="detail_image"
@@ -55,8 +149,10 @@ export const ProfileModificationPage = () => {
               name="imgUpload"
               type="file"
               accept="image/*"
-              onChange={saveFileImage}
+              ref={itemImage}
+              onChange={handleChangeFile}
             />
+            
             <label htmlFor="detail_image" className="profile-change-btn">
               <img src="/assets/upload-file.png" alt="파일 올리기 버튼" />
             </label>
@@ -66,6 +162,7 @@ export const ProfileModificationPage = () => {
               <h3>사용자 이름</h3>
               <input
                 placeholder="2~10자 이내여야 합니다."
+                ref={userName}
                 value={name.value}
                 onChange={name.onChange}
                 required
@@ -82,6 +179,7 @@ export const ProfileModificationPage = () => {
                 className="inp-profile-price"
                 id="userId"
                 required
+                ref={accountname}
                 value={AlphaNum}
                 onChange={isId}
               />
@@ -95,6 +193,7 @@ export const ProfileModificationPage = () => {
                 type="text"
                 value={about.value}
                 onChange={about.onChange}
+                ref={intro}
                 required
                 placeholder="자신과 판매할 상품에 대해 소개해 주세요!"
                 className="inp-profile-about"
@@ -169,5 +268,33 @@ const ModifiSec = styled.section`
   }
   #profile-id-alert.on {
     display: block;
+  }
+`;
+
+const ModificationHeads = styled.section`
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
+  height: 48px;
+  padding: 13px 16px;
+  border-bottom: 1px solid ${PALLETS.GRAY};
+  #btnBack {
+    background: url(/assets/icon/icon-arrow-left.png);
+    width: 22px;
+    height: 22px;
+  }
+  #uploadBtn {
+    background-color: ${PALLETS.ORANGE};
+    width: 100px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: 26px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+    .disabled {
+      background-color: ${PALLETS.BEIGE};
+    }
   }
 `;
