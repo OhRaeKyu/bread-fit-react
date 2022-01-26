@@ -1,14 +1,42 @@
-import { PALLETS } from '../../constants';
-import React, { useState, useRef } from 'react';
+import { PALLETS, API_ENDPOINT } from '../../constants';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const ProductModificationPage = () => {
   const [image, setImgfile] = useState(null);
   const [imageSrc, setImageSrc] = useState('/assets/logo.png');
+  const userToken = localStorage.getItem('Token');
+  const userAccountname = localStorage.getItem('accountname');
+  const productId =useParams();
+  const [product, setProduct] = useState([]);
 
   //이미지 초기화
+
+  const getProfile = async () => {
+    try {
+      const res = await axios.get(
+        `${API_ENDPOINT}/product/detail/${productId.id}`,
+        {
+          headers: {
+            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
+            Authorization: `Bearer ${userToken}`,
+            'Content-type': 'application/json',
+          },
+        }
+      );
+      setProduct(res.data.product);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+
+
   const handleChangeFile = (e) => {
     setImgfile(e.target.files);
     encodeFileToBase64(e.target.files[0]);
@@ -32,7 +60,7 @@ const ProductModificationPage = () => {
   async function imageUpload(files, index) {
     const formData = new FormData();
     formData.append('image', files[index]);
-    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
+    const res = await fetch(`${API_ENDPOINT}/image/uploadfile`, {
       method: 'POST',
       body: formData,
     });
@@ -47,7 +75,7 @@ const ProductModificationPage = () => {
     e.preventDefault();
     const imageUrls = [];
     const files = image;
-    const url = 'http://146.56.183.55:5050';
+    const url = `${API_ENDPOINT}`;
     console.log(files.length);
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
@@ -55,12 +83,10 @@ const ProductModificationPage = () => {
         imageUrls.push(url + '/' + imgurl);
       }
       // 게시글 id 인자로 받기
-      const productId = '61ee5c65fc5ff92d6d4f7922';
-      const res = await fetch(url + '/product/'+ productId, {
+      const res = await fetch(`${API_ENDPOINT}/product/${productId}`, {
         method: 'PUT',
         headers: {
-          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWU1YmRiZmM1ZmY5MmQ2ZDRmNzdmNiIsImV4cCI6MTY0ODE5NTEzNCwiaWF0IjoxNjQzMDExMTM0fQ.ed4tN8uHCNcmA3s9Eqm3OxXnxTjRAwx6NgZEQZjsNfg`,
+          Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
         body: JSON.stringify({
@@ -128,7 +154,7 @@ const ProductModificationPage = () => {
           <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
           <div className="prod-picb-wrap">
             <h2 className="product-title">이미지 등록</h2>
-            <img src={imageSrc} alt="상품 사진" id="product-cha-img" />
+            <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
             <input
               id="product-cha-btn"
               className="product-change-inp"
@@ -149,7 +175,7 @@ const ProductModificationPage = () => {
               <h3>상품명</h3>
               <input
                 type="text"
-                placeholder="1~15자 이내여야 합니다."
+                placeholder={product.itemName}
                 className="inp-product-name"
                 value={name.value}
                 onChange={name.onChange}
@@ -161,7 +187,7 @@ const ProductModificationPage = () => {
               <h3>가격</h3>
               <input
                 type="number"
-                placeholder="숫자만 입력 가능합니다."
+                placeholder={product.price}
                 className="inp-product-price"
                 required
                 value={productPrice.value}
@@ -173,7 +199,7 @@ const ProductModificationPage = () => {
               <h3>판매 링크</h3>
               <input
                 type="text"
-                placeholder="URL을 입력해 주세요."
+                placeholder={product.link}
                 className="inp-product-link"
                 required
                 // value={AlphaNum}, 

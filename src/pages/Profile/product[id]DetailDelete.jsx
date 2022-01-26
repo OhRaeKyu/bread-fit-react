@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { PALLETS } from '../../constants';
+import { PALLETS, API_ENDPOINT } from '../../constants';
 import { useHistory, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 function ProductDetail({productId}) {
@@ -12,7 +12,7 @@ function ProductDetail({productId}) {
     const getProfile = async () => {
       try {
         const res = await axios.get(
-          `http://146.56.183.55:5050/product/detail/${userAccountname}`,
+          `${API_ENDPOINT}/product/detail/${productParams.id}`,
           {
             headers: {
               // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
@@ -36,7 +36,7 @@ function ProductDetail({productId}) {
       try {
         await axios
           .delete(
-            `http://146.56.183.55:5050/product/61f0f6559d09d36b212366c1`,
+            `${API_ENDPOINT}/product/${productParams.id}`,
             {
               headers: {
                 // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
@@ -59,7 +59,7 @@ function ProductDetail({productId}) {
             <button id="btnBack" onClick={() => {history.back()}}></button>
             <div>
             <button className="uploadBtn" onClick={deleteProduct}>삭제하기</button>
-            <Link to="/product">
+            <Link to={`/productEdit/${product.id}`}>
             <button className="uploadBtn">수정하기</button>
             </Link>
             </div>

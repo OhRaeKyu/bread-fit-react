@@ -39,7 +39,7 @@ function App() {
           <PrivateRoute path="/follower" exact component={follower} />
           <PrivateRoute path="/following" exact component={following} />
           <PrivateRoute path="/product" exact component={product} />
-          <PrivateRoute path="/productEdit" exact component={productEdit} />
+          <PrivateRoute path="/productEdit/:id" exact component={productEdit} />
           <PrivateRoute path="/product/:id" exact component={productId} />
           <PrivateRoute path="/modification" exact component={modification} />
           <PrivateRoute path="/recommend" exact component={Recommend} />
