@@ -37,7 +37,6 @@ const LoginEmailPage = () => {
         }),
       });
       const json = await res.json();
-      console.log(json);
       if (json.user.token) {
         localStorage.setItem('Token', json.user.token);
         localStorage.setItem('accountname', json.user.accountname);

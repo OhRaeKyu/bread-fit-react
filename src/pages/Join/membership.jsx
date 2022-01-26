@@ -2,8 +2,6 @@ import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
 import { useState } from 'react';
 import { API_ENDPOINT } from '../../constants';
-import { useHistory } from 'react-router-dom';
-import { Tabmenu } from '../layouts/Tabmenu';
 
 const MembershipPage = ({ setMode, handleUserdata }) => {
   const [error, setError] = useState('');
@@ -89,7 +87,6 @@ const MembershipPage = ({ setMode, handleUserdata }) => {
           다음
         </Btnsubmit>
       </Form>
-      <Tabmenu route={'게시물 작성'} />
     </>
   );
 };
