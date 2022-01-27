@@ -8,23 +8,26 @@ import MenuModal from '../../layouts/MenuModal';
 
 import { API_ENDPOINT } from '../../../constants';
 
-function CommentList({ postId }) {
+function CommentList({ postData }) {
+  postData = '61e7ca8b458f1ddd2e27055c';
+
   const now = new Date();
-  const [delID, setDelID] = useState('');
+  const [delIndex, setDelIndex] = useState('');
   const [comments, setComments] = useState([]);
 
   const [viewModal, setViewModal] = useState(false);
-  const toggleModal = (e, id) => {
+  const toggleModal = (e, index) => {
     e.preventDefault();
-    setDelID(id);
+    setDelIndex(index);
     viewModal ? setViewModal(false) : setViewModal(true);
   };
 
   const getComments = async () => {
     const userToken = localStorage.getItem('Token');
     try {
-      const res = await axios.get(`${API_ENDPOINT}/post/${postId}/comments`, {
+      const res = await axios.get(`${API_ENDPOINT}post/${postData}/comments`, {
         headers: {
+          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
           Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
@@ -41,7 +44,7 @@ function CommentList({ postId }) {
 
   return (
     <Commentlist>
-      {comments.map((data) => (
+      {comments.map((data, index) => (
         <li key={data.id}>
           <img src={data.author.image} alt="" />
           <div className="wrap-reply">
@@ -51,7 +54,7 @@ function CommentList({ postId }) {
               <small>{new Date(data.createdAt).toLocaleDateString()}</small>
               <button
                 onClick={(e) => {
-                  toggleModal(e, data.id);
+                  toggleModal(e, index);
                 }}
               >
                 <span className="sr-only">댓글 메뉴 보기 버튼</span>
@@ -63,7 +66,11 @@ function CommentList({ postId }) {
       ))}
       {/* 자신의 댓글 일 때와 아닐 때 처리해야함 */}
       {viewModal ? (
-        <MenuModal setViewModal={setViewModal} mode="댓글" commentId={delID} />
+        <MenuModal
+          setViewModal={setViewModal}
+          mode="댓글"
+          commentId={comments[delIndex].id}
+        />
       ) : null}
     </Commentlist>
   );

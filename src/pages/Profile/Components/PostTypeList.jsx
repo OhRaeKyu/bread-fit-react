@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
-
 import MenuModal from '../../layouts/MenuModal';
 import { PALLETS } from '../../../constants';
 import axios from 'axios';
-
 import { API_ENDPOINT } from '../../../constants';
 
 function PostTypeList({ userData }) {
+  const [delIndex, setDelIndex] = useState('');
+  const userAccount = localStorage.getItem('accountname');
   const userToken = localStorage.getItem('Token');
-
   const postLike = () => {
     fetch(`${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/heart`, {
       method: 'POST',
@@ -54,61 +53,87 @@ function PostTypeList({ userData }) {
   };
 
   const [viewModal, setViewModal] = useState(false);
-  const toggleModal = (e) => {
+  const toggleModal = (e, index) => {
     e.preventDefault();
+    setDelIndex(index);
+    console.log(index);
+    console.log(delIndex);
     viewModal ? setViewModal(false) : setViewModal(true);
   };
 
   const postId = '';
+  const [feed, setFeed] = useState([]);
+  console.log(feed);
+  useEffect(() => {
+    fetch(`${API_ENDPOINT}/post/${userAccount}/userpost`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setFeed(data.post);
+      });
+  }, []);
+  console.log(feed[delIndex]);
 
   return (
     <>
       <ul>
-        {/* 데이터 list 반복문으로 랜더링하면 됩니다. */}
-        <PostItem>
-          <ItemHeader>
-            <div className="wrap-img">
-              <img
-                src="/assets/logo.png"
-                alt="게시물에 보여지는 사용자의 프로필 이미지입니다."
+        {feed.map((data, index) => (
+          <PostItem key={data.id}>
+            <ItemHeader>
+              <div className="wrap-img">
+                <img
+                  src={data.author.image}
+                  alt="게시물에 보여지는 사용자의 프로필 이미지입니다."
+                />
+              </div>
+              <div className="user-post">
+                <p>{data.author.username}</p>
+                <small>@ {data.author.accountname}</small>
+              </div>
+              <div className="btn-more" onClick={toggleModal}>
+                <span className="sr-only">게시물 메뉴</span>
+              </div>
+            </ItemHeader>
+            <ItemMain>
+              <p className="cont-post">{data.content}</p>
+              {data.image.length ? (
+                <img
+                  src={data.image}
+                  alt="게시물에 업로드된 이미지입니다."
+                  className="img-post"
+                />
+              ) : null}
+              <WrapResponse>
+                <button
+                  className={isLike ? 'like on' : 'like'}
+                  onClick={toggleLike}
+                ></button>
+                <p>{countLike}</p>
+                <Link to={`/post/${data.id}`} className="comment"></Link>
+                <p>0</p>
+              </WrapResponse>
+              <p className="date-post">
+                {data.updatedAt.slice(0, 4)}년{data.updatedAt.slice(5, 7)}월
+                {data.updatedAt.slice(8, 10)}일
+              </p>
+            </ItemMain>
+            {viewModal ? (
+              <MenuModal
+                setViewModal={setViewModal}
+                mode="게시글"
+                data={data.id}
               />
-            </div>
-            <div className="user-post">
-              <p>서초구 소울브레드</p>
-              <small>@ soul_bread</small>
-            </div>
-            <div className="btn-more" onClick={toggleModal}>
-              <span className="sr-only">게시물 메뉴</span>
-            </div>
-          </ItemHeader>
-          <ItemMain>
-            <p className="cont-post">
-              옷을 인생을 그러므로 없으면 것은 이상은 것은 우리의 위하여,
-              뿐이다. 이상의 청춘의 뼈 따뜻한 그들의 그와 약동하다. 대고, 못할
-              넣는 풍부하게 뛰노는 인생의 힘있다.
-            </p>
-            <img
-              src="/assets/product-img.jpg"
-              alt="게시물에 업로드된 이미지입니다."
-              className="img-post"
-            />
-            <WrapResponse>
-              <button
-                className={isLike ? 'like on' : 'like'}
-                onClick={toggleLike}
-              ></button>
-              <p>{countLike}</p>
-              <Link to={`/post/:id`} className="comment"></Link>
-              <p>0</p>
-            </WrapResponse>
-            <p className="date-post">2021년 12월 31일</p>
-          </ItemMain>
-        </PostItem>
+            ) : null}
+          </PostItem>
+        ))}
       </ul>
-      {/* 자신의 게시글 일 때와 아닐 때 처리해야함 */}
-      {viewModal ? (
-        <MenuModal setViewModal={setViewModal} mode="게시글" postId={postId} />
-      ) : null}
     </>
   );
 }

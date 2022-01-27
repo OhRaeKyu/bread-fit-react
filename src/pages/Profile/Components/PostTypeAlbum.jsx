@@ -1,17 +1,44 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { PALLETS, API_ENDPOINT } from '../../../constants';
 function PostTypeAlbum({ userData }) {
+  const [feed, setFeed] = useState([]);
+  const now = new Date();
+  const [isLike, setIsLike] = useState(false);
+  const userAccount = localStorage.getItem('accountname');
+  const toggleLike = () => {
+    isLike ? setIsLike(false) : setIsLike(true);
+  };
+  const userToken = localStorage.getItem('Token');
+  useEffect(() => {
+    fetch(`${API_ENDPOINT}/post/${userAccount}/userpost`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setFeed(data.post);
+      });
+  }, []);
   return (
     <ListType>
-      {/* 데이터 list 반복문으로 랜더링하면 됩니다. */}
-      <Link to="/post/:id">
-        <img
-          src="/assets/product-img.jpg"
-          alt="게시물에 업로드된 이미지입니다."
-        />
-      </Link>
+      {/* <li>{feed}</li> */}
+      {feed.map((data, index) => (
+        <>
+          {data.image.length ? (
+            <Link key={index} to="/post/:id">
+              <img src={data.image} alt="storepicture" className="img-post" />
+            </Link>
+          ) : null}
+        </>
+      ))}
     </ListType>
   );
 }
@@ -22,15 +49,13 @@ const ListType = styled.div`
   gap: 7.5px;
   padding: 15px;
 
-  a {
-    width: 115px;
-    height: 115px;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  .img-post {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .img-post-none {
+    display: none;
   }
 `;
 
