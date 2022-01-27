@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINT } from '../../../constants';
 
 export const UserList = ({ keyword, follow }) => {
   const [isActive, setActive] = useState(false);
   const [isfollow, setIsfollow] = useState(false);
-
+  const userToken = localStorage.getItem('Token');
+  const accountName = localStorage.getItem('accountname');
   const handleToggle = () => {
     setActive(!isActive);
     setIsfollow(!isfollow);
@@ -15,11 +17,11 @@ export const UserList = ({ keyword, follow }) => {
   //조건문
   const [profile, setProfile] = useState([]);
   useEffect(() => {
-    fetch(`http://146.56.183.55:5050/profile/lion123/${follow}`, {
+    fetch(`${API_ENDPOINT}/profile/${accountName}/${follow}`, {
       method: 'GET',
       headers: {
         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWE5Y2ZhY2QyN2I2Y2Y2NWY5NTJlZCIsImV4cCI6MTY0Nzk0OTU3OCwiaWF0IjoxNjQyNzY1NTc4fQ.yvPTEypDONy8Pbf0Rp30u66ceoqi-esfavk1CtWK4nA`,
+        Authorization: `Bearer ${userToken}`,
         'Content-type': 'application/json',
       },
     })
@@ -136,3 +138,5 @@ const Container = styled.ul`
     }
   }
 `;
+
+export default UserList;

@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { PALLETS } from '../../constants';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { API_ENDPOINT } from '../../constants';
-const PostUploadPage = () => {
+
+const Editpage = () => {
   let history = useHistory();
   const back = () => {
     history.goBack();
@@ -33,6 +34,11 @@ const PostUploadPage = () => {
     });
   };
 
+  const userToken = localStorage.getItem('Token');
+  const userAccountname = localStorage.getItem('accountname');
+  const postId = useParams();
+  console.log(postId);
+
   async function imageUpload(files, index) {
     const formData = new FormData();
     formData.append('image', files[index]);
@@ -42,19 +48,19 @@ const PostUploadPage = () => {
     });
     const data = await res.json();
     const productImgName = data['filename'];
+    console.log(productImgName);
     return productImgName;
   }
   async function createPost(e) {
-    const userToken = localStorage.getItem('Token');
     const imageUrls = [];
     const files = image;
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
-        imageUrls.push(`${API_ENDPOINT} /${imgurl}`);
+        imageUrls.push({ API_ENDPOINT } + '/' + imgurl);
       }
-      const res = await fetch(`${API_ENDPOINT}/post`, {
-        method: 'POST',
+      const res = await fetch(`${API_ENDPOINT}/post/${postId}`, {
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
@@ -105,7 +111,7 @@ const PostUploadPage = () => {
   );
 };
 
-export default PostUploadPage;
+export default Editpage;
 
 const Container = styled.section`
   width: 100%;

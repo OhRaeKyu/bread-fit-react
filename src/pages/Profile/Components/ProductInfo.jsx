@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled/';
 import { PALLETS, API_ENDPOINT } from '../../../constants';
 import axios from 'axios';
@@ -26,35 +26,32 @@ function ProductInfo({ userData, id }) {
       });
   }, []);
 
-  
   return (
     <>
-      <ProductSection >
-      <WrapProduct>
-        <h2>판매 중인 상품</h2>
-        <div className='productListWrap'>
-          {productInfo.map((data)=>(
-          <Link to={`/product/${data.id}`}>
-            <ProductList key={data.id}>
-              {/* 데이터 list 반복문으로 랜더링하면 됩니다. */}
-              <li>
-                <img
-                  src={data.itemImage}
-                  alt="판매 중인 상품에 대한 이미지입니다."
-                />
-                <p className="product-name">{data.itemName}</p>
-                <p className="product-price">{data.price}</p>
-              </li>
-            </ProductList>
-          </Link>
-          ))}
-        </div>
-      </WrapProduct>
-    </ProductSection>
+      <ProductSection>
+        <WrapProduct>
+          <h2>판매 중인 상품</h2>
+          <div className="productListWrap">
+            {productInfo.map((data) => (
+              <ProductList key={data.id}>
+                <Link to={`/product/${data.id}`}>
+                  <li>
+                    <img
+                      src={data.itemImage}
+                      alt="판매 중인 상품에 대한 이미지입니다."
+                    />
+                    <p className="product-name">{data.itemName}</p>
+                    <p className="product-price">{data.price}</p>
+                  </li>
+                </Link>
+              </ProductList>
+            ))}
+          </div>
+        </WrapProduct>
+      </ProductSection>
     </>
   );
 }
-
 
 const ProductSection = styled.section`
   width: 100%;
@@ -66,7 +63,7 @@ const ProductSection = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  .delete_modal{
+  .delete_modal {
     overflow: hidden;
   }
 `;
@@ -119,7 +116,5 @@ const ProductList = styled.ul`
     }
   }
 `;
-
-
 
 export default ProductInfo;

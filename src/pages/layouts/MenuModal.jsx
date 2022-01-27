@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import { API_ENDPOINT } from '../../constants';
 
-function MenuModal({ setViewModal, mode, postId, commentId }) {
+function MenuModal({ setViewModal, mode, postId, commentId, data }) {
   const userToken = localStorage.getItem('Token');
 
   const [clickDel, setClickDel] = useState(false);
@@ -112,7 +112,7 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
             <li onClick={toggleDel}>삭제</li>
             <li>
               {/* 해당 게시글(id) 수정 페이지로 이동 */}
-              <Link to="/modification">수정</Link>
+              <Link to={`/edit/${data}`}>수정</Link>
             </li>
           </>
         );
