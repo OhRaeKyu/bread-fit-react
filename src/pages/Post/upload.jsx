@@ -3,7 +3,7 @@ import { PALLETS } from '../../constants';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import { API_ENDPOINT } from '../../constants';
 const PostUploadPage = () => {
   let history = useHistory();
   const back = () => {
@@ -36,7 +36,7 @@ const PostUploadPage = () => {
   async function imageUpload(files, index) {
     const formData = new FormData();
     formData.append('image', files[index]);
-    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
+    const res = await fetch(`${API_ENDPOINT}/image/uploadfile`, {
       method: 'POST',
       body: formData,
     });
@@ -45,18 +45,18 @@ const PostUploadPage = () => {
     return productImgName;
   }
   async function createPost(e) {
+    const userToken = localStorage.getItem('Token');
     const imageUrls = [];
     const files = image;
-    const url = 'http://146.56.183.55:5050';
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
-        imageUrls.push(url + '/' + imgurl);
+        imageUrls.push(`${API_ENDPOINT} /${imgurl}`);
       }
-      const res = await fetch(url + '/post', {
+      const res = await fetch(`${API_ENDPOINT}/post`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWEwOTQ3NDU4ZjFkZGQyZTJiYTE5MiIsImV4cCI6MTY0NzkyNzEwOSwiaWF0IjoxNjQyNzQzMTA5fQ.kxZJWVlF8-1DFZKxflFBAmEr6jRyq2ynCRIiTTGP6Ks`,
+          Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
         body: JSON.stringify({

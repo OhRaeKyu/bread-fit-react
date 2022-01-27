@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { PALLETS, ROUTES } from '../../constants';
 import styled from '@emotion/styled';
+import { useHistory } from 'react-router-dom';
 
 export const Savehead = () => {
+  let history = useHistory();
+
   const back = () => {
     history.back();
   };
