@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import styled from "@emotion/styled";
+import React, { useState, useEffect } from 'react';
+import styled from '@emotion/styled';
 import { PALLETS, API_ENDPOINT } from '../../constants';
 import { Tabmenu } from '../layouts/Tabmenu';
 import { FollowerHead } from '../layouts/FollowerHead';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, useParams } from 'react-router-dom';
 
-export const UserInformation = ()=>{
+export const UserInformation = () => {
+  const params = useParams().id;
+
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
   const [isActive, setActive] = useState(false);
@@ -18,7 +20,7 @@ export const UserInformation = ()=>{
   };
   const [profile, setProfile] = useState([]);
   useEffect(() => {
-    fetch(`${API_ENDPOINT}/profile/${userAccountname}/following`, {
+    fetch(`${API_ENDPOINT}/profile/${params}/following`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${userToken}`,
@@ -35,40 +37,41 @@ export const UserInformation = ()=>{
   }, []);
   return (
     <>
-    {profile
-            .map((data, index) => (
-              <li key={`follow-${index}`}>
-                <div className="user-search-container">
-                  <Link className="item-link-cont" to="profile/id">
-                    <img
-                      className="search-user-img"
-                      src={data.image}
-                      alt="사용자 이미지"
-                    />
-                    <div className="user-information">
-                      <h3 className="user-profile-name">{data.username}</h3>
-                      <small className="user-profile-email">{data.intro}</small>
-                    </div>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={handleToggle}
-                    className={`s-button follow btn-one-fol`}
-                  >
-                    팔로우
-                  </button>
-                </div>
-              </li>
-            ))}
-        </>
-      );
-    };
+      {profile.map((data, index) => (
+        <li key={`follow-${index}`}>
+          <div className="user-search-container">
+            <Link
+              className="item-link-cont"
+              to={`/profile/${data.accountname}`}
+            >
+              <img
+                className="search-user-img"
+                src={data.image}
+                alt="사용자 이미지"
+              />
+              <div className="user-information">
+                <h3 className="user-profile-name">{data.username}</h3>
+                <small className="user-profile-email">{data.intro}</small>
+              </div>
+            </Link>
+            <button
+              type="button"
+              onClick={handleToggle}
+              className={`s-button follow btn-one-fol`}
+            >
+              팔로우
+            </button>
+          </div>
+        </li>
+      ))}
+    </>
+  );
+};
 
-      
-export const FollowerPage = ()=>{
+export const FollowerPage = () => {
   return (
     <>
-    <FollowerHead />
+      <FollowerHead />
       <ModifiSec>
         <UserInformation />
       </ModifiSec>
@@ -80,13 +83,14 @@ export const FollowerPage = ()=>{
 export default FollowerPage;
 
 const ModifiSec = styled.section`
-li,ul{
-  list-style: none;
-}
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
+  li,
+  ul {
+    list-style: none;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   .user-search-container {
     width: 322px;
@@ -96,13 +100,13 @@ align-items: center;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    .item-link-cont{
+    .item-link-cont {
       display: flex;
-    justify-content: flex-start;
-    align-items: center;
+      justify-content: flex-start;
+      align-items: center;
     }
-    .search-user-img{
-      background-color:  ${PALLETS.ORANGE};
+    .search-user-img {
+      background-color: ${PALLETS.ORANGE};
       width: 60px;
       height: 60px;
       border-radius: 60px;
@@ -123,7 +127,7 @@ align-items: center;
       height: 28px;
       background-color: ${PALLETS.ORANGE};
       border: 1px solid ${PALLETS.ORANGE};
-      color:  white;
+      color: white;
     }
     .cancle {
       display: none;

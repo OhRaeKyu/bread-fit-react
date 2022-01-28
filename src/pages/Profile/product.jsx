@@ -30,7 +30,7 @@ const ProductModificationPage = () => {
   const price = useRef(null);
   const link = useRef(null);
   const itemImage = useRef(null);
- 
+
   async function imageUpload(files, index) {
     const formData = new FormData();
     formData.append('image', files[index]);
@@ -40,11 +40,9 @@ const ProductModificationPage = () => {
     });
     const data = await res.json();
     const productImgName = data['filename'];
-    console.log(productImgName)
     return productImgName;
-    
   }
-  
+
   const productPost = async (e) => {
     e.preventDefault();
     const imageUrls = [];
@@ -73,10 +71,8 @@ const ProductModificationPage = () => {
         }),
       });
       const json = await res.json();
-      console.log(json);
-    } 
+    }
   };
-
 
   // 글자수 제한
   const useInput = (initialValue, validator) => {
@@ -104,8 +100,6 @@ const ProductModificationPage = () => {
   const [AlphaNum, setAlphaNum] = useState('');
   const isId = (e) => {
     const curValue = e.currentTarget.value;
-    // const regExp = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,10}/gi;
-    // setAlphaNum(curValue.replace(regExp, ''));
   };
   let history = useHistory();
   return (
@@ -115,10 +109,10 @@ const ProductModificationPage = () => {
           <button
             id="btnBack"
             onClick={() => {
-              history.back();
+              history.goBack();
             }}
           ></button>
-          <Link to="/product/id">
+          <Link to="/profile">
             <button id="uploadBtn" onClick={productPost}>
               저장
             </button>
@@ -176,7 +170,7 @@ const ProductModificationPage = () => {
                 placeholder="URL을 입력해 주세요."
                 className="inp-product-link"
                 required
-                // value={AlphaNum}, 
+                // value={AlphaNum},
                 onChange={isId}
                 ref={link}
               />

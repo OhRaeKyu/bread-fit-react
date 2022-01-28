@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled/';
 import { PALLETS, API_ENDPOINT } from '../../../constants';
-import axios from 'axios';
-import { useHistory, Link, useParams, Route } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-function ProductInfo({ userData, id }) {
+function ProductInfo() {
+  const params = useParams().id;
+
   const [productInfo, setProductInfo] = useState([]);
-  const productId = '';
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
 
   useEffect(() => {
-    fetch(`${API_ENDPOINT}/product/${userAccountname}`, {
+    fetch(`${API_ENDPOINT}/product/${params ? params : userAccountname}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${userToken}`,
@@ -26,8 +26,8 @@ function ProductInfo({ userData, id }) {
       });
   }, []);
 
-  return (
-    <>
+  if (productInfo.length > 0) {
+    return (
       <ProductSection>
         <WrapProduct>
           <h2>판매 중인 상품</h2>
@@ -49,8 +49,10 @@ function ProductInfo({ userData, id }) {
           </div>
         </WrapProduct>
       </ProductSection>
-    </>
-  );
+    );
+  } else {
+    return null;
+  }
 }
 
 const ProductSection = styled.section`
@@ -60,6 +62,7 @@ const ProductSection = styled.section`
   background-color: ${PALLETS.WHITE};
   border-top: 1px solid ${PALLETS.LIGHTGRAY};
   border-bottom: 1px solid ${PALLETS.LIGHTGRAY};
+  border-collapse: collapse;
   display: flex;
   justify-content: center;
   align-items: center;

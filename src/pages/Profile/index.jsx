@@ -9,16 +9,13 @@ import { useState, useEffect } from 'react';
 import { PALLETS, API_ENDPOINT } from '../../constants';
 
 const ProfileIndexPage = () => {
-  const userData = {};
-
   return (
-    // <button type="button" onClick={() => Router.back()}><button>
     <Profile>
       <h1 className="sr-only">본인의 프로필 확인 페이지입니다.</h1>
       <ProfileHeader />
-      <ProfileInfo userData={userData} who={'my'} />
-      <ProductInfo userData={userData} />
-      <PostInfo userData={userData} />
+      <ProfileInfo who={'my'} />
+      <ProductInfo />
+      <PostInfo />
       <Tabmenu route={'프로필'} />
     </Profile>
   );

@@ -6,12 +6,17 @@ import { PALLETS } from '../../../constants';
 import axios from 'axios';
 import { API_ENDPOINT } from '../../../constants';
 
-function PostTypeList({ userData }) {
-  const [delIndex, setDelIndex] = useState('');
+function PostTypeList() {
+  const params = useParams().id;
+  const [postMenu, setPostMenu] = useState('');
   const userAccount = localStorage.getItem('accountname');
   const userToken = localStorage.getItem('Token');
-  const postLike = () => {
-    fetch(`${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/heart`, {
+
+  const [isLiked, setIsLiked] = useState([]);
+  const [likeCount, setLikeCount] = useState([]);
+
+  const postLike = async (postId) => {
+    fetch(`${API_ENDPOINT}/post/${postId}/heart`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${userToken}`,
@@ -20,10 +25,45 @@ function PostTypeList({ userData }) {
     });
   };
 
-  const deleteLike = async () => {
+  const deleteLike = async (postId) => {
     try {
-      await axios.delete(
-        `${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/unheart`,
+      await axios.delete(`${API_ENDPOINT}/post/${postId}/unheart`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const toggleLike = async (e, index, postId) => {
+    e.preventDefault();
+    if (isLiked[index]) {
+      deleteLike(postId);
+      isLiked[index] = false;
+      likeCount[index] -= 1;
+    } else {
+      postLike(postId);
+      isLiked[index] = true;
+      likeCount[index] += 1;
+    }
+  };
+
+  const [viewModal, setViewModal] = useState(false);
+  const toggleModal = (e, postId) => {
+    e.preventDefault();
+    setPostMenu(postId);
+    viewModal ? setViewModal(false) : setViewModal(true);
+  };
+
+  const [feed, setFeed] = useState([]);
+
+  const getPostList = async () => {
+    try {
+      const res = await axios.get(
+        `${API_ENDPOINT}/post/${params ? params : userAccount}/userpost`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -31,55 +71,19 @@ function PostTypeList({ userData }) {
           },
         }
       );
+      setFeed(res.data.post);
+      res.data.post.map((ele) => {
+        setIsLiked((isLiked) => [...isLiked, ele.hearted]);
+        setLikeCount((likeCount) => [...likeCount, ele.heartCount]);
+      });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const [isLike, setIsLike] = useState(false);
-  const [countLike, setCountLike] = useState(0);
-
-  const toggleLike = (e) => {
-    e.preventDefault();
-    if (isLike) {
-      setCountLike(countLike - 1);
-      setIsLike(false);
-      deleteLike();
-    } else {
-      setCountLike(countLike + 1);
-      setIsLike(true);
-      postLike();
-    }
-  };
-
-  const [viewModal, setViewModal] = useState(false);
-  const toggleModal = (e, index) => {
-    e.preventDefault();
-    setDelIndex(index);
-    console.log(index);
-    console.log(delIndex);
-    viewModal ? setViewModal(false) : setViewModal(true);
-  };
-
-  const postId = '';
-  const [feed, setFeed] = useState([]);
-  console.log(feed);
   useEffect(() => {
-    fetch(`${API_ENDPOINT}/post/${userAccount}/userpost`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        'Content-type': 'application/json',
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setFeed(data.post);
-      });
+    getPostList();
   }, []);
-  console.log(feed[delIndex]);
 
   return (
     <>
@@ -97,9 +101,16 @@ function PostTypeList({ userData }) {
                 <p>{data.author.username}</p>
                 <small>@ {data.author.accountname}</small>
               </div>
-              <div className="btn-more" onClick={toggleModal}>
-                <span className="sr-only">게시물 메뉴</span>
-              </div>
+              {data.author.accountname === userAccount ? (
+                <div
+                  className="btn-more"
+                  onClick={(e) => {
+                    toggleModal(e, data.id);
+                  }}
+                >
+                  <span className="sr-only">게시물 메뉴</span>
+                </div>
+              ) : null}
             </ItemHeader>
             <ItemMain>
               <p className="cont-post">{data.content}</p>
@@ -112,28 +123,30 @@ function PostTypeList({ userData }) {
               ) : null}
               <WrapResponse>
                 <button
-                  className={isLike ? 'like on' : 'like'}
-                  onClick={toggleLike}
+                  className={isLiked[index] ? 'like on' : 'like'}
+                  onClick={(e) => {
+                    toggleLike(e, index, data.id);
+                  }}
                 ></button>
-                <p>{countLike}</p>
+                <p>{likeCount[index]}</p>
                 <Link to={`/post/${data.id}`} className="comment"></Link>
-                <p>0</p>
+                <p>{data.commentCount}</p>
               </WrapResponse>
               <p className="date-post">
                 {data.updatedAt.slice(0, 4)}년{data.updatedAt.slice(5, 7)}월
                 {data.updatedAt.slice(8, 10)}일
               </p>
             </ItemMain>
-            {viewModal ? (
-              <MenuModal
-                setViewModal={setViewModal}
-                mode="게시글"
-                data={data.id}
-              />
-            ) : null}
           </PostItem>
         ))}
       </ul>
+      {viewModal ? (
+        <MenuModal
+          setViewModal={setViewModal}
+          mode="게시글"
+          postId={postMenu}
+        />
+      ) : null}
     </>
   );
 }
@@ -152,7 +165,9 @@ const ItemHeader = styled.div`
     height: 42px;
     border: 1px solid ${PALLETS.LIGHTGRAY};
     border-radius: 50%;
+    overflow: hidden;
     img {
+      width: 100%;
       height: 100%;
       object-fit: cover;
     }

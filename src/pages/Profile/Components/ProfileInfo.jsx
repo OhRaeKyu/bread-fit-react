@@ -1,86 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { PALLETS, API_ENDPOINT } from '../../../constants';
 import axios from 'axios';
 
-function ProfileInfo({ userData, who }) {
-  const [profileInfo, setProfileInfo] = useState([]);
+function ProfileInfo({ who }) {
+  const params = useParams().id;
   const userToken = localStorage.getItem('Token');
-  const userAccountname = localStorage.getItem('accountname');
-  useEffect(() => {
-    fetch(`${API_ENDPOINT}/profile/${userAccountname}`, {
-      method: 'GET',
-      headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer ${userToken}`,
-        'Content-type': 'application/json',
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setProfileInfo(data.profile);
-      });
-  }, []);
+  const userName = localStorage.getItem('accountname');
+  const [profileInfo, setProfileInfo] = useState({});
+  const [isFollow, setIsFollow] = useState();
+  const [follow, setFollow] = useState();
 
-
-  const postFollow = () => {
-    // 게시글 id 인자로 받기
-    fetch('http://146.56.183.55:5050/profile/real_binky/follow', {
-      method: 'POST',
-      headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-        'Content-type': 'application/json',
-      },
-    });
-  };
-
-  // axios로 하는 방법 찾기
-  // const postFollow = async () => {
-  //   try {
-  //     await axios.post(`http://146.56.183.55:5050/profile/real_binky/follow`, {
-  //       headers: {
-  //         // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-  //         'Content-type': 'application/json',
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  const deleteFollow = async () => {
+  const getProfile = async () => {
     try {
-      await axios.delete(
-        `${API_ENDPOINT}/profile/real_binky/unfollow`,
+      const res = await axios.get(
+        `${API_ENDPOINT}/profile/${params ? params : userName}`,
         {
           headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
+            Authorization: `Bearer ${userToken}`,
             'Content-type': 'application/json',
           },
         }
       );
+      setProfileInfo(res.data.profile);
+      setIsFollow(res.data.profile.isfollow);
+      setFollow(res.data.profile.followerCount);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const [isFollow, setIsFollow] = useState(false);
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const postFollow = () => {
+    fetch(`${API_ENDPOINT}/profile/${params}/follow`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-type': 'application/json',
+      },
+    });
+  };
+
+  const deleteFollow = async () => {
+    try {
+      await axios.delete(`${API_ENDPOINT}/profile/${params}/unfollow`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const toggleFollow = (e) => {
     e.preventDefault();
     if (isFollow) {
-      setIsFollow(false);
       deleteFollow();
+      setIsFollow(false);
+      setFollow(follow - 1);
     } else {
-      setIsFollow(true);
       postFollow();
+      setIsFollow(true);
+      setFollow(follow + 1);
     }
   };
+
   const MyProfile = () => {
     return (
       <MyProfileBtn>
@@ -118,7 +108,7 @@ function ProfileInfo({ userData, who }) {
     <ProfileSection>
       <article className="info-head">
         <FollowInfo>
-          <Link to="/follower">{profileInfo.followerCount}</Link>
+          <Link to={`/follower/${profileInfo.accountname}`}>{follow}</Link>
           <p>followers</p>
         </FollowInfo>
         <UserImage
@@ -126,7 +116,9 @@ function ProfileInfo({ userData, who }) {
           alt="사용자의 프로필 이미지입니다."
         ></UserImage>
         <FollowInfo>
-          <Link to="/following">{profileInfo.followingCount}</Link>
+          <Link to={`/following/${profileInfo.accountname}`}>
+            {profileInfo.followingCount}
+          </Link>
           <p>followings</p>
         </FollowInfo>
       </article>
@@ -146,6 +138,8 @@ const ProfileSection = styled.section`
   align-items: center;
   width: 100%;
   border-bottom: 1px solid ${PALLETS.LIGHTGRAY};
+  border-collapse: collapse;
+
   padding: 20px 0;
   background-color: ${PALLETS.WHITE};
 
@@ -194,6 +188,7 @@ const UserImage = styled.img`
   width: 110px;
   height: 110px;
   border-radius: 50%;
+  margin-bottom: 10px;
 `;
 
 const MyProfileBtn = styled.div`

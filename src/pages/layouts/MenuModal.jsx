@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import { API_ENDPOINT } from '../../constants';
 
-function MenuModal({ setViewModal, mode, postId, commentId, data }) {
+function MenuModal({ setViewModal, mode, postId, commentId }) {
   const userToken = localStorage.getItem('Token');
 
   const [clickDel, setClickDel] = useState(false);
@@ -20,12 +20,10 @@ function MenuModal({ setViewModal, mode, postId, commentId, data }) {
       await axios
         .delete(`${API_ENDPOINT}/post/${postId}`, {
           headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
             Authorization: `Bearer ${userToken}`,
             'Content-type': 'application/json',
           },
         })
-        // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
         .then(() => {
           window.location.reload();
         });
@@ -39,11 +37,10 @@ function MenuModal({ setViewModal, mode, postId, commentId, data }) {
       await axios
         .delete(`${API_ENDPOINT}/post/${postId}/comments/${commentId}`, {
           headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
             Authorization: `Bearer ${userToken}`,
             'Content-type': 'application/json',
           },
-        }) // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
+        })
         .then(() => {
           window.location.reload();
         });
@@ -70,10 +67,10 @@ function MenuModal({ setViewModal, mode, postId, commentId, data }) {
             className="btn-delete"
             onClick={() => {
               localStorage.removeItem('Token');
+              localStorage.removeItem('accountname');
             }}
           >
-            <Link to="/"></Link>
-            로그아웃
+            <Link to="/home">로그아웃</Link>
           </button>
         </CheckDelete>
       );
@@ -94,7 +91,7 @@ function MenuModal({ setViewModal, mode, postId, commentId, data }) {
             className="btn-delete"
             onClick={() => {
               setViewModal(false);
-              mode === 'post' ? deletePost() : deleteComment();
+              mode === '게시글' ? deletePost() : deleteComment();
             }}
           >
             삭제
@@ -112,7 +109,7 @@ function MenuModal({ setViewModal, mode, postId, commentId, data }) {
             <li onClick={toggleDel}>삭제</li>
             <li>
               {/* 해당 게시글(id) 수정 페이지로 이동 */}
-              <Link to={`/edit/${data}`}>수정</Link>
+              <Link to={`/edit/${postId}`}>수정</Link>
             </li>
           </>
         );

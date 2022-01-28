@@ -10,7 +10,7 @@ function index() {
     <>
       <Header />
       <RecommendList />
-      <Tabmenu route={'채팅'} />
+      <Tabmenu route={'오늘의빵'} />
     </>
   );
 }

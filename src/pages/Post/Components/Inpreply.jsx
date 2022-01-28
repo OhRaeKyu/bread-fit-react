@@ -4,18 +4,19 @@ import { PALLETS } from '../../../constants';
 import axios from 'axios';
 
 import { API_ENDPOINT } from '../../../constants';
+import { useParams } from 'react-router-dom';
 
-const Inpreply = ({ postData }) => {
+const Inpreply = () => {
+  const params = useParams().id;
+  const userToken = localStorage.getItem('Token');
+
   const contComment = useRef(null);
 
   const postReply = (e) => {
-    const userToken = localStorage.getItem('Token');
     e.preventDefault();
-    // 게시글 id 인자로 받기
-    fetch(`${API_ENDPOINT}post/61e7ca8b458f1ddd2e27055c/comments`, {
+    fetch(`${API_ENDPOINT}/post/${params}/comments`, {
       method: 'POST',
       headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
         Authorization: `Bearer ${userToken}`,
         'Content-type': 'application/json',
       },
@@ -26,28 +27,6 @@ const Inpreply = ({ postData }) => {
       window.location.reload();
     });
   };
-
-  // axios로 해보기
-  // const postReply = (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     axios.post(
-  //       'http://146.56.183.55:5050/post/61e7ca8b458f1ddd2e27055c/comments',
-  //       {
-  //         body: {
-  //           comment: { content: `${contComment.current.value}` },
-  //         },
-  //         headers: {
-  //           // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-  //           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZThiY2IxNDU4ZjFkZGQyZTI4ZGFhZSIsImV4cCI6MTY0NzkxNzc0NSwiaWF0IjoxNjQyNzMzNzQ1fQ.8lovXQuOFzR_Y0irSfzFqFT1xaQ8Rgdj8jQ7hIhI7ak`,
-  //           'Content-type': 'application/json',
-  //         },
-  //       }
-  //     );
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   return (
     <WrapReply>

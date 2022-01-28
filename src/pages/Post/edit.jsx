@@ -36,7 +36,7 @@ const Editpage = () => {
 
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
-  const postId = useParams();
+  const postId = useParams().id;
   console.log(postId);
 
   async function imageUpload(files, index) {

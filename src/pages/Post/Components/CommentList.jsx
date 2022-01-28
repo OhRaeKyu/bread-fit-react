@@ -7,27 +7,27 @@ import axios from 'axios';
 import MenuModal from '../../layouts/MenuModal';
 
 import { API_ENDPOINT } from '../../../constants';
+import { useParams } from 'react-router-dom';
 
-function CommentList({ postData }) {
-  postData = '61e7ca8b458f1ddd2e27055c';
+function CommentList() {
+  const params = useParams().id;
+  const userAccount = localStorage.getItem('accountname');
 
-  const now = new Date();
-  const [delIndex, setDelIndex] = useState('');
+  const [delComment, setDelComment] = useState('');
   const [comments, setComments] = useState([]);
 
   const [viewModal, setViewModal] = useState(false);
-  const toggleModal = (e, index) => {
+  const toggleModal = (e, commentId) => {
     e.preventDefault();
-    setDelIndex(index);
+    setDelComment(commentId);
     viewModal ? setViewModal(false) : setViewModal(true);
   };
 
   const getComments = async () => {
     const userToken = localStorage.getItem('Token');
     try {
-      const res = await axios.get(`${API_ENDPOINT}post/${postData}/comments`, {
+      const res = await axios.get(`${API_ENDPOINT}/post/${params}/comments`, {
         headers: {
-          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
           Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
@@ -44,7 +44,7 @@ function CommentList({ postData }) {
 
   return (
     <Commentlist>
-      {comments.map((data, index) => (
+      {comments.map((data) => (
         <li key={data.id}>
           <img src={data.author.image} alt="" />
           <div className="wrap-reply">
@@ -52,13 +52,15 @@ function CommentList({ postData }) {
               <p className="user-name">{data.author.username}</p>
               {/* 며칠전으로 바꿔야함 */}
               <small>{new Date(data.createdAt).toLocaleDateString()}</small>
-              <button
-                onClick={(e) => {
-                  toggleModal(e, index);
-                }}
-              >
-                <span className="sr-only">댓글 메뉴 보기 버튼</span>
-              </button>
+              {data.author.accountname === userAccount ? (
+                <button
+                  onClick={(e) => {
+                    toggleModal(e, data.id);
+                  }}
+                >
+                  <span className="sr-only">댓글 메뉴 보기 버튼</span>
+                </button>
+              ) : null}
             </div>
             <p className="cont-reply">{data.content}</p>
           </div>
@@ -69,7 +71,8 @@ function CommentList({ postData }) {
         <MenuModal
           setViewModal={setViewModal}
           mode="댓글"
-          commentId={comments[delIndex].id}
+          postId={params}
+          commentId={delComment}
         />
       ) : null}
     </Commentlist>

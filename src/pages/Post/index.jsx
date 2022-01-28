@@ -12,28 +12,32 @@ import MenuModal from '../layouts/MenuModal';
 import { API_ENDPOINT } from '../../constants';
 
 const PostDetailPage = ({ postId }) => {
-  const params = useParams();
-  const [post, setPost] = useState();
+  const params = useParams().id;
   const userToken = localStorage.getItem('Token');
+  const userAccount = localStorage.getItem('accountname');
 
+  const [post, setPost] = useState();
   const getPost = async () => {
     try {
-      const res = await axios.get(`${API_ENDPOINT}/post/${params.id}`, {
+      const res = await axios.get(`${API_ENDPOINT}/post/${params}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
       });
       setPost(res.data.post);
+      setIsLike(res.data.post.hearted);
+      setCountLike(res.data.post.heartCount);
     } catch (err) {
       console.log(err);
     }
   };
+  useEffect(() => {
+    getPost();
+  }, []);
 
-  getPost();
-
-  const postLike = () => {
-    fetch(`${API_ENDPOINT}/post/${params.id}/heart`, {
+  const postLike = async () => {
+    fetch(`${API_ENDPOINT}/post/${params}/heart`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${userToken}`,
@@ -44,7 +48,7 @@ const PostDetailPage = ({ postId }) => {
 
   const deleteLike = async () => {
     try {
-      await axios.delete(`${API_ENDPOINT}/post/${params.id}/unheart`, {
+      await axios.delete(`${API_ENDPOINT}/post/${params}/unheart`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
@@ -83,19 +87,24 @@ const PostDetailPage = ({ postId }) => {
         <WrapPost>
           <PostHeader />
           <ItemHeader>
-            <div className="wrap-img">
+            <Link
+              to={`/profile/${post.author.accountname}`}
+              className="wrap-img"
+            >
               <img
                 src={post.author.image}
                 alt="게시물에 보여지는 사용자의 프로필 이미지입니다."
               />
-            </div>
+            </Link>
             <div className="user-post">
               <p>{post.author.username}</p>
               <small>{post.author.accountname}</small>
             </div>
-            <div className="btn-more" onClick={toggleModal}>
-              <span className="sr-only">게시물 메뉴</span>
-            </div>
+            {post.author.accountname === userAccount ? (
+              <div className="btn-more" onClick={toggleModal}>
+                <span className="sr-only">게시물 메뉴</span>
+              </div>
+            ) : null}
           </ItemHeader>
           <ItemMain>
             <p className="cont-post">{post.content}</p>
@@ -109,24 +118,20 @@ const PostDetailPage = ({ postId }) => {
                 className={isLike ? 'like on' : 'like'}
                 onClick={toggleLike}
               ></button>
-              <p>{post.heartCount}</p>
-              <Link to="/post/:id" className="comment"></Link>
+              <p>{countLike}</p>
+              <div className="comment"></div>
               <p>{post.commentCount}</p>
             </WrapResponse>
             <p className="date-post">
               {new Date(post.createdAt).toLocaleDateString()}
             </p>
           </ItemMain>
-          <CommentList postId={params.id} />
+          <CommentList postId={params} />
         </WrapPost>
       ) : null}
-      <Inpreply postId={params.id} />
+      <Inpreply postId={params} />
       {viewModal ? (
-        <MenuModal
-          setViewModal={setViewModal}
-          mode="게시글"
-          postId={params.id}
-        />
+        <MenuModal setViewModal={setViewModal} mode="게시글" postId={params} />
       ) : null}
     </>
   );

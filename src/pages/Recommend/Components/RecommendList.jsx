@@ -52,7 +52,7 @@ const RecommendWrap = styled.div`
     height: 300px;
     object-fit: cover;
     border-radius: 10px;
-    animation: appear 1s linear;
+    animation: appear 0.5s ease-in-out;
   }
 
   p {
@@ -72,9 +72,7 @@ const RecommendWrap = styled.div`
     text-align: center;
     font-size: 3rem;
     border-radius: 10px;
-    background-color: ${PALLETS.ORANGE};
-    color: ${PALLETS.WHITE};
-    animation: appear 1s linear;
+    color: ${PALLETS.ORANGE};
 
     span {
       display: inline-block;
