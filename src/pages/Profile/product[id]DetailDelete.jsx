@@ -3,100 +3,97 @@ import styled from '@emotion/styled';
 import { PALLETS, API_ENDPOINT } from '../../constants';
 import { useHistory, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-function ProductDetail({productId}) {
-    const [product, setProduct] = useState([]);
-    const userToken = localStorage.getItem('Token');
-    const userAccountname = localStorage.getItem('accountname');
-    const productParams =useParams();
-    console.log(product.id)
-    const getProfile = async () => {
-      try {
-        const res = await axios.get(
-          `${API_ENDPOINT}/product/detail/${productParams.id}`,
-          {
-            headers: {
-              // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-              Authorization: `Bearer ${userToken}`,
-              'Content-type': 'application/json',
-            },
-          }
-        );
-        setProduct(res.data.product);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    useEffect(() => {
-      getProfile();
-    }, []);
-
-    let history = useHistory();
-
-    const deleteProduct = async () => {
-      try {
-        await axios
-          .delete(
-            `${API_ENDPOINT}/product/${productParams.id}`,
-            {
-              headers: {
-                // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-                Authorization: `Bearer ${userToken}`,
-                'Content-type': 'application/json',
-              },
-            }
-          ) // 새로고침 말고 더 좋은 리랜더링 되는 방법  찾기
-          .then(() => {
-            window.location.reload();
-          });
-      } catch (err) {
-        console.log(err);
-        console.log(productId);
-      }
-    };
-    return (
-        <ModifiSec key={product.id}>
-          <ModificationHeads>
-            <button id="btnBack" onClick={() => {history.back()}}></button>
-            <div>
-            <button className="uploadBtn" onClick={deleteProduct}>삭제하기</button>
-            <Link to={`/productEdit/${product.id}`}>
-            <button className="uploadBtn">수정하기</button>
-            </Link>
-            </div>
-          </ModificationHeads>
-          <section className="prod-modi-cont">
-            <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
-            <div className="prod-picb-wrap">
-              <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
-            </div>
-            <article className="prod-info-inpt">
-              <label>
-                <h3>상품명</h3>
-                <li
-                  className="inp-product-name"
-                  required
-                  >{product.itemName}</li>
-              </label>
-              <label>
-                <h3>가격</h3>
-                <li className="inp-product-price">
-                  {product.price}
-                </li>
-              </label>product
-              <label>
-                <h3>판매 링크</h3>
-                <li className="inp-product-link">
-                  {product.link}
-                </li>
-              </label>
-            </article>
-          </section>
-        </ModifiSec>
+function ProductDetail() {
+  const [product, setProduct] = useState([]);
+  const [poster, setPoster] = useState('');
+  const userToken = localStorage.getItem('Token');
+  const userAccountname = localStorage.getItem('accountname');
+  const productParams = useParams();
+  const getProduct = async () => {
+    try {
+      const res = await axios.get(
+        `${API_ENDPOINT}/product/detail/${productParams.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            'Content-type': 'application/json',
+          },
+        }
       );
+      setProduct(res.data.product);
+      setPoster(res.data.product.author.accountname);
+    } catch (err) {
+      console.log(err);
     }
-    
-export default ProductDetail;
+  };
+  useEffect(() => {
+    getProduct();
+  }, []);
 
+  let history = useHistory();
+
+  const deleteProduct = async () => {
+    try {
+      await axios.delete(`${API_ENDPOINT}/product/${productParams.id}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-type': 'application/json',
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  return (
+    <ModifiSec key={product.id}>
+      <ModificationHeads>
+        <button
+          id="btnBack"
+          onClick={() => {
+            history.goBack();
+          }}
+        ></button>
+        {poster === userAccountname ? (
+          <div>
+            <Link to="/profile">
+              <button className="uploadBtn" onClick={deleteProduct}>
+                삭제하기
+              </button>
+            </Link>
+            <Link to={`/productEdit/${product.id}`}>
+              <button className="uploadBtn">수정하기</button>
+            </Link>
+          </div>
+        ) : null}
+      </ModificationHeads>
+      <section className="prod-modi-cont">
+        <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
+        <div className="prod-picb-wrap">
+          <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
+        </div>
+        <article className="prod-info-inpt">
+          <label>
+            <h3>상품명</h3>
+            <li className="inp-product-name" required>
+              {product.itemName}
+            </li>
+          </label>
+          <label>
+            <h3>가격</h3>
+            <li className="inp-product-price">{product.price}</li>
+          </label>
+          product
+          <label>
+            <h3>판매 링크</h3>
+            <li className="inp-product-link">{product.link}</li>
+          </label>
+        </article>
+      </section>
+    </ModifiSec>
+  );
+}
+
+export default ProductDetail;
 
 const ModifiSec = styled.section`
   .sr-only {

@@ -35,12 +35,14 @@ export const Userfeed = () => {
   }, []);
 
   return (
-    <>
+    <FeedWrap>
       {post.map((data, index) => (
         <Userfeeds key={data.id}>
           <WrapPost>
             <UserInfo>
-              <img src={data.author.image} alt="" className="author-img" />
+              <Link to={`/profile/${data.author.accountname}`}>
+                <img src={data.author.image} alt="" className="author-img" />
+              </Link>
               <div className="author-post">
                 <p>{data.author.username}</p>
                 <small>{data.author.accountname}</small>
@@ -73,9 +75,13 @@ export const Userfeed = () => {
           </WrapPost>
         </Userfeeds>
       ))}
-    </>
+    </FeedWrap>
   );
 };
+
+const FeedWrap = styled.div`
+  padding: 60px 0;
+`;
 
 const Userfeeds = styled.section``;
 

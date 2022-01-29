@@ -15,12 +15,17 @@ export const Searchhead = () => {
 };
 
 const Searchheads = styled.section`
+  position: fixed;
+  top: 0;
+  width: 100%;
   height: 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 16px;
   border-bottom: 1px solid ${PALLETS.GRAY};
+  background-color: ${PALLETS.WHITE};
+  z-index: 100;
   input {
     width: 90%;
     line-height: 2;

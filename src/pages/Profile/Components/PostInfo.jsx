@@ -53,6 +53,7 @@ const PostSection = styled.section`
   padding-bottom: 20px;
   background-color: ${PALLETS.WHITE};
   border-top: 1px solid ${PALLETS.LIGHTGRAY};
+  border-collapse: collapse;
 `;
 
 const WrapPost = styled.div`
@@ -64,7 +65,7 @@ const Header = styled.div`
   width: 100%;
   padding: 10px 0;
   border-bottom: 1px solid ${PALLETS.LIGHTGRAY};
-
+  border-collapse: collapse;
   .wrap-header {
     width: 390px;
     margin: 0 auto;

@@ -9,7 +9,7 @@ const ProductModificationPage = () => {
   const [imageSrc, setImageSrc] = useState('/assets/logo.png');
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
-  const productId =useParams();
+  const productId = useParams();
   const [product, setProduct] = useState([]);
 
   //이미지 초기화
@@ -35,8 +35,6 @@ const ProductModificationPage = () => {
     getProfile();
   }, []);
 
-
-
   const handleChangeFile = (e) => {
     setImgfile(e.target.files);
     encodeFileToBase64(e.target.files[0]);
@@ -56,7 +54,7 @@ const ProductModificationPage = () => {
   const price = useRef(null);
   const link = useRef(null);
   const itemImage = useRef(null);
- 
+
   async function imageUpload(files, index) {
     const formData = new FormData();
     formData.append('image', files[index]);
@@ -66,11 +64,10 @@ const ProductModificationPage = () => {
     });
     const data = await res.json();
     const productImgName = data['filename'];
-    console.log(productImgName)
+    console.log(productImgName);
     return productImgName;
-    
   }
-  
+
   const productPost = async (e) => {
     e.preventDefault();
     const imageUrls = [];
@@ -100,9 +97,8 @@ const ProductModificationPage = () => {
       });
       const json = await res.json();
       console.log(json);
-    } 
+    }
   };
-
 
   // 글자수 제한
   const useInput = (initialValue, validator) => {
@@ -130,85 +126,83 @@ const ProductModificationPage = () => {
   const [AlphaNum, setAlphaNum] = useState('');
   const isId = (e) => {
     const curValue = e.currentTarget.value;
-    // const regExp = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,10}/gi;
-    // setAlphaNum(curValue.replace(regExp, ''));
   };
   let history = useHistory();
   return (
     <ModifiSec>
       {/* <form> */}
-        <ModificationHeads>
-          <button
-            id="btnBack"
-            onClick={() => {
-              history.back();
-            }}
-          ></button>
-          <Link to="/product/id">
-            <button id="uploadBtn" onClick={productPost}>
-              저장
-            </button>
-          </Link>
-        </ModificationHeads>
-        <section className="prod-modi-cont">
-          <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
-          <div className="prod-picb-wrap">
-            <h2 className="product-title">이미지 등록</h2>
-            <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
+      <ModificationHeads>
+        <button
+          id="btnBack"
+          onClick={() => {
+            history.goBack();
+          }}
+        ></button>
+        <Link to="/profile">
+          <button id="uploadBtn" onClick={productPost}>
+            저장
+          </button>
+        </Link>
+      </ModificationHeads>
+      <section className="prod-modi-cont">
+        <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
+        <div className="prod-picb-wrap">
+          <h2 className="product-title">이미지 등록</h2>
+          <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
+          <input
+            id="product-cha-btn"
+            className="product-change-inp"
+            name="imgUpload"
+            type="file"
+            accept="image/*"
+            ref={itemImage}
+            onChange={handleChangeFile}
+            required
+          />
+          <label
+            htmlFor="product-cha-btn"
+            className="product-change-btn"
+          ></label>
+        </div>
+        <article className="prod-info-inpt">
+          <label>
+            <h3>상품명</h3>
             <input
-              id="product-cha-btn"
-              className="product-change-inp"
-              name="imgUpload"
-              type="file"
-              accept="image/*"
-              ref={itemImage}
-              onChange={handleChangeFile}
+              type="text"
+              placeholder={product.itemName}
+              className="inp-product-name"
+              value={name.value}
+              onChange={name.onChange}
+              ref={itemName}
               required
             />
-            <label
-              htmlFor="product-cha-btn"
-              className="product-change-btn"
-            ></label>
-          </div>
-          <article className="prod-info-inpt">
-            <label>
-              <h3>상품명</h3>
-              <input
-                type="text"
-                placeholder={product.itemName}
-                className="inp-product-name"
-                value={name.value}
-                onChange={name.onChange}
-                ref={itemName}
-                required
-              />
-            </label>
-            <label>
-              <h3>가격</h3>
-              <input
-                type="number"
-                placeholder={product.price}
-                className="inp-product-price"
-                required
-                value={productPrice.value}
-                onChange={productPrice.onChange}
-                ref={price}
-              />
-            </label>
-            <label>
-              <h3>판매 링크</h3>
-              <input
-                type="text"
-                placeholder={product.link}
-                className="inp-product-link"
-                required
-                // value={AlphaNum}, 
-                onChange={isId}
-                ref={link}
-              />
-            </label>
-          </article>
-        </section>
+          </label>
+          <label>
+            <h3>가격</h3>
+            <input
+              type="number"
+              placeholder={product.price}
+              className="inp-product-price"
+              required
+              value={productPrice.value}
+              onChange={productPrice.onChange}
+              ref={price}
+            />
+          </label>
+          <label>
+            <h3>판매 링크</h3>
+            <input
+              type="text"
+              placeholder={product.link}
+              className="inp-product-link"
+              required
+              // value={AlphaNum},
+              onChange={isId}
+              ref={link}
+            />
+          </label>
+        </article>
+      </section>
       {/* </form> */}
     </ModifiSec>
   );

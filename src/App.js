@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch } from 'react-router-dom';
 import login from './pages/Login';
 import loginEmail from './pages/Login/email';
 import join from './pages/Join';
@@ -37,8 +37,8 @@ function App() {
           <PrivateRoute path="/profile/:id" exact component={otherProfile} />
           <PrivateRoute path="/post/:id" exact component={post} />
           <PrivateRoute path="/upload" exact component={upload} />
-          <PrivateRoute path="/follower" exact component={follower} />
-          <PrivateRoute path="/following" exact component={following} />
+          <PrivateRoute path="/follower/:id" exact component={follower} />
+          <PrivateRoute path="/following/:id" exact component={following} />
           <PrivateRoute path="/product" exact component={product} />
           <PrivateRoute path="/productEdit/:id" exact component={productEdit} />
           <PrivateRoute path="/product/:id" exact component={productId} />
