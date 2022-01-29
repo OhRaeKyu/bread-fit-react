@@ -51,7 +51,7 @@ const PostUploadPage = () => {
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
-        imageUrls.push(`${API_ENDPOINT} /${imgurl}`);
+        imageUrls.push(`${API_ENDPOINT}/${imgurl}`);
       }
       const res = await fetch(`${API_ENDPOINT}/post`, {
         method: 'POST',
@@ -71,6 +71,9 @@ const PostUploadPage = () => {
       alert('파일이 너무 큽니다.');
     }
   }
+  const refreshPage = () => {
+    window.location.reload();
+  };
   return (
     <Container>
       <Saveheads>
