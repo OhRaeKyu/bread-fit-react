@@ -13,9 +13,7 @@ const feedDetail = async () => {
       },
     });
     console(params);
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
 };
 
 // eslint-disable-next-line react-hooks/rules-of-hooks

@@ -29,9 +29,7 @@ const HomeIndexPage = () => {
         },
       });
       setPost(res.data.posts);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -41,9 +39,7 @@ const HomeIndexPage = () => {
   const [keyword, setKeyword] = useState('');
 
   const handleSearch = (event) => {
-    const keyword = event.target.value;
     setKeyword(keyword);
-    console.log(keyword);
   };
 
   return (

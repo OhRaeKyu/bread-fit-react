@@ -33,9 +33,7 @@ function PostTypeList() {
           'Content-type': 'application/json',
         },
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const toggleLike = async (e, index, postId) => {
@@ -76,9 +74,7 @@ function PostTypeList() {
         setIsLiked((isLiked) => [...isLiked, ele.hearted]);
         setLikeCount((likeCount) => [...likeCount, ele.heartCount]);
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {

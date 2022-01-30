@@ -28,9 +28,7 @@ const PostDetailPage = ({ postId }) => {
       setPost(res.data.post);
       setIsLike(res.data.post.hearted);
       setCountLike(res.data.post.heartCount);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   useEffect(() => {
     getPost();
@@ -54,9 +52,7 @@ const PostDetailPage = ({ postId }) => {
           'Content-type': 'application/json',
         },
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const [isLike, setIsLike] = useState(false);

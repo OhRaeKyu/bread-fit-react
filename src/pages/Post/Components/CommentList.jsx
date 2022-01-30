@@ -33,9 +33,7 @@ function CommentList() {
         },
       });
       setComments(res.data.comments);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {

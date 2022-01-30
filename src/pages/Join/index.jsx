@@ -46,9 +46,7 @@ const JoinPage = () => {
       });
       const data = await res.json();
       history.push('/login');
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   return (

@@ -37,7 +37,6 @@ const Editpage = () => {
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
   const postId = useParams().id;
-  console.log(postId);
 
   async function imageUpload(files, index) {
     const formData = new FormData();
@@ -48,7 +47,7 @@ const Editpage = () => {
     });
     const data = await res.json();
     const productImgName = data['filename'];
-    console.log(productImgName);
+
     return productImgName;
   }
   async function createPost(e) {
