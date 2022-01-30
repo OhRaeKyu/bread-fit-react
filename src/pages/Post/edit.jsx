@@ -52,12 +52,12 @@ const Editpage = () => {
     return productImgName;
   }
   async function createPost(e) {
-    const imageUrls = [];
+    let imageUrl = '';
     const files = image;
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
-        imageUrls.push({ API_ENDPOINT } + '/' + imgurl);
+        imageUrl = `${API_ENDPOINT}/${imgurl}`;
       }
       const res = await fetch(`${API_ENDPOINT}/post/${postId}`, {
         method: 'PUT',
@@ -68,7 +68,7 @@ const Editpage = () => {
         body: JSON.stringify({
           post: {
             content: text,
-            image: imageUrls + '',
+            image: imageUrl,
           },
         }),
       });
