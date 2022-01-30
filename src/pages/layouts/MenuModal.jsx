@@ -27,7 +27,9 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
         .then(() => {
           window.location.reload();
         });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const deleteComment = async () => {
@@ -42,7 +44,9 @@ function MenuModal({ setViewModal, mode, postId, commentId }) {
         .then(() => {
           window.location.reload();
         });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const CheckModal = () => {

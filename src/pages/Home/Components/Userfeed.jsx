@@ -25,7 +25,9 @@ export const Userfeed = ({ keyword }) => {
         },
       });
       setPost(res.data.posts);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {

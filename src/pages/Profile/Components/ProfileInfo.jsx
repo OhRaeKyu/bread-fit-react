@@ -26,7 +26,9 @@ function ProfileInfo({ who }) {
       setProfileInfo(res.data.profile);
       setIsFollow(res.data.profile.isfollow);
       setFollow(res.data.profile.followerCount);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -51,7 +53,9 @@ function ProfileInfo({ who }) {
           'Content-type': 'application/json',
         },
       });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const toggleFollow = (e) => {

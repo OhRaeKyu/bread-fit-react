@@ -26,7 +26,9 @@ const HomeIndexPage = () => {
         },
       });
       setPost(res.data.posts);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {

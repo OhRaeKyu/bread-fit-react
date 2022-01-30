@@ -22,7 +22,9 @@ function ProductDetail() {
       );
       setProduct(res.data.product);
       setPoster(res.data.product.author.accountname);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getProduct();
@@ -38,7 +40,9 @@ function ProductDetail() {
           'Content-type': 'application/json',
         },
       });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <ModifiSec key={product.id}>

@@ -27,7 +27,9 @@ const ProductModificationPage = () => {
         }
       );
       setProduct(res.data.product);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getProfile();
