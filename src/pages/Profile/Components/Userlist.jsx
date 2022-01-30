@@ -1,85 +1,34 @@
-import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import { Link } from 'react-router-dom';
-import { API_ENDPOINT } from '../../../constants';
 
-export const UserList = ({ keyword, follow }) => {
-  const [isActive, setActive] = useState(false);
-  const [isfollow, setIsfollow] = useState(false);
-  const userToken = localStorage.getItem('Token');
-  const accountName = localStorage.getItem('accountname');
-  const handleToggle = () => {
-    setActive(!isActive);
-    setIsfollow(!isfollow);
-  };
-
+export const UserList = ({ profile }) => {
   //조건문
-  const [profile, setProfile] = useState([]);
-  useEffect(() => {
-    fetch(`${API_ENDPOINT}/profile/${accountName}/${follow}`, {
-      method: 'GET',
-      headers: {
-        // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
-        Authorization: `Bearer ${userToken}`,
-        'Content-type': 'application/json',
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setProfile(data);
-        setIsfollow(data.isfollow);
-      });
-  }, []);
+
   return (
     <Container>
-      {profile
-        .filter((profile) => {
-          if (keyword == '') {
-            return profile;
-          } else if (
-            profile.username.toLowerCase().includes(keyword.toLowerCase())
-          ) {
-            return profile;
-          }
-        })
-        .map((data, index) => (
-          <li key={`follow-${index}`}>
-            <div className="user-search-container">
-              <Link className="item-link-cont" to="profile/id">
-                <img
-                  className="search-user-img"
-                  src={data.image}
-                  alt="사용자 이미지"
-                />
-                <div className="user-information">
-                  <h3 className="user-profile-name">{data.username}</h3>
-                  <small className="user-profile-email">{data.intro}</small>
-                </div>
-              </Link>
-              <button
-                type="button"
-                onClick={handleToggle}
-                className={`s-button follow btn-one-fol ${
-                  isfollow ? 'click' : null
-                }`}
-              >
-                팔로우
-              </button>
-              <button
-                type="button"
-                onClick={handleToggle}
-                className={`s-button cancle btn-one-canc ${
-                  isActive ? 'click' : null
-                }`}
-              >
-                취소
-              </button>
-            </div>
-          </li>
-        ))}
+      {profile.map((data, index) => (
+        <li key={`follow-${index}`}>
+          <div className="user-search-container">
+            <Link
+              className="item-link-cont"
+              to={`/profile/${data.accountname}`}
+            >
+              <img
+                className="search-user-img"
+                src={data.image}
+                alt="사용자 이미지"
+              />
+              <div className="user-information">
+                <h3 className="user-profile-name">{data.username}</h3>
+                <small className="user-profile-email">
+                  &#64;{data.accountname}
+                </small>
+              </div>
+            </Link>
+          </div>
+        </li>
+      ))}
     </Container>
   );
 };

@@ -19,7 +19,6 @@ export const Searchuserhead = ({ handleSearch }) => {
         type="text"
         className="cont-home-search-input"
         placeholder="계정검색"
-        // onKeyUp={searchUser}
         onChange={handleSearch}
       />
     </Searchuserheads>
