@@ -64,7 +64,6 @@ const ProductModificationPage = () => {
     });
     const data = await res.json();
     const productImgName = data['filename'];
-    console.log(productImgName);
     return productImgName;
   }
 
@@ -73,7 +72,7 @@ const ProductModificationPage = () => {
     const imageUrls = [];
     const files = image;
     const url = `${API_ENDPOINT}`;
-    console.log(files.length);
+
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
@@ -96,7 +95,6 @@ const ProductModificationPage = () => {
         }),
       });
       const json = await res.json();
-      console.log(json);
     }
   };
 

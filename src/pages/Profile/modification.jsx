@@ -47,7 +47,7 @@ export const ProfileModificationPage = () => {
     });
     const data = await res.json();
     const productImgName = data['filename'];
-    console.log(productImgName);
+
     return productImgName;
   }
 
@@ -79,14 +79,6 @@ export const ProfileModificationPage = () => {
         }),
       });
       const json = await res.json();
-      console.log(res);
-      console.log(json);
-      console.log(typeof userName.current.value);
-      console.log(typeof accountname.current.value);
-      console.log(typeof intro.current.value);
-      console.log(typeof imageUrls);
-      console.log(imageUrls);
-      console.log(imageUrls[0]);
     }
   };
 

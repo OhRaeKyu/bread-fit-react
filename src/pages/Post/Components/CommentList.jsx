@@ -46,7 +46,14 @@ function CommentList() {
     <Commentlist>
       {comments.map((data) => (
         <li key={data.id}>
-          <img src={data.author.image} alt="" />
+          <img
+            src={data.author.image}
+            alt=""
+            onError={(e) => {
+              e.target.onerror = null;
+              e.currentTarget.src = '/assets/basic-profile-img.png';
+            }}
+          />
           <div className="wrap-reply">
             <div className="info-reply">
               <p className="user-name">{data.author.username}</p>

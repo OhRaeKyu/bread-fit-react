@@ -87,6 +87,7 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
       }
     } catch (err) {
       setError('email');
+      console.log(err);
     }
   };
 

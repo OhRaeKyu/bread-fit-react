@@ -114,6 +114,10 @@ function ProfileInfo({ who }) {
         <UserImage
           src={profileInfo.image}
           alt="사용자의 프로필 이미지입니다."
+          onError={(e) => {
+            e.target.onerror = null;
+            e.currentTarget.src = '/assets/basic-profile-img.png';
+          }}
         ></UserImage>
         <FollowInfo>
           <Link to={`/following/${profileInfo.accountname}`}>
