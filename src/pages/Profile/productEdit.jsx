@@ -6,21 +6,19 @@ import axios from 'axios';
 
 const ProductModificationPage = () => {
   const [image, setImgfile] = useState(null);
-  const [imageSrc, setImageSrc] = useState('/assets/logo.png');
+  const [imageSrc, setImageSrc] = useState(false);
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
-  const productId = useParams();
+  const productId = useParams().id;
   const [product, setProduct] = useState([]);
-
   //이미지 초기화
 
   const getProfile = async () => {
     try {
       const res = await axios.get(
-        `${API_ENDPOINT}/product/detail/${productId.id}`,
+        `${API_ENDPOINT}/product/detail/${productId}`,
         {
           headers: {
-            // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
             Authorization: `Bearer ${userToken}`,
             'Content-type': 'application/json',
           },
@@ -28,7 +26,6 @@ const ProductModificationPage = () => {
       );
       setProduct(res.data.product);
     } catch (err) {
-      console.log(err);
     }
   };
   useEffect(() => {
@@ -64,22 +61,18 @@ const ProductModificationPage = () => {
     });
     const data = await res.json();
     const productImgName = data['filename'];
-    console.log(productImgName);
     return productImgName;
   }
 
   const productPost = async (e) => {
     e.preventDefault();
-    const imageUrls = [];
+    let imageUrl = '';
     const files = image;
-    const url = `${API_ENDPOINT}`;
-    console.log(files.length);
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
-        imageUrls.push(url + '/' + imgurl);
+        imageUrl = `${API_ENDPOINT}/${imgurl}`;
       }
-      // 게시글 id 인자로 받기
       const res = await fetch(`${API_ENDPOINT}/product/${productId}`, {
         method: 'PUT',
         headers: {
@@ -91,16 +84,14 @@ const ProductModificationPage = () => {
             itemName: `${itemName.current.value}`,
             price: parseInt(price.current.value),
             link: `${link.current.value}`,
-            itemImage: imageUrls + '',
+            itemImage: imageUrl,
           },
         }),
       });
       const json = await res.json();
-      console.log(json);
+      window.location.replace("/profile")
     }
   };
-
-  // 글자수 제한
   const useInput = (initialValue, validator) => {
     const [value, setValue] = useState(initialValue);
     const onChange = (event) => {
@@ -130,7 +121,7 @@ const ProductModificationPage = () => {
   let history = useHistory();
   return (
     <ModifiSec>
-      {/* <form> */}
+      <form>
       <ModificationHeads>
         <button
           id="btnBack"
@@ -148,7 +139,7 @@ const ProductModificationPage = () => {
         <h1 className="sr-only">상품 수정 페이지 입니다.</h1>
         <div className="prod-picb-wrap">
           <h2 className="product-title">이미지 등록</h2>
-          <img src={product.itemImage} alt="상품 사진" id="product-cha-img" />
+          {imageSrc ? <img src={imageSrc} alt="preview-img" />: <img src={product.itemImage} alt="preview-img" />}
           <input
             id="product-cha-btn"
             className="product-change-inp"
@@ -203,7 +194,7 @@ const ProductModificationPage = () => {
           </label>
         </article>
       </section>
-      {/* </form> */}
+      </form>
     </ModifiSec>
   );
 };

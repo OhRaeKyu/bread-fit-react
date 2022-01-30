@@ -106,7 +106,6 @@ const ModifiSec = styled.section`
       align-items: center;
     }
     .search-user-img {
-      background-color: ${PALLETS.ORANGE};
       width: 60px;
       height: 60px;
       border-radius: 60px;

@@ -53,11 +53,9 @@ const ProductModificationPage = () => {
         const imgurl = await imageUpload(files, index);
         imageUrls.push(url + '/' + imgurl);
       }
-      // 게시글 id 인자로 받기
       const res = await fetch(url + '/product', {
         method: 'POST',
         headers: {
-          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
           Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
@@ -71,6 +69,7 @@ const ProductModificationPage = () => {
         }),
       });
       const json = await res.json();
+      window.location.replace("/profile")
     }
   };
 
@@ -97,11 +96,15 @@ const ProductModificationPage = () => {
   const productPrice = useInput('', maxPrice);
 
   //url 규칙
-  const [AlphaNum, setAlphaNum] = useState('');
   const isId = (e) => {
     const curValue = e.currentTarget.value;
   };
-  let history = useHistory();
+const [urlcheck, setUrlcheck] = useState('');
+  const checkUrl = (e) => {
+    var regExp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    setUrlcheck(regExp.test(link));
+}
+let history = useHistory();
   return (
     <ModifiSec>
       <form>
@@ -170,10 +173,13 @@ const ProductModificationPage = () => {
                 placeholder="URL을 입력해 주세요."
                 className="inp-product-link"
                 required
-                // value={AlphaNum},
                 onChange={isId}
+                onBlur={checkUrl}
                 ref={link}
               />
+              {urlcheck ? 
+              <li className='urlcheck'> 정확한 url 값을 넣어주세요</li>: null
+            }
             </label>
           </article>
         </section>
@@ -261,6 +267,12 @@ const ModifiSec = styled.section`
   }
   .ms-button.disabled.add {
     display: block;
+  }
+  .urlcheck{
+    list-style: none;
+    color: red;
+    font-size: 13px;
+    margin-top: -10px;
   }
 `;
 

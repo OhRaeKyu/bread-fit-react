@@ -74,10 +74,16 @@ const ProductSection = styled.section`
 const WrapProduct = styled.div`
   width: 390px;
   margin: 0 auto;
+  overflow: scroll;
+  position: relative;
   .productListWrap {
+    margin-top: 20px;
     display: flex;
+    gap: 10px;
+    width: 1560px;
   }
   h2 {
+    position: absolute;
     font-weight: 700;
     margin-bottom: 16px;
   }
