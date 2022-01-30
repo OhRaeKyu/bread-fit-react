@@ -80,7 +80,7 @@ export const ProfileModificationPage = () => {
         }),
       });
       const json = await res.json();
-      // window.location.replace("/profile")
+      window.location.replace("/profile")
     }
   };
 

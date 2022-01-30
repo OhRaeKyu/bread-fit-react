@@ -94,6 +94,10 @@ const PostDetailPage = ({ postId }) => {
               <img
                 src={post.author.image}
                 alt="게시물에 보여지는 사용자의 프로필 이미지입니다."
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.currentTarget.src = '/assets/basic-profile-img.png';
+                }}
               />
             </Link>
             <div className="user-post">

@@ -68,6 +68,7 @@ const ProductModificationPage = () => {
     e.preventDefault();
     let imageUrl = '';
     const files = image;
+    const url = `${API_ENDPOINT}`;
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);

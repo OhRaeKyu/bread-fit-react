@@ -44,6 +44,7 @@ const LoginEmailPage = () => {
       }
     } catch (err) {
       setError(true);
+      console.log(err);
     }
   };
 

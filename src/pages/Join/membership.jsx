@@ -49,6 +49,7 @@ const MembershipPage = ({ setMode, handleUserdata }) => {
       }
     } catch (err) {
       setError('email');
+      console.log(err);
     }
   };
 

@@ -9,8 +9,6 @@ import { API_ENDPOINT } from '../../constants';
 import axios from 'axios';
 
 const HomeIndexPage = () => {
-  // const userToken = localStorage.getItem('Token');
-
   const now = new Date();
   const [isLike, setIsLike] = useState(false);
   const toggleLike = () => {
@@ -23,7 +21,6 @@ const HomeIndexPage = () => {
     try {
       const res = await axios.get(`${API_ENDPOINT}/post/feed`, {
         headers: {
-          // localStorage.getItem('token') 으로 현재 사용자(본인)의 토큰 받아오기
           Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
@@ -38,10 +35,17 @@ const HomeIndexPage = () => {
     getFeed();
   }, []);
 
+  const [keyword, setKeyword] = useState('');
+
+  const handleSearch = (event) => {
+    const keyword = event.target.value;
+    setKeyword(keyword);
+  };
+
   return (
     <>
-      <Searchhead />
-      {post.length ? <Userfeed /> : <Searchuser />}
+      <Searchhead handleSearch={handleSearch} />
+      {post.length ? <Userfeed keyword={keyword} /> : <Searchuser />}
       <Tabmenu route={'홈'}></Tabmenu>
     </>
   );

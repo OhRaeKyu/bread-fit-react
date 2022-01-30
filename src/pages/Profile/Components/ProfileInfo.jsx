@@ -7,7 +7,7 @@ import axios from 'axios';
 function ProfileInfo({ who }) {
   const params = useParams().id;
   const userToken = localStorage.getItem('Token');
-  const userName = localStorage.getItem('accountname');
+  const userAccount = localStorage.getItem('accountname');
   const [profileInfo, setProfileInfo] = useState({});
   const [isFollow, setIsFollow] = useState();
   const [follow, setFollow] = useState();
@@ -15,7 +15,7 @@ function ProfileInfo({ who }) {
   const getProfile = async () => {
     try {
       const res = await axios.get(
-        `${API_ENDPOINT}/profile/${params ? params : userName}`,
+        `${API_ENDPOINT}/profile/${params ? params : userAccount}`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -114,6 +114,10 @@ function ProfileInfo({ who }) {
         <UserImage
           src={profileInfo.image}
           alt="사용자의 프로필 이미지입니다."
+          onError={(e) => {
+            e.target.onerror = null;
+            e.currentTarget.src = '/assets/basic-profile-img.png';
+          }}
         ></UserImage>
         <FollowInfo>
           <Link to={`/following/${profileInfo.accountname}`}>
@@ -127,7 +131,11 @@ function ProfileInfo({ who }) {
         <p className="user-id">@ {profileInfo.accountname}</p>
         <p className="user-intro">{profileInfo.intro}</p>
       </article>
-      {who === 'my' ? <MyProfile /> : <OtherProfile />}
+      {who === 'my' || userAccount === params ? (
+        <MyProfile />
+      ) : (
+        <OtherProfile />
+      )}
     </ProfileSection>
   );
 }
