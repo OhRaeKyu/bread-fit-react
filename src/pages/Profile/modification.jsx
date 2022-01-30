@@ -1,11 +1,13 @@
-import { PALLETS } from '../../constants';
+import { PALLETS, API_ENDPOINT } from '../../constants';
 import React, { useState, useRef } from 'react';
 import styled from '@emotion/styled';
 import { useHistory, Link } from 'react-router-dom';
+import axios from 'axios';
 
 export const ProfileModificationPage = () => {
+  const userToken = localStorage.getItem('token');
   let history = useHistory();
-
+  const userAccountname = localStorage.getItem('accountname');
   //프로필 사진 미리보기
   const [image, setImgfile] = useState(null);
   const [imageSrc, setImageSrc] = useState('/assets/logo.png');
@@ -41,32 +43,31 @@ export const ProfileModificationPage = () => {
   async function imageUpload(files, index) {
     const formData = new FormData();
     formData.append('image', files[index]);
-    const res = await fetch(`http://146.56.183.55:5050/image/uploadfile`, {
+    const res = await fetch(`${API_ENDPOINT}/image/uploadfile`, {
       method: 'POST',
       body: formData,
     });
     const data = await res.json();
     const productImgName = data['filename'];
-
     return productImgName;
   }
 
   const profileEdit = async (e) => {
     e.preventDefault();
-    const userToken = localStorage.getItem('token');
-    const imageUrls = [];
+    let imageUrl = '';
     const files = image;
-    const url = 'http://146.56.183.55:5050';
+    // localStorage.setItem(`${accountname.current.value}`);
+
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
-        imageUrls.push(url + '/' + imgurl);
+        imageUrl = `${API_ENDPOINT}/${imgurl}`;
       }
       // 게시글 id 인자로 받기
-      const res = await fetch(url + '/user', {
+      const res = await fetch(`${API_ENDPOINT}/user`, {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZWYzMGIyMzY4NTcwZTE1MTQ3MDhlMCIsImV4cCI6MTY0ODI0OTUzNywiaWF0IjoxNjQzMDY1NTM3fQ.yT63IjWS6aC4UfYii0AgzALFztLCCj0H33EbLEtdBqA`,
+         headers: {
+          Authorization: `Bearer ${userToken}`,
           'Content-type': 'application/json',
         },
         body: JSON.stringify({
@@ -74,11 +75,12 @@ export const ProfileModificationPage = () => {
             username: `${userName.current.value}`,
             accountname: `${accountname.current.value}`,
             intro: `${intro.current.value}`,
-            image: imageUrls[0] + '',
+            image: imageUrl,
           },
         }),
       });
       const json = await res.json();
+      window.location.replace("/profile")
     }
   };
 
