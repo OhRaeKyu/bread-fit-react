@@ -51,7 +51,15 @@ export const Userfeed = ({ keyword }) => {
             <WrapPost>
               <UserInfo>
                 <Link to={`/profile/${data.author.accountname}`}>
-                  <img src={data.author.image} alt="" className="author-img" />
+                  <img
+                    src={data.author.image}
+                    alt=""
+                    className="author-img"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.currentTarget.src = '/assets/basic-profile-img.png';
+                    }}
+                  />
                 </Link>
                 <div className="author-post">
                   <p>{data.author.username}</p>

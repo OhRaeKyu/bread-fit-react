@@ -18,6 +18,10 @@ export const UserList = ({ profile }) => {
                 className="search-user-img"
                 src={data.image}
                 alt="사용자 이미지"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.currentTarget.src = '/assets/basic-profile-img.png';
+                }}
               />
               <div className="user-information">
                 <h3 className="user-profile-name">{data.username}</h3>
@@ -53,7 +57,6 @@ const Container = styled.ul`
       align-items: center;
     }
     .search-user-img {
-      background-color: ${PALLETS.ORANGE};
       width: 60px;
       height: 60px;
       border-radius: 60px;
