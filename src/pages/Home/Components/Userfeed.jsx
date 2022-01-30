@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import axios from 'axios';
 
-export const Userfeed = () => {
+export const Userfeed = ({ keyword }) => {
   const now = new Date();
   const [isLike, setIsLike] = useState(false);
   const toggleLike = () => {
@@ -36,45 +36,55 @@ export const Userfeed = () => {
 
   return (
     <FeedWrap>
-      {post.map((data, index) => (
-        <Userfeeds key={data.id}>
-          <WrapPost>
-            <UserInfo>
-              <Link to={`/profile/${data.author.accountname}`}>
-                <img src={data.author.image} alt="" className="author-img" />
-              </Link>
-              <div className="author-post">
-                <p>{data.author.username}</p>
-                <small>{data.author.accountname}</small>
-              </div>
-              <span className="btn-more"></span>
-            </UserInfo>
-            <PostContent>
-              <p className="txt-post">{data.content}</p>
-              {data.image.length ? (
-                <img
-                  src={data.image}
-                  alt="이미지를 불러올 수 없습니다."
-                  className="img-post"
-                />
-              ) : null}
-              <WrapResponse>
-                <button
-                  className={isLike ? 'like on' : 'like'}
-                  onClick={toggleLike}
-                ></button>
-                <p>{data.heartCount}</p>
-                <Link to={`/post/${data.id}`} className="comment"></Link>
-                <p>{data.commentCount}</p>
-              </WrapResponse>
-              <p className="date-post">
-                {new Date(data.createdAt).toLocaleDateString()}
-              </p>
-            </PostContent>
-            {/* <CommentList /> */}
-          </WrapPost>
-        </Userfeeds>
-      ))}
+      {post
+        .filter((post) => {
+          if (keyword == '') {
+            return post;
+          } else if (
+            post.content.toLowerCase().includes(keyword.toLowerCase())
+          ) {
+            return post;
+          }
+        })
+        .map((data, index) => (
+          <Userfeeds key={data.id}>
+            <WrapPost>
+              <UserInfo>
+                <Link to={`/profile/${data.author.accountname}`}>
+                  <img src={data.author.image} alt="" className="author-img" />
+                </Link>
+                <div className="author-post">
+                  <p>{data.author.username}</p>
+                  <small>{data.author.accountname}</small>
+                </div>
+                <span className="btn-more"></span>
+              </UserInfo>
+              <PostContent>
+                <p className="txt-post">{data.content}</p>
+                {data.image.length ? (
+                  <img
+                    src={data.image}
+                    alt="이미지를 불러올 수 없습니다."
+                    className="img-post"
+                  />
+                ) : null}
+                <WrapResponse>
+                  <button
+                    className={isLike ? 'like on' : 'like'}
+                    onClick={toggleLike}
+                  ></button>
+                  <p>{data.heartCount}</p>
+                  <Link to={`/post/${data.id}`} className="comment"></Link>
+                  <p>{data.commentCount}</p>
+                </WrapResponse>
+                <p className="date-post">
+                  {new Date(data.createdAt).toLocaleDateString()}
+                </p>
+              </PostContent>
+              {/* <CommentList /> */}
+            </WrapPost>
+          </Userfeeds>
+        ))}
     </FeedWrap>
   );
 };

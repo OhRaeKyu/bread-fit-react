@@ -38,10 +38,18 @@ const HomeIndexPage = () => {
     getFeed();
   }, []);
 
+  const [keyword, setKeyword] = useState('');
+
+  const handleSearch = (event) => {
+    const keyword = event.target.value;
+    setKeyword(keyword);
+    console.log(keyword);
+  };
+
   return (
     <>
-      <Searchhead />
-      {post.length ? <Userfeed /> : <Searchuser />}
+      <Searchhead handleSearch={handleSearch} />
+      {post.length ? <Userfeed keyword={keyword} /> : <Searchuser />}
       <Tabmenu route={'홈'}></Tabmenu>
     </>
   );

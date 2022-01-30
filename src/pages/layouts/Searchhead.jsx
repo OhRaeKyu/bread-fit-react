@@ -2,11 +2,16 @@ import { Link } from 'react-router-dom';
 import { PALLETS } from '../../constants';
 import styled from '@emotion/styled';
 
-export const Searchhead = () => {
+export const Searchhead = ({ handleSearch }) => {
   return (
     <Searchheads>
       <label htmlFor="inpUser"></label>
-      <input type="text" id="inpUser" placeholder="Bread-fit 피드" />
+      <input
+        type="text"
+        id="inpUser"
+        placeholder="Bread-fit 피드"
+        onChange={handleSearch}
+      />
       <Link to="/home/search">
         <button id="searchBtn"></button>
       </Link>
