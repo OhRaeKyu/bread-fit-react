@@ -2,9 +2,18 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 
-const imgList = ['바게트', '수플레', '타르트', '크루아상', '샌드위치'];
+const imgList = [
+  '바게트',
+  '수플레',
+  '타르트',
+  '크루아상',
+  '샌드위치',
+  '머핀',
+  '도넛',
+  '케이크',
+];
 
-function RecommendList2() {
+function RecommendList() {
   const [isClick, setIsClick] = useState(false);
   const toggleBtn = (e) => {
     e.preventDefault();
@@ -37,7 +46,7 @@ function RecommendList2() {
   );
 }
 
-export default RecommendList2;
+export default RecommendList;
 
 const RecommendWrap = styled.div`
   position: relative;
