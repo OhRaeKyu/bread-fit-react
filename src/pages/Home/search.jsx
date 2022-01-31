@@ -4,17 +4,20 @@ import React, { useState, useEffect } from 'react';
 import { API_ENDPOINT } from '../../constants';
 
 const SearchPage = () => {
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState('%^&');
 
   const handleSearch = (event) => {
-    const keyword = event.target.value;
-    setKeyword(keyword);
+    if (event.target.value === '') {
+      setKeyword('%^&');
+    } else {
+      setKeyword(event.target.value);
+    }
   };
 
-  const userToken = localStorage.getItem('Token');
   const [profile, setProfile] = useState([]);
 
   useEffect(() => {
+    const userToken = localStorage.getItem('Token');
     fetch(`${API_ENDPOINT}/user/searchuser/?keyword=${keyword}`, {
       method: 'GET',
       headers: {
