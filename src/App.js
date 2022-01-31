@@ -1,7 +1,7 @@
 import './App.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch } from 'react-router-dom';
-import login from './pages/Login';
+import Login from './pages/Login';
 import loginEmail from './pages/Login/email';
 import join from './pages/Join';
 import home from './pages/Home';
@@ -20,14 +20,33 @@ import following from './pages/Profile/following';
 import productEdit from './pages/Profile/productEdit';
 import edit from './pages/Post/edit';
 import Recommend from './pages/Recommend';
+import Splash from './pages/Login/components/Splash';
+import { Route } from 'react-router-dom';
+import { isLogin } from './utils/isLogin';
 
 function App() {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (window.location.pathname === '/') {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
+  }, []);
+
+  return loading ? <Splash /> : <Router />;
+}
+
+function Router() {
   return (
     <div className="App">
       <BrowserRouter>
         <Switch>
-          <PublicRoute path="/" exact component={login} />
-          <PublicRoute path="/login" exact component={login} />
+          <Route path="/splash" component={Splash} />
+          <Route path="/" exact component={isLogin() ? home : Login} />
+          <PublicRoute path="/login" exact component={Login} />
           <PublicRoute path="/login/email" exact component={loginEmail} />
           <PublicRoute path="/join" exact component={join} />
           <PrivateRoute path="/product" exact component={product} />
