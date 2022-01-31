@@ -2,8 +2,26 @@ import styled from '@emotion/styled';
 import { PALLETS } from '../../../constants';
 import { Link } from 'react-router-dom';
 
-export const UserList = ({ profile }) => {
-  //조건문
+export const UserList = ({ keyword, profile }) => {
+  const matchedText = (text, query) => {
+    if (query !== '' && text.includes(query)) {
+      const parts = text.split(new RegExp(`(${query})`, 'gi'));
+
+      return (
+        <>
+          {parts.map((part, index) =>
+            part.toLowerCase() === query.toLowerCase() ? (
+              <Markedtext key={index}>{part}</Markedtext>
+            ) : (
+              part
+            )
+          )}
+        </>
+      );
+    }
+
+    return text;
+  };
 
   return (
     <Container>
@@ -24,9 +42,11 @@ export const UserList = ({ profile }) => {
                 }}
               />
               <div className="user-information">
-                <h3 className="user-profile-name">{data.username}</h3>
+                <h3 className="user-profile-name">
+                  {matchedText(data.username, keyword)}
+                </h3>
                 <small className="user-profile-email">
-                  &#64;{data.accountname}
+                  &#64;{matchedText(data.accountname, keyword)}
                 </small>
               </div>
             </Link>
@@ -89,6 +109,10 @@ const Container = styled.ul`
       }
     }
   }
+`;
+
+const Markedtext = styled.span`
+  color: ${PALLETS.ORANGE};
 `;
 
 export default UserList;

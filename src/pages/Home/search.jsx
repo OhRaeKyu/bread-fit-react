@@ -37,7 +37,7 @@ const SearchPage = () => {
   return (
     <>
       <Searchuserhead handleSearch={handleSearch} />
-      <UserList profile={profile} />
+      <UserList profile={profile} keyword={keyword} />
     </>
   );
 };
