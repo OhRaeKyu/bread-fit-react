@@ -11,7 +11,6 @@ const ProductModificationPage = () => {
   const userAccountname = localStorage.getItem('accountname');
   const productId = useParams().id;
   const [product, setProduct] = useState([]);
-  //이미지 초기화
 
   const getProfile = async () => {
     try {
@@ -114,7 +113,6 @@ const ProductModificationPage = () => {
   const maxPrice = (value) => value.length <= 8;
   const productPrice = useInput('', maxPrice);
 
-  //url 규칙
   const [AlphaNum, setAlphaNum] = useState('');
   const isId = (e) => {
     const curValue = e.currentTarget.value;
@@ -188,7 +186,6 @@ const ProductModificationPage = () => {
               placeholder={product.link}
               className="inp-product-link"
               required
-              // value={AlphaNum},
               onChange={isId}
               ref={link}
             />
