@@ -5,18 +5,15 @@ import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 
 export const ProfileModificationPage = () => {
-  const userToken = localStorage.getItem('token');
+  const userToken = JSON.stringify(localStorage.getItem('Token'));
+  const userToken1 = localStorage.getItem('Token');
   let history = useHistory();
-  const userAccountname = localStorage.getItem('accountname');
-  //프로필 사진 미리보기
   const [image, setImgfile] = useState(null);
   const [imageSrc, setImageSrc] = useState('/assets/logo.png');
   const [fileImage, setFileImage] = useState('/assets/logo.png');
   const saveFileImage = (e) => {
     setFileImage(URL.createObjectURL(e.target.files[0]));
   };
-
-  //이미지 초기화
   const handleChangeFile = (e) => {
     setImgfile(e.target.files);
     encodeFileToBase64(e.target.files[0]);
@@ -36,9 +33,9 @@ export const ProfileModificationPage = () => {
   const accountname = useRef(null);
   const intro = useRef(null);
   const itemImage = useRef(null);
-  const userAccountName = '';
+  // const userAccountName = '';
 
-  localStorage.setItem(userAccountName, accountname);
+  // localStorage.setItem(userAccountName, accountname);
 
   async function imageUpload(files, index) {
     const formData = new FormData();
@@ -51,13 +48,11 @@ export const ProfileModificationPage = () => {
     const productImgName = data['filename'];
     return productImgName;
   }
-
   const profileEdit = async (e) => {
     e.preventDefault();
     let imageUrl = '';
     const files = image;
-    // localStorage.setItem(`${accountname.current.value}`);
-
+    const userToken2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjczYmM1OWQwOWQzNmIyMTM2MmFiNSIsImV4cCI6MTY0ODc3NzAxMCwiaWF0IjoxNjQzNTkzMDEwfQ.m5QXwMRl3RFBgIap9_NuALPnBi-yr1kW4MlXaBhYOEA'
     if (files.length < 2) {
       for (let index = 0; index < files.length; index++) {
         const imgurl = await imageUpload(files, index);
@@ -65,26 +60,26 @@ export const ProfileModificationPage = () => {
       }
       // 게시글 id 인자로 받기
       const res = await fetch(`${API_ENDPOINT}/user`, {
+        
         method: 'PUT',
          headers: {
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `Bearer ${userToken1}`,
           'Content-type': 'application/json',
         },
         body: JSON.stringify({
-          user: {
-            username: `${userName.current.value}`,
-            accountname: `${accountname.current.value}`,
-            intro: `${intro.current.value}`,
-            image: imageUrl,
+          "user": {
+            "username": `${userName.current.value}`,
+            "accountname": `${accountname.current.value}`,
+            "intro": `${intro.current.value}`,
+            "image": imageUrl,
           },
         }),
       });
       const json = await res.json();
+      localStorage.setItem("accountname",`${accountname.current.value}`);
       window.location.replace("/profile")
     }
   };
-
-  // 글자수 제한
   const useInput = (initialValue, validator) => {
     const [value, setValue] = useState(initialValue);
     const onChange = (event) => {
@@ -105,10 +100,6 @@ export const ProfileModificationPage = () => {
   const name = useInput('', maxLen);
   const maxAbout = (value) => value.length <= 20;
   const about = useInput('', maxAbout);
-
-  //-아이디 유효성 검사
-
-  // 1. 영문 ,숫자만 입력 가능
   const [AlphaNum, setAlphaNum] = useState('');
   const isId = (e) => {
     const curValue = e.currentTarget.value;
@@ -117,6 +108,7 @@ export const ProfileModificationPage = () => {
   };
   return (
     <ModifiSec>
+      <form action='post'>
       <ModificationHeads>
         <button
           id="btnBack"
@@ -194,6 +186,7 @@ export const ProfileModificationPage = () => {
           </label>
         </article>
       </section>
+      </form>
     </ModifiSec>
   );
 };

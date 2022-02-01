@@ -9,8 +9,6 @@ const ProductModificationPage = () => {
   const [imageSrc, setImageSrc] = useState('/assets/logo.png');
   const userToken = localStorage.getItem('Token');
   const userAccountname = localStorage.getItem('accountname');
-
-  //이미지 초기화
   const handleChangeFile = (e) => {
     setImgfile(e.target.files);
     encodeFileToBase64(e.target.files[0]);
@@ -72,8 +70,6 @@ const ProductModificationPage = () => {
       window.location.replace("/profile")
     }
   };
-
-  // 글자수 제한
   const useInput = (initialValue, validator) => {
     const [value, setValue] = useState(initialValue);
     const onChange = (event) => {
@@ -95,7 +91,6 @@ const ProductModificationPage = () => {
   const maxPrice = (value) => value.length <= 8;
   const productPrice = useInput('', maxPrice);
 
-  //url 규칙
   const isId = (e) => {
     const curValue = e.currentTarget.value;
   };
