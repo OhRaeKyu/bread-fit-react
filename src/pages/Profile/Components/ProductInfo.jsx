@@ -74,7 +74,7 @@ const ProductSection = styled.section`
 const WrapProduct = styled.div`
   width: 390px;
   margin: 0 auto;
-  overflow: scroll;
+  overflow: auto;
   position: relative;
   .productListWrap {
     margin-top: 20px;
