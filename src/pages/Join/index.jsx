@@ -12,7 +12,7 @@ const JoinPage = () => {
       accountname: '',
       intro: '',
       name: '',
-      image: `${API_ENDPOINT}/Ellipse.png`,
+      image: `${API_ENDPOINT}/Ellipse-1.png`,
     },
   ]);
 
@@ -20,10 +20,10 @@ const JoinPage = () => {
     setUserdata((prevState) => {
       return { ...prevState, [key]: value };
     });
+    console.log(userdata);
   };
 
   const [mode, setMode] = useState(true);
-
   const history = useHistory();
 
   const submitUserdata = async () => {
