@@ -1,32 +1,33 @@
-import styled from "@emotion/styled";
-import { PALLETS } from "../../constants";
-import { useState } from "react";
-import { API_ENDPOINT } from "../../constants";
+import styled from '@emotion/styled';
+import { PALLETS } from '../../constants';
+import { useState } from 'react';
+import { API_ENDPOINT } from '../../constants';
 
 const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
-  const [error, setError] = useState("");
-  const [previewSrc, setPreviewSrc] = useState("/assets/logo-white.svg");
+  const [error, setError] = useState('');
+  const [previewSrc, setPreviewSrc] = useState('/assets/logo-white.svg');
   const [imagefile, setImagefile] = useState(null);
 
   //username 관리
   const handleNameInput = (event) => {
-    handleUserdata("name", event.target.value);
+    handleUserdata('name', event.target.value);
   };
 
   //account name 관리
   const HandleAccountInput = (event) => {
-    handleUserdata("accountname", event.target.value);
+    handleUserdata('accountname', event.target.value);
   };
 
   //intro 관리
   const HandleIntroInput = (event) => {
-    handleUserdata("intro", event.target.value);
+    handleUserdata('intro', event.target.value);
   };
 
   //이미지 프리뷰
-  const handleImgInput = (e) => {
-    setImagefile(e.target.files);
-    encodeFileToBase64(e.target.files[0]);
+  const handleImgInput = (event) => {
+    setImagefile(event.target.files);
+    encodeFileToBase64(event.target.files[0]);
+    imageUpload(event.target.files);
   };
 
   const encodeFileToBase64 = (fileBlob) => {
@@ -43,13 +44,14 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
   //이미지 업로드
   async function imageUpload(files) {
     const formData = new FormData();
-    formData.append("image", files[0]);
+    formData.append('image', files[0]);
     const res = await fetch(`${API_ENDPOINT}/image/uploadfile`, {
-      method: "POST",
+      method: 'POST',
       body: formData,
     });
     const data = await res.json();
-    const ImgName = `${API_ENDPOINT}/${data["filename"]}`;
+    const ImgName = `${API_ENDPOINT}/${data['filename']}`;
+    handleUserdata('image', ImgName);
     return ImgName;
   }
 
@@ -58,7 +60,7 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
 
   const checkAccount = () => {
     if (!checkAvailable.test(userdata.accountname)) {
-      setError("unavailable");
+      setError('unavailable');
       return;
     } else submitAccount();
   };
@@ -66,11 +68,10 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
   //accountname 관리 - 중복검사
   const submitAccount = async () => {
     try {
-      const imgurl = await imageUpload(imagefile);
       const res = await fetch(`${API_ENDPOINT}/user/accountnamevalid`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-type": "application/json",
+          'Content-type': 'application/json',
         },
         body: JSON.stringify({
           user: {
@@ -79,14 +80,13 @@ const SettingPage = ({ userdata, handleUserdata, submitUserdata }) => {
         }),
       });
       const json = await res.json();
-      if (json.message === "사용 가능한 계정ID 입니다.") {
-        handleUserdata("image", imgurl);
+      if (json.message === '사용 가능한 계정ID 입니다.') {
         submitUserdata();
       } else {
-        setError("duplication");
+        setError('duplication');
       }
     } catch (err) {
-      setError("email");
+      setError('email');
       console.log(err);
     }
   };
@@ -237,7 +237,7 @@ const Input = styled.input`
 
 const Error = styled.strong`
   margin-top: 6px;
-  display: ${(props) => (props.display === "unavailable" ? "block" : "none")};
+  display: ${(props) => (props.display === 'unavailable' ? 'block' : 'none')};
   color: #eb5757;
   font-size: 12px;
   line-height: 14px;
@@ -245,7 +245,7 @@ const Error = styled.strong`
 
 const Errorid = styled.strong`
   margin-top: 6px;
-  display: ${(props) => (props.display === "duplication" ? "block" : "none")};
+  display: ${(props) => (props.display === 'duplication' ? 'block' : 'none')};
   color: #eb5757;
   font-size: 12px;
   line-height: 14px;

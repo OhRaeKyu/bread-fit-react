@@ -4,9 +4,7 @@ import ProfileInfo from './Components/ProfileInfo';
 import ProductInfo from './Components/ProductInfo';
 import PostInfo from './Components/PostInfo';
 import { Tabmenu } from '../layouts/Tabmenu';
-import { Link, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { PALLETS, API_ENDPOINT } from '../../constants';
+import { PALLETS } from '../../constants';
 
 const ProfileIndexPage = () => {
   return (
