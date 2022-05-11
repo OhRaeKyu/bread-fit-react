@@ -1,5 +1,4 @@
 export const API_ENDPOINT = 'https://mandarin.api.weniv.co.kr';
-// export const API_ENDPOINT = 'http://146.56.183.55:5050';
 
 export const ROUTES = [
   {
