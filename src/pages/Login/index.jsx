@@ -10,27 +10,16 @@ const LoginIndexPage = () => {
       <Section>
         <Loginitems>
           <li>
-            <Loginitem to="/" social="kakao">
-              카카오톡 계정으로 로그인
+            <Loginitem to="/login/email" social="kakao">
+              이메일로 로그인
             </Loginitem>
           </li>
           <li>
-            <Loginitem to="/" social="google">
-              구글 계정으로 로그인
-            </Loginitem>
-          </li>
-          <li>
-            <Loginitem to="/" social="facebook">
-              페이스북 계정으로 로그인
+            <Loginitem to="/join" social="facebook">
+            회원가입
             </Loginitem>
           </li>
         </Loginitems>
-        <Option to="/login/email" option="email" className="link-email">
-          이메일로 로그인
-        </Option>
-        <Option to="/join" className="link-join">
-          회원가입
-        </Option>
       </Section>
     </Container>
   );
@@ -127,21 +116,4 @@ const Loginitem = styled(Link)`
   border-radius: 44px;
   white-space: nowrap;
 
-  &:before {
-    display: block;
-    content: '';
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    top: 10px;
-    left: 14px;
-    background: url(${(props) =>
-      props.social === 'kakao'
-        ? '/assets/message-circle.png'
-        : props.social === 'google'
-        ? '/assets/google.png'
-        : props.social === 'facebook'
-        ? '/assets/facebook.png'
-        : 'null'});
-  }
 `;
