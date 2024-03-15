@@ -214,7 +214,7 @@ const CheckDelete = styled.div`
   background-color: ${PALLETS.WHITE};
   border-radius: 10px;
   overflow: hidden;
-
+  z-index: 100;
   strong {
     line-height: 65px;
     display: block;
